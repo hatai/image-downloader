@@ -1,6 +1,6 @@
 # Image downloader
 
-This project is forked from [image-downloder](https://github.com/vdsabev/image-downloader).
+This project is forked from [image-downloader](https://github.com/vdsabev/image-downloader).
 
 If you need to bulk download images from a web page, with this extension you can:
 
