@@ -248,7 +248,10 @@ const mutations = {
 
   SAVE_TO_LOCAL_STORAGE: (state, _) => {
     saveOptions({key: 'options', value: Object.assign({}, state)})
-      .catch(error => console.log(error))
+      .catch(error => {
+        console.log(error)
+        chrome.storage.local.clear()
+      })
   }
 }
 

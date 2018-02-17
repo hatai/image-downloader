@@ -137,7 +137,24 @@ const mutations = {
    * @constructor
    */
   SET_IMAGES: (state, {images}) => {
-    state.sources = [].concat(images)
+    state.sources = [].concat(
+      images.images.map(image => ({
+        src: image,
+        width: 0,
+        height: 0,
+        linked: false,
+        checked: false,
+        visible: false,
+      })),
+      images.linkedImages.map(image => ({
+        src: image,
+        width: 0,
+        height: 0,
+        linked: true,
+        checked: false,
+        visible: false,
+      }))
+    )
   },
 
   /**
@@ -244,7 +261,7 @@ const mutations = {
    * @constructor
    */
   SET_NATURAL_SIZE: (state, {index, width, height}) => {
-    state.sources[index] = Object.assign(state.sources[index], {width, height,})
+    state.sources[index] = Object.assign(state.sources[index], {width, height, visible: true})
   },
 
   /**
@@ -363,10 +380,12 @@ const mutations = {
    */
   FILTER_BY_LINKED_IMAGE: (state, {onlyImagesFromLinks}) => {
     if (onlyImagesFromLinks)
-      state.images = state.sources.filter(image => image.linked === true)
+      state.images = state.sources
+        .filter(image => image.visible)
+        .filter(image => image.linked)
 
     else
-      state.images = state.sources
+      state.images = state.sources.filter(image => image.visible)
   }
 }
 

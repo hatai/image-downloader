@@ -35,6 +35,7 @@ const isTarget = type => {
     case optionType.SET_MAX_HEIGHT_ENABLED:
     case optionType.SET_ONLY_IMAGES_FROM_LINKS:
     case imageType.RUN_FILTER:
+    case imageType.SET_NATURAL_SIZE:
     case imageType.SET_NATURAL_WIDTH:
     case imageType.SET_NATURAL_HEIGHT:
       return true

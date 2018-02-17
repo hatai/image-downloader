@@ -84,23 +84,7 @@ class App extends Component {
     const results = await util.getImages()
 
     const {image} = this.props
-    const images = [].concat(
-      results.images.map(image => ({
-        src: image,
-        width: 0,
-        height: 0,
-        linked: false,
-        checked: false,
-      })),
-      results.linkedImages.map(image => ({
-        src: image,
-        width: 0,
-        height: 0,
-        linked: true,
-        checked: false,
-      }))
-    )
-    image.setImages(images)
+    image.setImages(Object.assign({}, results))
   }
 }
 

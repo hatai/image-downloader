@@ -35,8 +35,8 @@ class ImageCheckbox extends Component {
               />
             </figure>
 
-            <span className={`icon is-large has-text-success`}>
-              <i className={`mdi mdi-48px mdi-${props.checked ? 'checkbox-marked' : 'checkbox-blank-outline'}`}/>
+            <span className={`icon is-large has-text-primary`}>
+              <i className={`opacity65 mdi mdi-48px mdi-${props.checked ? 'checkbox-marked' : 'checkbox-blank-outline'}`}/>
             </span>
           </div>
           <div className={'card-content'}>
@@ -65,7 +65,7 @@ class ImageCheckbox extends Component {
           <div className="modal-background" onClick={this._handleModal}/>
           <div className="modal-content">
             <p className="image">
-              <img src={props.src} alt={props.src}/>
+              <img src={props.src} alt={props.src} onClick={this._handleModal}/>
             </p>
           </div>
           <button onClick={this._handleModal} className="modal-close is-large" aria-label="close"/>
