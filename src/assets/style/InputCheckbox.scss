@@ -1,0 +1,29 @@
+label.checkbox {
+  input[type=checkbox] {
+    position: relative;
+    vertical-align: middle;
+    //bottom: 1px;
+  }
+}
+
+span {
+  @mixin disabled {
+    color: rgb(190, 189, 195);
+  }
+
+  &.checkbox-label {
+    &__left {
+      margin-right: 2px;
+
+      &.disabled {
+        @include disabled;
+      }
+    }
+
+    &__right {
+      &.disabled {
+        @include disabled;
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+.image-checkbox {
+  width: 49.5%;
+
+  .card {
+    .card-image {
+      min-height: 50px;
+
+      figure {
+        .image {
+          img {
+            max-width: 100%;
+          }
+        }
+      }
+
+      span {
+        &.icon {
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index: 2;
+        }
+      }
+    }
+
+    .card-content {
+      padding: 0.5rem;
+    }
+
+    .card-footer {
+      .card-footer-item {
+        padding: .3rem .75rem .3rem .75rem;
+      }
+    }
+  }
+}

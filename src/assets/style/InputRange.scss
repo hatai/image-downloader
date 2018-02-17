@@ -1,0 +1,46 @@
+.slider {
+  height: auto;
+
+  &:first-child {
+  }
+}
+
+$slider-height: 8px;
+
+html:not([dir=rtl]){
+  .noUi-horizontal {
+    .noUi-handle {
+      right: -7px;
+    }
+  }
+}
+
+.noUi-horizontal {
+  height: $slider-height;
+
+  &:before {}
+
+  &:after {}
+
+  .noUi-handle {
+    top: -3px;
+  }
+
+  .noUi-handle {
+    $handle-width: $slider-height * 1.8;
+
+    width: $handle-width;
+    height: $slider-height * 1.5;
+    right: -10px;
+
+    &:before, &:after {
+      height: $slider-height * 0.8;
+      top: $slider-height * 0.2;
+      left: $handle-width * 0.3;
+    }
+
+    &:after {
+      left: $handle-width * 0.5;
+    }
+  }
+}
