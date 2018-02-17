@@ -21,4 +21,4 @@ yarn-debug.log*
 yarn-error.log*
 
 .idea/
-src/assets/*.css
+src/assets/style/*.css
