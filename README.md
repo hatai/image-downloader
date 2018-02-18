@@ -23,7 +23,7 @@ This extension is and always wil be free, open-source,
 and without ads or tracking algorithms of any kind.
 You can find source code here: [](https://github.com/hatai/image-downloader)
 
-Uses above JavaScript libraries:
+This extension use following JavaScript libraries:
 
 * React
 * Redux
@@ -31,8 +31,9 @@ Uses above JavaScript libraries:
 * redux-box
 * uuid
 * mdi
+* SweetAleart2
 
-CSS Framework
+This extension use following CSS Framework
 
 * Bluma
     
