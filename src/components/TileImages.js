@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 // import PropTypes from 'prop-types'
+import swal from 'sweetalert2'
 import { connectStore } from 'redux-box'
 import { module as optionModule } from '../store/option'
 import { module as imageModule } from '../store/image'
@@ -17,6 +18,13 @@ class TileImages extends Component {
   state = {
     checked: false
   }
+
+  constructor (props, context) {
+    super(props, context)
+
+    this._handleOnClickDownloadButton = this._handleOnClickDownloadButton.bind(this)
+  }
+
 
   render () {
     const {image} = this.props
@@ -45,7 +53,7 @@ class TileImages extends Component {
                 {/* download button */}
                 <div className={'tile-images__button'}>
                   <Button
-                    onClick={image.downloadChecked}
+                    onClick={this._handleOnClickDownloadButton}
                     title={'Download'}
                     disabled={downloadButtonIsDisabled}
                     info={true}
@@ -95,6 +103,32 @@ class TileImages extends Component {
         </div>
       </div>
     )
+  }
+
+  async _handleOnClickDownloadButton () {
+    swal({
+      title: 'Downloading...',
+      text: 'Please wait until download is over',
+      allowOutsideClick: false,
+      onOpen: () => {
+        swal.showLoading()
+      }
+    }).catch(error => error)
+
+    // shortcut
+    const isChecked = data => data.checked
+
+    const images = this.props.image.images
+    const checkedNum = images.filter(isChecked).length - 1
+    // download images
+    images.filter(isChecked).forEach((image, i) => {
+      chrome.downloads.download({url: image.src}, () => {
+        if (checkedNum === i) {
+          // modal close
+          swal.close()
+        }
+      })
+    })
   }
 }
 
