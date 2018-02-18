@@ -112,6 +112,12 @@
         .map(imageDownloader.relativeUrlToAbsolute)
     )
 
+  imageDownloader.linkedImages = imageDownloader.removeDuplicateOrEmpty(
+    imageDownloader.linkedImages
+      .slice()
+      .map(imageDownloader.relativeUrlToAbsolute)
+  )
+
   chrome.runtime.sendMessage({
     linkedImages: imageDownloader.linkedImages,
     images: imageDownloader.images
