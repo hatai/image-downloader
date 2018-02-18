@@ -32,6 +32,7 @@ class ImageCheckbox extends Component {
                 src={props.src}
                 alt={props.src}
                 onLoad={props.onLoad}
+                onError={props.onError}
               />
             </figure>
 
@@ -88,6 +89,7 @@ ImageCheckbox.propTypes = {
   checked: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   onLoad: PropTypes.func,
+  onError: PropTypes.func,
 }
 
 export default ImageCheckbox

@@ -25,17 +25,15 @@ class App extends Component {
   }
 
   componentWillMount () {
-    this.getImages()
+    this.initialize()
       .catch(error => console.log(error))
   }
 
   componentDidMount () {
-    this.initialize()
-      .catch(error => console.log(error))
-
     setTimeout(() => {
-      this.props.image.runFilter()
-    }, 1000)
+      this.getImages()
+        .catch(error => console.log(error))
+    }, 500)
   }
 
   render () {

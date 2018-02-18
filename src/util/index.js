@@ -37,9 +37,12 @@ export const getImages = () => {
  */
 export const getSavedOptions = (key) => {
   return new Promise(resolve => {
-    chrome.storage.local.get({key, value: null}, items => {
-      resolve(items.value)
-    })
+    // chrome.storage.local.get({key, value: null}, items => {
+    //   resolve(items.value)
+    // })
+    const item = localStorage.getItem(key)
+    console.log(JSON.parse(item))
+    resolve(JSON.parse(item))
   })
 }
 
@@ -53,15 +56,15 @@ export const saveOptions = ({key, value}) => {
   return getSavedOptions(key)
     .then(savedValue => {
       // if saved value is equal new value, do not anything
-      if (Object.keys(value).find(key => value[key] !== savedValue[key]))
-        return new Promise(resolve => {
-          chrome.storage.local.set({key, value}, () => {
-            resolve('saved')
-          })
-        })
-
-      else
-        return 'skipped'
+      if (Object.keys(value).find(key => value[key] !== savedValue[key])) {
+        // return new Promise(resolve => {
+        //   chrome.storage.local.set({key, value}, () => {
+        //     resolve('saved')
+        //   })
+        // })
+        localStorage.setItem(key, JSON.stringify(value))
+        console.log({[key]: JSON.stringify(value)})
+      }
     })
 }
 

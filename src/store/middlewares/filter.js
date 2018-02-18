@@ -120,7 +120,7 @@ const filterAction = async (store, state) => {
     }
   })
 
-  // image status check
+  // check all images are checked
   store.dispatch({
     type: imageType.IS_CHECKED_ALL
   })

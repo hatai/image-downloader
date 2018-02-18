@@ -6,6 +6,7 @@ export const mutationType = {
   SET_IMAGES: 'SET_IMAGES',
   SET_NOT_LINKED_IMAGES: 'SET_NOT_LINKED_IMAGES',
   SET_LINKED_IMAGES: 'SET_LINKED_IMAGES',
+  REMOVE: 'REMOVE',
   CHECK: 'CHECK',
   CHECK_ALL: 'CHECK_ALL',
   UNCHECK_ALL: 'UNCHECK_ALL',
@@ -57,6 +58,11 @@ const actions = {
   setLinkedImages: (images) => ({
     type: mutationType.SET_LINKED_IMAGES,
     images
+  }),
+
+  remove: (index) => ({
+    type: mutationType.REMOVE,
+    index
   }),
 
   check: (index) => ({
@@ -190,14 +196,29 @@ const mutations = {
   },
 
   /**
+   * remove element from array
+   * @param state
+   * @param index
+   * @constructor
+   */
+  REMOVE: (state, {index}) => {
+    // create deep copy
+    const copy = state.sources.slice()
+    // remove element
+    copy.splice(index, 1)
+    // set value
+    state.sources = copy
+  },
+
+  /**
    * check a selected image
    * @param {Object} state
    * @param {Number} index
    * @constructor
    */
   CHECK: (state, {index}) => {
-    const data = state.images[index]
-    state.images[index] = Object.assign(data, {checked: !data.checked})
+    const image = state.images[index]
+    state.images[index] = Object.assign(image, {checked: !image.checked})
     // check all images are checked
     state.checkedAll = state.images.filter(data => data.checked).length === state.images.length
   },

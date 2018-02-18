@@ -58,6 +58,7 @@ class TileImages extends Component {
 
               {/* body */}
               <div className={'tile-images__body'}>
+                {/*<div id={'columns'}>*/}
                 {image.images
                   .map((data, i) => (
                     <ImageCheckbox
@@ -67,12 +68,15 @@ class TileImages extends Component {
                       onClick={async () => image.check(i)}
                     />
                   ))}
+                {/*</div>*/}
               </div>
 
+              {/* hidden images that is used get size */}
               <div className={`hidden-image`}>
                 {image.sources.map((data, i) => (
                   <div>
                     <img
+                      key={i}
                       src={data.src}
                       alt={data.src}
                       onLoad={async event => {
@@ -80,7 +84,7 @@ class TileImages extends Component {
                         const height = event.target.naturalHeight
                         image.setNaturalSize(i, width, height)
                       }}
-                      key={i}
+                      onError={async () => image.remove(i)}
                     />
                   </div>
                 ))}
