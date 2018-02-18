@@ -1,4 +1,4 @@
-import { createSagas, createContainer } from 'redux-box'
+import { createContainer, createSagas } from 'redux-box'
 // import { call } from 'redux-saga/effects'
 import { saveOptions } from '../util'
 
@@ -19,7 +19,7 @@ export const mutationType = {
   SAVE_TO_LOCAL_STORAGE: 'SAVE_TO_LOCAL_STORAGE',
 }
 
-const state = {
+export const state = {
   subfolder: '',
   filter: '',
   // filterType 0: normal, 1: wildcard, 2: regex
