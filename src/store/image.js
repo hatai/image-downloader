@@ -1,4 +1,4 @@
-import { createSagas, createContainer } from 'redux-box'
+import { createContainer, createSagas } from 'redux-box'
 // import { call } from 'redux-saga/effects'
 // import dummy from '../util/dummy'
 
@@ -143,9 +143,12 @@ const mutations = {
    * @constructor
    */
   SET_IMAGES: (state, {images}) => {
+    let id = 0
+
     state.sources = [].concat(
       images.images.map(image => ({
         src: image,
+        id: id++,
         width: 0,
         height: 0,
         linked: false,
@@ -154,6 +157,7 @@ const mutations = {
       })),
       images.linkedImages.map(image => ({
         src: image,
+        id: id++,
         width: 0,
         height: 0,
         linked: true,
@@ -218,7 +222,13 @@ const mutations = {
    */
   CHECK: (state, {index}) => {
     const image = state.images[index]
+    const sourceIndex = state.sources.map(image => image.id).indexOf(image.id)
+    const source = state.sources[sourceIndex]
+
+    // update status
+    state.sources[sourceIndex] = Object.assign(source, {checked: !source.checked})
     state.images[index] = Object.assign(image, {checked: !image.checked})
+
     // check all images are checked
     state.checkedAll = state.images.filter(data => data.checked).length === state.images.length
   },
@@ -229,7 +239,10 @@ const mutations = {
    * @constructor
    */
   CHECK_ALL: (state) => {
-    state.images = state.images.map(data => Object.assign(data, {checked: true}))
+    const check = data => Object.assign(data, {checked: true})
+
+    state.images = state.images.map(check)
+    state.sources = state.sources.map(check)
     state.checkedAll = true
   },
 
@@ -239,7 +252,10 @@ const mutations = {
    * @constructor
    */
   UNCHECK_ALL: (state) => {
-    state.images = state.images.map(data => Object.assign(data, {checked: false}))
+    const check = data => Object.assign(data, {checked: true})
+
+    state.images = state.images.map(check)
+    state.sources = state.sources.map(check)
     state.checkedAll = false
   },
 
@@ -249,10 +265,7 @@ const mutations = {
    * @constructor
    */
   IS_CHECKED_ALL: (state) => {
-    const len = state
-      .images
-      .filter(image => image.checked === true)
-      .length
+    const len = state.images.filter(image => image.checked).length
 
     if (len === 0)
       state.checkedAll = false
@@ -422,10 +435,13 @@ const util = {
   shouldFilterBySize (image, option) {
     const minWidthIsOk = option.minWidthEnabled === false
       || (option.minWidthEnabled && image.width >= option.minWidth)
+
     const maxWidthIsOk = option.maxWidthEnabled === false
       || (option.maxWidthEnabled && image.width <= option.maxWidth)
+
     const minHeightIsOk = option.minHeightEnabled === false
       || (option.minHeightEnabled && image.height >= option.minHeight)
+
     const maxHeightIsOk = option.maxHeightEnabled === false
       || (option.maxHeightEnabled && image.height <= option.maxHeight)
 
