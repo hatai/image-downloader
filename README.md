@@ -1,6 +1,7 @@
 # Image downloader
 
 This project is forked from [image-downloader](https://github.com/vdsabev/image-downloader).
+This includes several bugfixes that were in that.
 
 If you need to bulk download images from a web page, with this extension you can:
 
@@ -14,8 +15,7 @@ If you need to bulk download images from a web page, with this extension you can
 
 ## Change log
 
-* ver. 1.0.0
-    * Replace React with jQuery
+see: [releases](https://github.com/hatai/image-downloader/releases)
     
 ## Credits
 
@@ -31,6 +31,10 @@ Uses above JavaScript libraries:
 * redux-box
 * uuid
 * mdi
+
+CSS Framework
+
+* Bluma
     
 ## Licence
 
