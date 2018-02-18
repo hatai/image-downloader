@@ -1,6 +1,13 @@
 .image-checkbox {
   width: 49.5%;
 
+  /*
+  // for #colums
+  &:not(:last-child) {
+    margin-bottom: 6px;
+  }
+  */
+
   .card {
     .card-image {
       min-height: 50px;
