@@ -62,6 +62,7 @@ class ImageCheckbox extends Component {
           </footer>
         </div>
 
+        {/* Image Modal */}
         <div className={`modal ${state.isActive ? 'is-active' : ''}`}>
           <div className="modal-background" onClick={this._handleModal}/>
           <div className="modal-content">

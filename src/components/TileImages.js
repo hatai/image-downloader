@@ -42,7 +42,7 @@ class TileImages extends Component {
                 {/* checkbox */}
                 <div className={'tile-images__checkbox'}>
                   <InputCheckbox
-                    label={`Select ALL (${image.images.length})`}
+                    label={`Select ALL (${image.images.filter(image => image.checked).length}/${image.images.length})`}
                     onClick={async (event, checked) => {
                       checked ? image.checkAll() : image.uncheckAll()
                     }}
@@ -106,28 +106,28 @@ class TileImages extends Component {
   }
 
   async _handleOnClickDownloadButton () {
-    swal({
+    await swal({
       title: 'Downloading...',
       text: 'Please wait until download is over',
       allowOutsideClick: false,
       onOpen: () => {
         swal.showLoading()
+
+        // shortcut
+        const isChecked = data => data.checked
+        const images = this.props.image.images
+        const checkedNum = images.filter(isChecked).length - 1
+
+        // download images
+        images.filter(isChecked).forEach((image, i) => {
+          chrome.downloads.download({url: image.src}, () => {
+            if (checkedNum === i) {
+              // modal close
+              swal.close()
+            }
+          })
+        })
       }
-    }).catch(error => error)
-
-    // shortcut
-    const isChecked = data => data.checked
-
-    const images = this.props.image.images
-    const checkedNum = images.filter(isChecked).length - 1
-    // download images
-    images.filter(isChecked).forEach((image, i) => {
-      chrome.downloads.download({url: image.src}, () => {
-        if (checkedNum === i) {
-          // modal close
-          swal.close()
-        }
-      })
     })
   }
 }
