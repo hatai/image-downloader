@@ -5224,6 +5224,10 @@ node-libs-browser@^2.0.0:
     util "^0.10.3"
     vm-browserify "0.0.4"
 
+node-native-zip@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/node-native-zip/-/node-native-zip-1.1.0.tgz#5b7b32288a502a24c5d5a7a4d61e3e02a31fb95d"
+
 node-notifier@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/node-notifier/-/node-notifier-5.2.1.tgz#fa313dd08f5517db0e2502e5758d664ac69f9dea"
