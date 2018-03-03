@@ -252,7 +252,7 @@ const mutations = {
    * @constructor
    */
   UNCHECK_ALL: (state) => {
-    const check = data => Object.assign(data, {checked: true})
+    const check = data => Object.assign(data, {checked: false})
 
     state.images = state.images.map(check)
     state.sources = state.sources.map(check)
