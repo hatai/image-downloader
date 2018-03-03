@@ -32,7 +32,7 @@ rl.question('what is next release version?: ', answer => {
     const files = shell.find('.')
         .filter(file => fs.lstatSync(file).isFile())
         .map(file => ({
-            name: file,
+          name: `build/${file}`,
             path: path.resolve(process.cwd(), file)
         }))
 
