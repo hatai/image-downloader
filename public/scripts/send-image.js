@@ -1,4 +1,4 @@
-(function () {
+function sendImages () {
   /* globals chrome */
   'use strict'
 
@@ -102,7 +102,7 @@
     }
   }
 
-  imageDownloader.linkedImages = [] // TODO: Avoid mutating this object in `extractImageFromElement`
+  imageDownloader.linkedImages = []
   imageDownloader.images = imageDownloader
     .removeDuplicateOrEmpty([]
         .concat(
@@ -125,4 +125,7 @@
 
   imageDownloader.linkedImages = null
   imageDownloader.images = null
-}())
+}
+
+document.addEventListener('DOMContentLoaded', sendImages, false)
+sendImages()
