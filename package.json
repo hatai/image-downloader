@@ -72,7 +72,7 @@
     "build-js": "node scripts/build.js",
     "build": "npm-run-all build-css build-js",
     "test": "node scripts/test.js --env=jsdom",
-    "release": "node scripts/release.js",
+    "crx": "node scripts/release.js",
     "zip": "node scripts/zip.js"
   },
   "jest": {
