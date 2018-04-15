@@ -38,8 +38,6 @@ export const getImages = () => {
 export const getSavedOptions = (key) => {
   return new Promise(resolve => {
     const item = localStorage.getItem(key)
-    // console.log('localStorage: get')
-    // console.log(JSON.parse(item))
     resolve(JSON.parse(item))
   })
 }
@@ -56,8 +54,6 @@ export const saveOptions = ({key, value}) => {
       // if saved value is equal new value, do not anything
       if (Object.keys(value).find(key => value[key] !== savedValue[key])) {
         localStorage.setItem(key, JSON.stringify(value))
-        // console.log('localStorage: set')
-        // console.log({[key]: JSON.stringify(value)})
       }
     })
 }

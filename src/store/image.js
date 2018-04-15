@@ -1,6 +1,4 @@
 import { createContainer, createSagas } from 'redux-box'
-// import { call } from 'redux-saga/effects'
-// import dummy from '../util/dummy'
 
 export const mutationType = {
   SET_IMAGES: 'SET_IMAGES',
@@ -415,8 +413,7 @@ const mutations = {
   FILTER_BY_LINKED_IMAGE: (state, {onlyImagesFromLinks}) => {
     if (onlyImagesFromLinks)
       state.images = state.sources
-        .filter(image => image.visible)
-        .filter(image => image.linked)
+        .filter(image => image.visible && image.linked)
 
     else
       state.images = state.sources.filter(image => image.visible)
