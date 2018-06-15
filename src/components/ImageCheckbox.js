@@ -81,6 +81,7 @@ class ImageCheckbox extends Component {
   }
 
   async _handleDownload () {
+    // eslint-disable-next-line no-undef
     chrome.downloads.download({url: this.props.src})
   }
 }

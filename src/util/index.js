@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * get images from active tab of current window
  * @return {Promise<void>}

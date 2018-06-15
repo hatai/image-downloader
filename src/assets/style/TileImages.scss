@@ -35,11 +35,11 @@
     align-items: flex-start;
 
     /* Chrome bug */
-    //#columns {
-    //  column-count: 2;
-    //  column-fill: auto;
-    //  column-gap: 6px;
-    //}
+    #columns {
+      column-count: 2;
+      column-fill: auto;
+      column-gap: 6px;
+    }
 
     @include scroll-bar;
 

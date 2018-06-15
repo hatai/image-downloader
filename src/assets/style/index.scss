@@ -1,4 +1,10 @@
+//@import "./foundation/index.scss";
+//@import "./foundation/MasonryCssGrid.scss";
 @import "./mixins.scss";
+
+*:not(input) {
+  user-select: none;
+}
 
 html {
   display: block;
@@ -32,7 +38,7 @@ div {
       > .tile {
         &.is-child {
           &:not(:last-child) {
-            margin-bottom: 0.85rem !important;
+            margin-bottom: 0.25rem !important;
           }
         }
       }
@@ -85,7 +91,7 @@ label {
     }
   }
 
-  div {
+  div:not([role="slider"]) {
     width: 100%;
   }
 }

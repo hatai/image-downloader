@@ -120,6 +120,7 @@ class TileImages extends Component {
 
         // download images
         images.filter(isChecked).forEach((image, i) => {
+          // eslint-disable-next-line no-undef
           chrome.downloads.download({url: image.src}, () => {
             if (checkedNum === i) {
               // modal close

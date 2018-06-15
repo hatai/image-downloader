@@ -282,6 +282,7 @@ const mutations = {
       .filter(data => data.checked)
       .forEach(async data => {
         // download images from url
+        // eslint-disable-next-line no-undef
         chrome.downloads.download({url: data.src})
       })
   },

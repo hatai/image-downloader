@@ -250,6 +250,7 @@ const mutations = {
     saveOptions({key: 'options', value: Object.assign({}, state)})
       .catch(error => {
         console.log(error)
+        // eslint-disable-next-line no-undef
         chrome.storage.local.clear()
       })
   }

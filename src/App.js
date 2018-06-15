@@ -66,6 +66,7 @@ class App extends Component {
   async initialize () {
     await this.setOptionsFromStorage()
 
+    // eslint-disable-next-line no-undef
     chrome.downloads.onDeterminingFilename
       .addListener((item, suggest) => {
         const suggestName = util.suggestNewFilename(this.props.option.subfolder, item.filename)
