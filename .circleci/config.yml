@@ -1,24 +1,3 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-workflows:
-  version: 2
-  main:
-    jobs:
-    - build:
-        filters:
-          tags:
-            only: /^\d+\.\d+\.\d+$/
-
-    - publish-chrome-webstore:
-      requires:
-      - build
-
-      filters:
-        tags:
-          only: /^\d+\.\d+\.\d+$/
-
 version: 2
 jobs:
   build:
@@ -75,3 +54,20 @@ jobs:
           ACCESS_TOKEN=$(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&refresh_token=${REFRESH_TOKEN}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)
           curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -X PUT -T /root/workspace/build.zip -v "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${APP_ID}"
           curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -H "Content-Length: 0" -X POST -v "https://www.googleapis.com/chromewebstore/v1.1/items/${APP_ID}/publish"
+
+workflows:
+  version: 2
+  main:
+    jobs:
+    - build:
+        filters:
+          tags:
+            only: /^\d+\.\d+\.\d+$/
+
+    - publish-chrome-webstore:
+      requires:
+      - build
+
+      filters:
+        tags:
+          only: /^\d+\.\d+\.\d+$/
