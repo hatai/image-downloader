@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { connectStore } from 'redux-box'
 import { Collapse } from 'react-collapse'
 import { module as optionModule } from '../store/option'
-import Icon from './Icon'
-import InputText from './InputText'
-import InputCheckBox from './InputCheckbox'
+import Icon from './common/Icon'
+import InputText from './input/InputText'
+import InputCheckBox from './input/InputCheckbox'
 import FilterByURL from './FilterByURL'
 import FilterSlider from './FilterSlider'
 
@@ -14,6 +14,15 @@ import FilterSlider from './FilterSlider'
   option: optionModule,
 })
 class TileOptions extends Component {
+  static propTypes = {
+    isOpened: PropTypes.bool.isRequired,
+    handleCollapse: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    isOpened: false,
+  }
+
   constructor (props) {
     super(props)
 
@@ -174,11 +183,6 @@ class TileOptions extends Component {
         })
     })
   }
-}
-
-TileOptions.propTypes = {
-  isOpened: PropTypes.bool.isRequired,
-  handleCollapse: PropTypes.func.isRequired,
 }
 
 export default TileOptions

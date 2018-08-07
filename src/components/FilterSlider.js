@@ -1,11 +1,29 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import wNumb from 'wnumb';
-import InputRange from './InputRange';
-import InputCheckbox from './InputCheckbox';
+import InputRange from './input/InputRange';
+import InputCheckbox from './input/InputCheckbox';
 import '../assets/style/FilterSlider.css';
 
-class FilterSlider extends Component {
+export default class FilterSlider extends Component {
+  static propTypes = {
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    minValue: PropTypes.number.isRequired,
+    maxValue: PropTypes.number.isRequired,
+    values: PropTypes.shape({
+      minEnabled: PropTypes.bool.isRequired,
+      maxEnabled: PropTypes.bool.isRequired,
+      min: PropTypes.number.isRequired,
+      max: PropTypes.number.isRequired,
+    }),
+    onChange: PropTypes.func.isRequired,
+    onClick: PropTypes.shape({
+      min: PropTypes.func.isRequired,
+      max: PropTypes.func.isRequired,
+    })
+  }
+
   constructor (props, context) {
     super(props, context)
 
@@ -63,23 +81,3 @@ class FilterSlider extends Component {
     );
   }
 }
-
-FilterSlider.propTypes = {
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  minValue: PropTypes.number.isRequired,
-  maxValue: PropTypes.number.isRequired,
-  values: PropTypes.shape({
-    minEnabled: PropTypes.bool.isRequired,
-    maxEnabled: PropTypes.bool.isRequired,
-    min: PropTypes.number.isRequired,
-    max: PropTypes.number.isRequired,
-  }),
-  onChange: PropTypes.func.isRequired,
-  onClick: PropTypes.shape({
-    min: PropTypes.func.isRequired,
-    max: PropTypes.func.isRequired,
-  })
-};
-
-export default FilterSlider;

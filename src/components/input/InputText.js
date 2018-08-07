@@ -1,7 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
-class InputText extends Component {
+export default class InputText extends Component {
+  static propTypes = {
+    label: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
+    onChange: PropTypes.func,
+  }
+
   render () {
     const {props} = this
 
@@ -17,14 +23,6 @@ class InputText extends Component {
           />
         </div>
       </div>
-    );
+    )
   }
 }
-
-InputText.propTypes = {
-  label: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  onChange: PropTypes.func,
-};
-
-export default InputText;

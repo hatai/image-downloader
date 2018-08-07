@@ -1,7 +1,20 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-class FilterByURL extends Component {
+export default class FilterByURL extends Component {
+  static propTypes = {
+    label: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
+    options: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        value: PropTypes.number,
+      })
+    ),
+    onSelect: PropTypes.func,
+    onChange: PropTypes.func,
+  }
+
   render () {
     const {props} = this
 
@@ -45,18 +58,3 @@ class FilterByURL extends Component {
     )
   }
 }
-
-FilterByURL.propTypes = {
-  label: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      value: PropTypes.number,
-    })
-  ),
-  onSelect: PropTypes.func,
-  onChange: PropTypes.func,
-}
-
-export default FilterByURL

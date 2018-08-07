@@ -9,6 +9,7 @@ export const mutationType = {
   CHECK_ALL: 'CHECK_ALL',
   UNCHECK_ALL: 'UNCHECK_ALL',
   IS_CHECKED_ALL: 'IS_CHECKED_ALL',
+  IS_INDETERMINATE: 'IS_INDETERMINATE',
   DOWNLOAD_CHECKED: 'DOWNLOAD_CHECKED',
   SET_NATURAL_SIZE: 'SET_NATURAL_SIZE',
   SET_NATURAL_WIDTH: 'SET_NATURAL_WIDTH',
@@ -37,6 +38,7 @@ export const mutationType = {
  */
 const state = {
   checkedAll: false,
+  indeterminate: false,
   images: [],
   sources: [],
   // sources: dummy,
@@ -69,19 +71,23 @@ const actions = {
   }),
 
   checkAll: () => ({
-    type: mutationType.CHECK_ALL
+    type: mutationType.CHECK_ALL,
   }),
 
   isCheckedAll: () => ({
-    type: mutationType.IS_CHECKED_ALL
+    type: mutationType.IS_CHECKED_ALL,
+  }),
+
+  isIndeterminate: () => ({
+    type: mutationType.IS_INDETERMINATE,
   }),
 
   uncheckAll: () => ({
-    type: mutationType.UNCHECK_ALL
+    type: mutationType.UNCHECK_ALL,
   }),
 
   downloadChecked: () => ({
-    type: mutationType.DOWNLOAD_CHECKED
+    type: mutationType.DOWNLOAD_CHECKED,
   }),
 
   setNaturalSize: (index, width, height) => ({
@@ -263,12 +269,18 @@ const mutations = {
    * @constructor
    */
   IS_CHECKED_ALL: (state) => {
-    const len = state.images.filter(image => image.checked).length
+    state.checkedAll = state.images.every(image => image.checked === true)
+  },
 
-    if (len === 0)
-      state.checkedAll = false
-    else
-      state.checkedAll = len === state.images.length
+  /**
+   * indeterminate
+   * @param state
+   * @constructor
+   */
+  IS_INDETERMINATE: (state) => {
+    const allChecked = state.images.every(image => image.checked === true)
+    const allUnchecked = state.images.every(image => image.checked === false)
+    state.indeterminate = allChecked === false && allUnchecked === false
   },
 
   /**

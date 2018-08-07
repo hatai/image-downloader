@@ -1,12 +1,23 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import uuid from 'uuid/v4'
-import '../assets/style/InputCheckbox.css'
+import '../../assets/style/InputCheckbox.css'
 
-class InputCheckbox extends Component {
+export default class InputCheckbox extends Component {
+  static propTypes = {
+    label: PropTypes.string.isRequired,
+    labelPosition: PropTypes.oneOf(['left', 'right']),
+    onClick: PropTypes.func.isRequired,
+    checked: PropTypes.bool,
+    indeterminate: PropTypes.bool,
+    isHandleDisabled: PropTypes.bool,
+    style: PropTypes.any,
+  }
+
   static defaultProps = {
     labelPosition: 'right',
     checked: false,
+    indeterminate: false,
     isHandleDisabled: false,
     style: null,
   }
@@ -17,10 +28,26 @@ class InputCheckbox extends Component {
     this.state = {
       id: uuid(),
     }
+    this.checkbox = null
 
     this._renderInputGroup = this._renderInputGroup.bind(this)
     this._renderCheckbox = this._renderCheckbox.bind(this)
     this._handleOnClick = this._handleOnClick.bind(this)
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    const {props} = this
+    if (props.indeterminate !== prevProps.indeterminate) {
+      return props.indeterminate
+    }
+
+    return null
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (snapshot !== null) {
+      this.checkbox.indeterminate = snapshot
+    }
   }
 
   render () {
@@ -41,6 +68,8 @@ class InputCheckbox extends Component {
 
   _renderInputGroup () {
     const {props} = this
+    const {label} = props
+
     let disabledClass = ''
     if (props.isHandleDisabled) {
       if (!props.checked)
@@ -51,7 +80,7 @@ class InputCheckbox extends Component {
       return (
         <span>
           <span className={`checkbox-label__left ${disabledClass}`} style={props.style}>
-            {this.props.label}
+            {label}
           </span>
           {this._renderCheckbox()}
         </span>
@@ -61,7 +90,7 @@ class InputCheckbox extends Component {
         <span>
           {this._renderCheckbox()}
           <span className={`checkbox-label__right ${disabledClass}`} style={props.style}>
-            {this.props.label}
+            {label}
           </span>
         </span>
       )
@@ -69,12 +98,13 @@ class InputCheckbox extends Component {
   }
 
   _renderCheckbox () {
-    const {state} = this
+    const {state, props} = this
     return (
       <input
         id={state.id}
         type={'checkbox'}
-        checked={this.props.checked}
+        ref={e => this.checkbox = e}
+        checked={props.checked}
         onClick={this._handleOnClick}
       />
     )
@@ -85,15 +115,3 @@ class InputCheckbox extends Component {
     props.onClick(event, !props.checked)
   }
 }
-
-InputCheckbox.propTypes = {
-  label: PropTypes.string.isRequired,
-  labelPosition: PropTypes.oneOf(['left', 'right']),
-  onClick: PropTypes.func.isRequired,
-  checked: PropTypes.bool,
-  isHandleDisabled: PropTypes.bool,
-  style: PropTypes.any,
-}
-
-
-export default InputCheckbox

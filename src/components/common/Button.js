@@ -1,8 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class Button extends Component {
+export default class Button extends Component {
+  static propTypes = {
+    title: PropTypes.string.isRequired,
+    onClick: PropTypes.func,
+    disabled: PropTypes.bool,
+    primary: PropTypes.bool,
+    link: PropTypes.bool,
+    info: PropTypes.bool,
+    success: PropTypes.bool,
+    warning: PropTypes.bool,
+    danger: PropTypes.bool,
+  }
+
   static defaultProps = {
+    primary: false,
+    link: false,
+    info: false,
+    success: false,
+    warning: false,
+    danger: false,
     disabled: false,
   }
 
@@ -52,26 +70,3 @@ class Button extends Component {
     }
   }
 }
-
-Button.propTypes = {
-  title: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool,
-  primary: PropTypes.bool,
-  link: PropTypes.bool,
-  info: PropTypes.bool,
-  success: PropTypes.bool,
-  warning: PropTypes.bool,
-  danger: PropTypes.bool,
-};
-
-Button.defaultProps = {
-  primary: false,
-  link: false,
-  info: false,
-  success: false,
-  warning: false,
-  danger: false,
-}
-
-export default Button;

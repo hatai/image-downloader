@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-// import PropTypes from 'prop-types'
 import swal from 'sweetalert2'
 import { connectStore } from 'redux-box'
 import { module as optionModule } from '../store/option'
 import { module as imageModule } from '../store/image'
-import Icon from './Icon'
-import InputCheckbox from './InputCheckbox'
-import Button from './Button'
+import Icon from './common/Icon'
+import InputCheckbox from './input/InputCheckbox'
+import Button from './common/Button'
 import ImageCheckbox from './ImageCheckbox'
 import '../assets/style/TileImages.css'
 
@@ -15,6 +14,10 @@ import '../assets/style/TileImages.css'
   image: imageModule,
 })
 class TileImages extends Component {
+  static propTypes = {}
+
+  static defaultProps = {}
+
   state = {
     checked: false
   }
@@ -24,6 +27,7 @@ class TileImages extends Component {
 
     this._handleOnClickDownloadButton = this._handleOnClickDownloadButton.bind(this)
   }
+
 
 
   render () {
@@ -47,6 +51,7 @@ class TileImages extends Component {
                       checked ? image.checkAll() : image.uncheckAll()
                     }}
                     checked={image.checkedAll}
+                    indeterminate={(()=>{image.isIndeterminate(); return image.indeterminate})()}
                   />
                 </div>
 
@@ -108,7 +113,7 @@ class TileImages extends Component {
   async _handleOnClickDownloadButton () {
     await swal({
       title: 'Downloading...',
-      text: 'Please wait until download is over',
+      text: 'Please wait',
       allowOutsideClick: false,
       onOpen: () => {
         swal.showLoading()
@@ -132,7 +137,5 @@ class TileImages extends Component {
     })
   }
 }
-
-TileImages.propTypes = {}
 
 export default TileImages

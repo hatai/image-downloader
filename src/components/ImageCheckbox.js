@@ -2,7 +2,15 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import '../assets/style/ImageCheckbox.css'
 
-class ImageCheckbox extends Component {
+export default class ImageCheckbox extends Component {
+  static propTypes = {
+    src: PropTypes.any.isRequired,
+    checked: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired,
+    onLoad: PropTypes.func,
+    onError: PropTypes.func,
+  }
+
   constructor (props, context) {
     super(props, context)
 
@@ -29,6 +37,7 @@ class ImageCheckbox extends Component {
           >
             <figure className={'image'}>
               <img
+                async
                 src={props.src}
                 alt={props.src}
                 onLoad={props.onLoad}
@@ -67,7 +76,7 @@ class ImageCheckbox extends Component {
           <div className="modal-background" onClick={this._handleModal}/>
           <div className="modal-content">
             <p className="image">
-              <img src={props.src} alt={props.src} onClick={this._handleModal}/>
+              <img async src={props.src} alt={props.src} onClick={this._handleModal}/>
             </p>
           </div>
           <button onClick={this._handleModal} className="modal-close is-large" aria-label="close"/>
@@ -85,13 +94,3 @@ class ImageCheckbox extends Component {
     chrome.downloads.download({url: this.props.src})
   }
 }
-
-ImageCheckbox.propTypes = {
-  src: PropTypes.any.isRequired,
-  checked: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
-  onLoad: PropTypes.func,
-  onError: PropTypes.func,
-}
-
-export default ImageCheckbox

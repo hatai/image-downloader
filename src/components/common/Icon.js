@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-class Icon extends Component {
+export default class Icon extends Component {
+  static propTypes = {
+    name: PropTypes.string.isRequired
+  }
+
   render () {
     return (
       <span className={"icon"}>
@@ -10,9 +14,3 @@ class Icon extends Component {
     );
   }
 }
-
-Icon.propTypes = {
-  name: PropTypes.string.isRequired
-};
-
-export default Icon;
