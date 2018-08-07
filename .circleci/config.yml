@@ -2,53 +2,52 @@ version: 2
 jobs:
   build:
     docker:
-    # specify the version you desire here
-    - image: cibuilds/chrome-extension:latest
+      - image: cibuilds/chrome-extension:latest
 
     steps:
-    - checkout
+      - checkout
 
-    # Download and cache dependencies
-    - restore_cache:
+      # Download and cache dependencies
+      - restore_cache:
         keys:
         - v1-dependencies-{{ checksum "package.json" }}
         # fallback to using the latest cache if no exact match is found
         - v1-dependencies-
 
-    - run:
+      - run:
         name: "Install Dependencies"
         command: yarn install
 
-    - save_cache:
+      - save_cache:
         paths:
-        - node_modules
+          - node_modules
 
         key: v1-dependencies-{{ checksum "package.json" }}
 
-    # run build!
-    - run:
+      # run build!
+      - run:
         name: "Package Extension"
         command: |
           yarn build
           zip -r build.zip build
 
-    - persist_to_workspace:
+      - persist_to_workspace:
         root: /root/project
         paths:
         - build.zip
 
   publish-chrome-webstore:
     docker:
-    - image: cibuilds/chrome-extension:latest
+      - image: cibuilds/chrome-extension:latest
 
     envirronment:
-    - APP_ID: leakgmkipjfnmnacgakpggmilnhlmbcg
+      - APP_ID: leakgmkipjfnmnacgakpggmilnhlmbcg
 
     steps:
-    - attach_workspace:
+      - attach_workspace:
         at: /root/workspace
 
-    - run:
+      - run:
         name: "Publish to the Google Chrome Store"
         command: |
           ACCESS_TOKEN=$(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&refresh_token=${REFRESH_TOKEN}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)
@@ -57,17 +56,17 @@ jobs:
 
 workflows:
   version: 2
-  main:
+  build-n-release:
     jobs:
-    - build:
+      - build:
+          filters:
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+
+      - publish-chrome-webstore:
+        requires:
+         - build
+
         filters:
           tags:
             only: /^\d+\.\d+\.\d+$/
-
-    - publish-chrome-webstore:
-      requires:
-      - build
-
-      filters:
-        tags:
-          only: /^\d+\.\d+\.\d+$/
