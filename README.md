@@ -7,7 +7,7 @@ or
 [releases](https://github.com/hatai/image-downloader/releases)
 
 This project is forked from [image-downloader](https://github.com/vdsabev/image-downloader).
-This includes several bugfixes that were in that.
+This includes several bug fixes.
 
 If you need to bulk download images from a web page, with this extension you can:
 
@@ -25,23 +25,9 @@ see: [releases](https://github.com/hatai/image-downloader/releases)
     
 ## Credits
 
-This extension is and always wil be free, open-source,
+This extension is and always will be free, open-source,
 and without ads or tracking algorithms of any kind.
 You can find source code here: [](https://github.com/hatai/image-downloader)
-
-This extension use following JavaScript libraries:
-
-* React
-* Redux
-* react-redux
-* redux-box
-* uuid
-* mdi
-* SweetAleart2
-
-This extension use following CSS Framework
-
-* Bluma
     
 ## Licence
 
