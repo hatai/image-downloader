@@ -1,5 +1,9 @@
 # IMAGE DOWNLOADER
 
+<p align="center">
+    ![icon](./assets/icons/tile_small.png)
+</p>
+
 > Note:
 > You can download this extension from 
 [Chrome Web Store](https://chrome.google.com/webstore/detail/image-downloader/leakgmkipjfnmnacgakpggmilnhlmbcg)
