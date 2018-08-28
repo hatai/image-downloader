@@ -1,8 +1,6 @@
 # IMAGE DOWNLOADER
 
-<p align="center">
-    ![icon](./assets/icons/tile_small.png)
-</p>
+ ![icon](https://github.com/hatai/image-downloader/blob/master/assets/icons/tile_small.png)
 
 > Note:
 > You can download this extension from 
