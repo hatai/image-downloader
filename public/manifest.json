@@ -2,7 +2,7 @@
   "name": "IMAGE DOWNLOADER",
   "short_name": "IMG DOWNLOADER",
   "description": "Browse and download images on a web page.",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "minimum_chrome_version": "50",
   "manifest_version": 2,
   "author": "hatai",
