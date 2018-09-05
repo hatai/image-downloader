@@ -1,6 +1,6 @@
-# IMAGE DOWNLOADER
+<h1 align="center">IMAGE DOWNLOADER</h1>
 
- <p align="center">
+<p align="center">
     <img src="https://github.com/hatai/image-downloader/blob/master/assets/icons/tile_small.png" alt="icon" width="440" height="280">
 </p>
 
