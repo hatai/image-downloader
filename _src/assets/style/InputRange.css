@@ -1,0 +1,21 @@
+.slider {
+  width: auto;
+  height: auto; }
+
+html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
+  right: -7px; }
+
+.noUi-horizontal {
+  height: 8px; }
+  .noUi-horizontal .noUi-handle {
+    top: -3px; }
+  .noUi-horizontal .noUi-handle {
+    width: 14.4px;
+    height: 12px;
+    right: -10px; }
+    .noUi-horizontal .noUi-handle:before, .noUi-horizontal .noUi-handle:after {
+      height: 6.4px;
+      top: 1.6px;
+      left: 4.32px; }
+    .noUi-horizontal .noUi-handle:after {
+      left: 7.2px; }

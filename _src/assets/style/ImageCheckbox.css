@@ -1,0 +1,21 @@
+.image-checkbox {
+  width: 49.5%;
+  /*
+  // for #colums
+  &:not(:last-child) {
+    margin-bottom: 6px;
+  }
+  */ }
+  .image-checkbox .card .card-image {
+    min-height: 50px; }
+    .image-checkbox .card .card-image figure .image img {
+      max-width: 100%; }
+    .image-checkbox .card .card-image span.icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 2; }
+  .image-checkbox .card .card-content {
+    padding: 0.5rem; }
+  .image-checkbox .card .card-footer .card-footer-item {
+    padding: .3rem .75rem .3rem .75rem; }
