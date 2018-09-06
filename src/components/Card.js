@@ -152,18 +152,23 @@ export default class Card extends Component {
   onMouseOverEye = () => {
     this.setState({eye: color.starfleetMediumGrey})
   }
+
   onMouseLeaveEye = () => {
     this.setState({eye: color.paleGrey})
   }
+
   onMouseOverDownload = () => {
     this.setState({download: color.starfleetMediumGrey})
   }
+
   onMouseLeaveDownload = () => {
     this.setState({download: color.paleGrey})
   }
+
   onMouseOverCheckbox = () => {
     this.setState({checkbox: color.darkMintGreen})
   }
+
   onMouseLeaveCheckbox = () => {
     this.setState({checkbox: color.orionGreen})
   }
