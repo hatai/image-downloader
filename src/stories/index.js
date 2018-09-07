@@ -24,7 +24,12 @@ storiesOf('Button', module)
 
 storiesOf('Components', module)
   .addDecorator(centered)
-  .add('Card', () => <Card
-    image={"https://i.pinimg.com/originals/0c/da/23/0cda2360f6f0200cd2547e7ad77a7eb5.jpg"}
-    title={"Dummy"}
-  />)
+  .add('Card', () => (
+    <Card
+      image={'https://i.pinimg.com/originals/0c/da/23/0cda2360f6f0200cd2547e7ad77a7eb5.jpg'}
+      title={'Dummy'}
+      onEyeButtonClick={action('Eye Button clicked')}
+      onDownloadButtonClick={action('download clicked')}
+      onCheckboxClick={action('checkbox clicked')}
+    />)
+  )

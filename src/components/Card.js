@@ -77,6 +77,15 @@ export default class Card extends Component {
   static propTypes = {
     image: PropTypes.string.isRequired,
     title: PropTypes.string,
+    onEyeButtonClick: PropTypes.func,
+    onDownloadButtonClick: PropTypes.func,
+    onCheckboxClick: PropTypes.func,
+  }
+
+  static defaultProps = {
+    onEyeButtonClick: () => {},
+    onDownloadButtonClick: () => {},
+    onCheckboxClick: () => {},
   }
 
   constructor (props) {
@@ -93,6 +102,9 @@ export default class Card extends Component {
     const {
       image,
       title,
+      onEyeButtonClick,
+      onDownloadButtonClick,
+      onCheckboxClick,
     } = this.props
 
     const {
@@ -113,6 +125,7 @@ export default class Card extends Component {
               <Action
                 onMouseOver={this.onMouseOverEye}
                 onMouseLeave={this.onMouseLeaveEye}
+                onClick={onEyeButtonClick}
               >
                 <Icon
                   path={mdiEye}
@@ -124,6 +137,7 @@ export default class Card extends Component {
               <Action
                 onMouseOver={this.onMouseOverDownload}
                 onMouseLeave={this.onMouseLeaveDownload}
+                onClick={onDownloadButtonClick}
               >
                 <Icon
                   path={mdiDownload}
@@ -135,6 +149,7 @@ export default class Card extends Component {
               <Action
                 onMouseOver={this.onMouseOverCheckbox}
                 onMouseLeave={this.onMouseLeaveCheckbox}
+                onClick={onCheckboxClick}
               >
                 <Icon
                   path={mdiCheckboxBlankOutline}
