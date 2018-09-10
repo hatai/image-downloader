@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Icon from '@mdi/react'
-import { mdiDownload, mdiEye, mdiCheckboxBlankOutline } from '@mdi/js'
+import { mdiDownload, mdiEye, mdiCheckboxBlankOutline, mdiCheckboxMarkedOutline } from '@mdi/js'
 import color from '../utils/colors'
 
 const Main = styled.div`
@@ -77,15 +77,19 @@ export default class Card extends Component {
   static propTypes = {
     image: PropTypes.string.isRequired,
     title: PropTypes.string,
+    checked: PropTypes.bool.isRequired,
     onEyeButtonClick: PropTypes.func,
     onDownloadButtonClick: PropTypes.func,
     onCheckboxClick: PropTypes.func,
   }
 
   static defaultProps = {
-    onEyeButtonClick: () => {},
-    onDownloadButtonClick: () => {},
-    onCheckboxClick: () => {},
+    onEyeButtonClick: () => {
+    },
+    onDownloadButtonClick: () => {
+    },
+    onCheckboxClick: () => {
+    },
   }
 
   constructor (props) {
@@ -102,6 +106,7 @@ export default class Card extends Component {
     const {
       image,
       title,
+      checked,
       onEyeButtonClick,
       onDownloadButtonClick,
       onCheckboxClick,
@@ -117,7 +122,7 @@ export default class Card extends Component {
       <Main>
         <Wrapper>
           <ImgWrapper>
-            <Img src={image} alt={image}/>
+            <Img src={image} alt={image} lazyload={'on'} async={true}/>
           </ImgWrapper>
           <Footer>
             <Title>{title}</Title>
@@ -152,7 +157,7 @@ export default class Card extends Component {
                 onClick={onCheckboxClick}
               >
                 <Icon
-                  path={mdiCheckboxBlankOutline}
+                  path={checked ? mdiCheckboxMarkedOutline : mdiCheckboxBlankOutline}
                   size={1}
                   color={checkbox}
                 />
