@@ -6,7 +6,7 @@ import { mdiDownload, mdiEye, mdiCheckboxBlankOutline, mdiCheckboxMarkedOutline 
 import color from '../utils/colors'
 
 const Main = styled.div`
-  width: 300px;
+  width: 100%;
   margin-bottom: 30px;
 `
 
