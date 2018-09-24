@@ -10,35 +10,31 @@ const Container = styled.div`
   column-count: 1;
   column-gap: 30px;
   
-  @media only screen and (min-width: 599px) {
+  @media only screen and (min-width: 600px) {
     column-count: 2;
   }
   
-  @media only screen and (min-width: 899px) {
-    column-count: 2;
-  }
-  
-  @media only screen and (min-width: 1199px) {
+  @media only screen and (min-width: 900px) {
     column-count: 3;
   }
-
-  @media only screen and  (min-width: 1499px) {
+  
+  @media only screen and (min-width: 1200px) {
     column-count: 4;
   }
-  
-  @media only screen and  (min-width: 1799px) {
+
+  @media only screen and  (min-width: 1500px) {
     column-count: 5;
   }
   
-  @media only screen and  (min-width: 2099px) {
+  @media only screen and  (min-width: 1800px) {
     column-count: 6;
   }
   
-  @media only screen and  (min-width: 2399px) {
+  @media only screen and  (min-width: 2100px) {
     column-count: 7;
   }
   
-  @media only screen and  (min-width: 2699px) {
+  @media only screen and  (min-width: 2400px) {
     column-count: 8;
   }
 `
