@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@babel/core": "7.1.0",
-    "@mdi/js": "^2.7.94",
+    "@mdi/js": "^2.8.94",
     "@mdi/react": "^1.0.1",
     "@storybook/addon-actions": "^3.4.11",
     "@storybook/addon-centered": "^3.4.11",

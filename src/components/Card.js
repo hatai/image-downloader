@@ -6,7 +6,7 @@ import { mdiDownload, mdiEye, mdiCheckboxBlankOutline, mdiCheckboxMarkedOutline 
 import color from '../utils/colors'
 
 const Main = styled.div`
-  width: 300px;
+  width: 100%;
   margin-bottom: 30px;
 `
 
@@ -20,6 +20,10 @@ const Wrapper = styled.div`
   background-color: ${color.voyagerDarkGrey};
   position: relative;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 4);
+  
+  &&:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .16);
+  }
 `
 
 const ImgWrapper = styled.div`
@@ -32,7 +36,7 @@ const Img = styled.img`
 `
 
 const Footer = styled.div`
-  background-color: ${color.enterpriseMediumDarkGrey};
+  background-color: ${props => props.background};
   padding-top: 12px;
   transition: background-color .25s;
   box-shadow: 0 0 black;
@@ -71,6 +75,11 @@ const Action = styled.div`
   flex: 1;
   justify-content: center;
   cursor: pointer;
+  
+  &&:hover {
+    color: white;
+    opacity: 1;
+  }
 `
 
 export default class Card extends Component {
@@ -96,6 +105,7 @@ export default class Card extends Component {
     super(props)
 
     this.state = {
+      hooter: color.titleGreyDefault,
       eye: color.paleGrey,
       download: color.paleGrey,
       checkbox: color.orionGreen
@@ -116,15 +126,20 @@ export default class Card extends Component {
       eye,
       download,
       checkbox,
+      hooter,
     } = this.state
 
     return (
-      <Main>
+      <Main
+        onMouseOver={this.onHover}
+        onMouseLeave={this.onLeave}
+      >
         <Wrapper>
           <ImgWrapper>
             <Img src={image} alt={image} lazyload={'on'} async={true}/>
           </ImgWrapper>
-          <Footer>
+
+          <Footer background={hooter}>
             <Title>{title}</Title>
             <Actions>
               <Action
@@ -167,6 +182,14 @@ export default class Card extends Component {
         </Wrapper>
       </Main>
     )
+  }
+
+  onHover = () => {
+    this.setState({hooter: color.titleGreyLight})
+  }
+
+  onLeave = () => {
+    this.setState({hooter: color.titleGreyDefault})
   }
 
   onMouseOverEye = () => {
