@@ -1,4 +1,5 @@
 const colors = {
+  baseBgColor: '#2E3036',
   clearBlue: '#227efa',
   lightishBlue: '#4a58fb',
   darkMintGreen: '#16824e',
