@@ -39,7 +39,7 @@ export class Images {
   }
 
   @computed get isIndeterminate () {
-    return !this.isCheckedAll && !this.uncheckAll()
+    return !this.isCheckedAll && !this.isUncheckedAll
   }
 
   @computed get checkedImages () {
