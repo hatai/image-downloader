@@ -2,7 +2,7 @@ import { observable, computed, action } from 'mobx'
 import uuid from 'uuid/v1'
 
 export class Image {
-  id = uuid()
+  id = ''
   @observable src = ''
   @observable width = 0
   @observable height = 0
@@ -12,14 +12,15 @@ export class Image {
   @observable filtered = false
 
   constructor (src, linked = false) {
+    this.id = uuid()
     this.src = src
     this.linked = linked
   }
 }
 
 export class Images {
-  @observable images = []
-  @observable sources = []
+  sources = []
+  @observable data = []
 
   constructor ({images, linkedImages}) {
     this.notLinkedImages = images
@@ -31,11 +32,11 @@ export class Images {
    ********************************************************************/
 
   @computed get isCheckedAll () {
-    return this.images.every(image => image.checked)
+    return this.data.every(image => image.checked)
   }
 
   @computed get isUncheckedAll () {
-    return this.images.every(image => !image.checked)
+    return this.data.every(image => !image.checked)
   }
 
   @computed get isIndeterminate () {
@@ -43,19 +44,19 @@ export class Images {
   }
 
   @computed get checkedImages () {
-    return this.images.filter(image => image.checked)
+    return this.data.filter(image => image.checked)
   }
 
   @computed get uncheckedImages () {
-    return this.images.filter(image => !image.checked)
+    return this.data.filter(image => !image.checked)
   }
 
   @computed get linkedImages () {
-    return this.images.filter(image => image.linked)
+    return this.data.filter(image => image.linked)
   }
 
   @computed get notLinkedImages () {
-    return this.images.filter(image => !image.linked)
+    return this.data.filter(image => !image.linked)
   }
 
   /********************************************************************
@@ -81,14 +82,16 @@ export class Images {
   }
 
   @action.bind checkAll () {
-    this.images = this.images.map(image => {
+    this.data = this.data.map(image => {
       image.checked = true
+      return image
     })
   }
 
   @action.bind uncheckAll () {
-    this.images = this.images.map(image => {
+    this.data = this.data.map(image => {
       image.checked = false
+      return image
     })
   }
 
@@ -105,7 +108,7 @@ export class Images {
     }
 
     const terms = filterValue.split(' ')
-    this.images = this.images.filter(data => {
+    this.data = this.data.filter(data => {
       for (let i = 0; i < terms.length; i++) {
         let term = terms[i]
 
@@ -132,7 +135,7 @@ export class Images {
   @action.bind filterByWildCard (filterValue) {
     const newFilterValue = filterValue.replace(/([.^$[\]\\(){}|-])/g, '\\$1').replace(/([?*+])/, '.$1')
 
-    this.images = this.images.filter(data => {
+    this.data = this.data.filter(data => {
       try {
         return data.src.match(newFilterValue)
 
@@ -144,7 +147,7 @@ export class Images {
   }
 
   @action.bind filterByRegex (filterValue) {
-    this.images = this.images.filter(data => {
+    this.data = this.data.filter(data => {
       try {
         return data.src.match(filterValue)
 
@@ -156,16 +159,16 @@ export class Images {
   }
 
   @action.bind filterByImageSize (option) {
-    this.images = this.images.filter(image => Images.shouldFilterBySize(image, option))
+    this.data = this.data.filter(image => Images.shouldFilterBySize(image, option))
   }
 
   @action.bind filterByLinkedImage (onlyImagesFromLinks) {
     if (onlyImagesFromLinks) {
-      this.images = this.sources
+      this.data = this.sources
         .filter(image => image.visible && image.linked)
     }
     else {
-      this.images = this.sources.filter(image => image.visible)
+      this.data = this.sources.filter(image => image.visible)
     }
   }
 

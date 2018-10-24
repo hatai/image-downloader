@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import color from '../utils/colors'
 
@@ -36,6 +36,7 @@ const AppCover = styled.div`
     background-position: 0;
   }
 `
+/*
 
 const Background = styled(div)`
   position: absolute;
@@ -46,10 +47,13 @@ const Background = styled(div)`
   z-index: 0;
   overflow: hidden!important;
 `
+*/
 
+/*
 const Canvas = styled.canvas`
   display: inline-block;
 `
+*/
 
 const Menu = styled(div)`
   height: 36px;
@@ -62,8 +66,8 @@ const Menu = styled(div)`
 `
 
 export default class Header extends Component{
-  static propTypes = {}
-  static defaultProps = {}
+  // static propTypes = {}
+  // static defaultProps = {}
 
   render () {
     return (

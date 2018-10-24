@@ -15,13 +15,14 @@
   },
   "dependencies": {
     "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-decorators": "^7.1.2",
     "@mdi/js": "^3.0.39",
     "@mdi/react": "^1.1.0",
-    "@storybook/addon-actions": "^4.0.0-rc.2",
-    "@storybook/addon-centered": "^4.0.0-rc.2",
-    "@storybook/addon-links": "^4.0.0-rc.2",
-    "@storybook/addons": "^4.0.0-rc.2",
-    "@storybook/react": "^4.0.0-rc.2",
+    "@storybook/addon-actions": "^4.0.0-rc.3",
+    "@storybook/addon-centered": "^4.0.0-rc.3",
+    "@storybook/addon-links": "^4.0.0-rc.3",
+    "@storybook/addons": "^4.0.0-rc.3",
+    "@storybook/react": "^4.0.0-rc.3",
     "@svgr/webpack": "^3.1.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
@@ -54,8 +55,8 @@
     "jest-pnp-resolver": "^1.0.1",
     "jest-resolve": "^23.6.0",
     "mini-css-extract-plugin": "^0.4.4",
-    "mobx": "^5.5.1",
-    "mobx-react": "^5.3.4",
+    "mobx": "^5.5.2",
+    "mobx-react": "^5.3.5",
     "mobx-react-devtools": "^6.0.3",
     "node-sass": "^4.9.4",
     "node-sass-chokidar": "^1.3.4",
@@ -68,15 +69,12 @@
     "postcss-safe-parser": "^4.0.1",
     "prop-types": "^15.6.2",
     "rc-util": "^4.6.0",
-    "react": "^16.5.2",
+    "react": "^16.6.0",
     "react-app-polyfill": "^0.1.3",
     "react-collapse": "^4.0.3",
     "react-dev-utils": "^6.0.5",
-    "react-dom": "^16.5.2",
+    "react-dom": "^16.6.0",
     "react-motion": "^0.5.2",
-    "react-redux": "^5.0.7",
-    "redux": "^4.0.1",
-    "redux-box": "^1.6.1",
     "resolve": "^1.8.1",
     "sass-loader": "^7.1.0",
     "shallowequal": "^1.1.0",
@@ -94,7 +92,12 @@
     "workbox-webpack-plugin": "^3.6.3"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "env": {
+      "browser": true,
+      "es6": true,
+      "webextensions": true
+    }
   },
   "jest": {
     "collectCoverageFrom": [
@@ -135,6 +138,21 @@
   "babel": {
     "presets": [
       "react-app"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "regacy": false,
+          "decoratorsBeforeExport": false
+        }
+      ]
     ]
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

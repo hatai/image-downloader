@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import swal from 'sweetalert2'
 import Icon from '@mdi/react'
 import { mdiDownload, mdiEye, mdiCheckboxBlankOutline, mdiCheckboxMarkedOutline } from '@mdi/js'
 import color from '../utils/colors'
@@ -84,7 +85,17 @@ const Action = styled.div`
   }
 `
 
-const emptyFunc = () => {}
+const emptyFunc = () => {
+}
+
+const onEyeButtonClick = (url) => {
+  swal({
+    showConfirmButton: false,
+    background: `rgba(0,0,0,0)`,
+    imageUrl: url,
+    animation: false,
+  })
+}
 
 export default class Card extends Component {
   static propTypes = {
@@ -99,7 +110,7 @@ export default class Card extends Component {
   }
 
   static defaultProps = {
-    onEyeButtonClick: emptyFunc,
+    onEyeButtonClick: onEyeButtonClick,
     onDownloadButtonClick: emptyFunc,
     onCheckboxClick: emptyFunc,
     onLoad: emptyFunc,
