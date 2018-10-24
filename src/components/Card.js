@@ -8,6 +8,7 @@ import color from '../utils/colors'
 const Main = styled.div`
   width: 100%;
   margin-bottom: 30px;
+  display: ${({visible}) => visible ? 'block' : 'none'};
 `
 
 const Wrapper = styled.div`
@@ -32,6 +33,7 @@ const ImgWrapper = styled.div`
 
 const Img = styled.img`
   max-width: 100%;
+  min-width: 100%;
   border-style: none;
 `
 
@@ -82,6 +84,8 @@ const Action = styled.div`
   }
 `
 
+const emptyFunc = () => {}
+
 export default class Card extends Component {
   static propTypes = {
     image: PropTypes.string.isRequired,
@@ -90,21 +94,23 @@ export default class Card extends Component {
     onEyeButtonClick: PropTypes.func,
     onDownloadButtonClick: PropTypes.func,
     onCheckboxClick: PropTypes.func,
+    onLoad: PropTypes.func,
+    onError: PropTypes.func,
   }
 
   static defaultProps = {
-    onEyeButtonClick: () => {
-    },
-    onDownloadButtonClick: () => {
-    },
-    onCheckboxClick: () => {
-    },
+    onEyeButtonClick: emptyFunc,
+    onDownloadButtonClick: emptyFunc,
+    onCheckboxClick: emptyFunc,
+    onLoad: emptyFunc,
+    onError: emptyFunc,
   }
 
   constructor (props) {
     super(props)
 
     this.state = {
+      visible: false,
       hooter: color.titleGreyDefault,
       eye: color.paleGrey,
       download: color.paleGrey,
@@ -120,9 +126,12 @@ export default class Card extends Component {
       onEyeButtonClick,
       onDownloadButtonClick,
       onCheckboxClick,
+      onLoad,
+      onError,
     } = this.props
 
     const {
+      visible,
       eye,
       download,
       checkbox,
@@ -133,10 +142,21 @@ export default class Card extends Component {
       <Main
         onMouseOver={this.onHover}
         onMouseLeave={this.onLeave}
+        visible={visible}
       >
         <Wrapper>
           <ImgWrapper>
-            <Img src={image} alt={image} lazyload={'on'} async={true}/>
+            <Img
+              src={image}
+              alt={image}
+              lazyload={'on'}
+              async={true}
+              onLoad={() => {
+                this.setState({visible: true})
+                onLoad()
+              }}
+              onError={onError}
+            />
           </ImgWrapper>
 
           <Footer background={hooter}>
