@@ -11,18 +11,19 @@
     "build": "npm-run-all build-css build-js",
     "test": "node scripts/test.js --env=jsdom",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "serve": "serve -s build"
   },
   "dependencies": {
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-decorators": "^7.1.2",
     "@mdi/js": "^3.0.39",
     "@mdi/react": "^1.1.0",
-    "@storybook/addon-actions": "^4.0.0-rc.3",
-    "@storybook/addon-centered": "^4.0.0-rc.3",
-    "@storybook/addon-links": "^4.0.0-rc.3",
-    "@storybook/addons": "^4.0.0-rc.3",
-    "@storybook/react": "^4.0.0-rc.3",
+    "@storybook/addon-actions": "^4.0.0-rc.6",
+    "@storybook/addon-centered": "^4.0.0-rc.6",
+    "@storybook/addon-links": "^4.0.0-rc.6",
+    "@storybook/addons": "^4.0.0-rc.6",
+    "@storybook/react": "^4.0.0-rc.6",
     "@svgr/webpack": "^3.1.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
@@ -77,6 +78,7 @@
     "react-motion": "^0.5.2",
     "resolve": "^1.8.1",
     "sass-loader": "^7.1.0",
+    "serve": "^10.0.2",
     "shallowequal": "^1.1.0",
     "shelljs": "^0.8.2",
     "style-loader": "^0.23.1",
@@ -143,10 +145,11 @@
       [
         "@babel/plugin-proposal-decorators",
         {
-          "regacy": false,
+          "regacy": true,
           "decoratorsBeforeExport": false
         }
-      ]
+      ],
+      "babel-plugin-styled-components"
     ]
   },
   "browserslist": [

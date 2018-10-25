@@ -1,7 +1,7 @@
 import { observable, computed, action } from 'mobx'
 import uuid from 'uuid/v1'
 
-export class Image {
+class ImageModel {
   id = ''
   @observable src = ''
   @observable width = 0
@@ -18,14 +18,9 @@ export class Image {
   }
 }
 
-export class Images {
+export default class ImageListModel {
   sources = []
   @observable data = []
-
-  constructor ({images, linkedImages}) {
-    this.notLinkedImages = images
-    this.linkedImages = linkedImages
-  }
 
   /********************************************************************
    * Getter
@@ -63,45 +58,51 @@ export class Images {
    * Setter
    ********************************************************************/
 
-  @computed set linkedImages (images) {
-    this.sources = [].concat(this.sources, images.map(image => new Image(image, true)))
+  set linkedImages (images) {
+    this.sources = [].concat(this.sources, images.map(image => new ImageModel(image, true)))
   }
 
-  @computed set notLinkedImages (images) {
-    this.sources = [].concat(this.sources, images.map(image => new Image(image, false)))
+  set notLinkedImages (images) {
+    this.sources = [].concat(this.sources, images.map(image => new ImageModel(image, false)))
   }
 
   /********************************************************************
    * Action
    ********************************************************************/
 
-  @action.bind remove () {
+  @action.bound
+  remove () {
   }
 
-  @action.bind check () {
+  @action.bound
+  check () {
   }
 
-  @action.bind checkAll () {
+  @action.bound
+  checkAll () {
     this.data = this.data.map(image => {
       image.checked = true
       return image
     })
   }
 
-  @action.bind uncheckAll () {
+  @action.bound
+  uncheckAll () {
     this.data = this.data.map(image => {
       image.checked = false
       return image
     })
   }
 
-  @action.bind download () {
+  @action.bound
+  download () {
     this.checkedImages.forEach(async image => {
       chrome.downlods.download({url: image.src})
     })
   }
 
-  @action.bind filterByNormal (filterValue) {
+  @action.bound
+  filterByNormal (filterValue) {
     if (filterValue === '' || filterValue === null) {
       // do not anything
       return
@@ -132,7 +133,8 @@ export class Images {
     })
   }
 
-  @action.bind filterByWildCard (filterValue) {
+  @action.bound
+  filterByWildCard (filterValue) {
     const newFilterValue = filterValue.replace(/([.^$[\]\\(){}|-])/g, '\\$1').replace(/([?*+])/, '.$1')
 
     this.data = this.data.filter(data => {
@@ -146,7 +148,8 @@ export class Images {
     })
   }
 
-  @action.bind filterByRegex (filterValue) {
+  @action.bound
+  filterByRegex (filterValue) {
     this.data = this.data.filter(data => {
       try {
         return data.src.match(filterValue)
@@ -158,11 +161,13 @@ export class Images {
     })
   }
 
-  @action.bind filterByImageSize (option) {
-    this.data = this.data.filter(image => Images.shouldFilterBySize(image, option))
+  @action.bound
+  filterByImageSize (option) {
+    this.data = this.data.filter(image => ImageListModel.shouldFilterBySize(image, option))
   }
 
-  @action.bind filterByLinkedImage (onlyImagesFromLinks) {
+  @action.bound
+  filterByLinkedImage (onlyImagesFromLinks) {
     if (onlyImagesFromLinks) {
       this.data = this.sources
         .filter(image => image.visible && image.linked)

@@ -1,25 +1,23 @@
 import React, { Component } from 'react'
-import { observer } from 'mobx-react'
-import styled from 'styled-components'
+import { observer, inject } from 'mobx-react'
+import { createGlobalStyle } from 'styled-components'
 import GridLayout from './GridLayout'
 import Header from './Header'
 import Card from './Card'
-import { Images, Options } from '../store'
 import color from '../utils/colors'
 import * as util from '../utils'
 
-const GlobalStyles = styled.createGlobalStyle`
-  html {
+const GlobalStyles = createGlobalStyle`
+  body {
     width: 100rem;
     height: 100rem;
     background-color: ${color.charcoalGreyTwo};
   }
 `
 
+@inject('images')
 @observer
 class App extends Component {
-  images = null
-  options = new Options()
 
   componentWillMount () {
     this.initialize()
@@ -30,6 +28,8 @@ class App extends Component {
   }
 
   render () {
+    const {images} = this.props
+
     return (
       <div>
         <GlobalStyles/>
@@ -37,12 +37,12 @@ class App extends Component {
         <Header/>
 
         <GridLayout>
-          {this.images !== null ? this.images.data.map(image => (
+          {images.data.map(image => (
             <Card
               image={image.src}
               checked={image.checked}
             />
-          )) : null}
+          ))}
         </GridLayout>
       </div>
     )
@@ -65,8 +65,9 @@ class App extends Component {
   }
 
   getImages = async () => {
-    const results = await util.getImages()
-    this.images = new Images(results)
+    const {images, linkedImages} = await util.getImages()
+    this.props.images.linkedImages = linkedImages
+    this.props.images.notLinkedImages = images
   }
 }
 
