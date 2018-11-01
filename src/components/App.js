@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { computed } from 'mobx'
 import { observer, inject } from 'mobx-react'
 import { createGlobalStyle } from 'styled-components'
 import GridLayout from './GridLayout'
@@ -15,9 +16,13 @@ const GlobalStyles = createGlobalStyle`
   }
 `
 
-@inject('images')
+@inject('imageList')
 @observer
 class App extends Component {
+  // imageList = []
+  @computed get imageList() {
+    return this.props.imageList
+  }
 
   componentWillMount () {
     this.initialize()
@@ -28,8 +33,6 @@ class App extends Component {
   }
 
   render () {
-    const {images} = this.props
-
     return (
       <div>
         <GlobalStyles/>
@@ -37,7 +40,7 @@ class App extends Component {
         <Header/>
 
         <GridLayout>
-          {images.data.map(image => (
+          {this.imageList.data.map(image => (
             <Card
               image={image.src}
               checked={image.checked}
@@ -66,8 +69,8 @@ class App extends Component {
 
   getImages = async () => {
     const {images, linkedImages} = await util.getImages()
-    this.props.images.linkedImages = linkedImages
-    this.props.images.notLinkedImages = images
+    this.imageList.linkedImages = linkedImages
+    this.imageList.notLinkedImages = images
   }
 }
 

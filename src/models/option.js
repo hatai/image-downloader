@@ -1,7 +1,7 @@
 import { observable, computed, action } from 'mobx'
 import { saveOptions } from '../utils/index'
 
-export default class OptionsModel {
+export default class OptionModel {
   @observable subFolder
   @observable filter
   // filterType 0: normal, 1: wildcard, 2: regex

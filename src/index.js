@@ -2,14 +2,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
 import App from './components/App'
-import ImageListModel from './models/images'
-import OptionsModel from './models/options'
+import ImageListModel from './models/image'
+import OptionModel from './models/option'
 import { unregister } from './registerServiceWorker'
 import './assets/style/rc-slider/index.css'
 
 const models = {
-  images: new ImageListModel(),
-  options: new OptionsModel(),
+  imageList: new ImageListModel(),
+  option: new OptionModel(),
 };
 
 (function (ls) {
