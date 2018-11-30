@@ -1,15 +1,15 @@
-import { observable, computed, action } from 'mobx'
+import { observable, computed, action, decorate } from 'mobx'
 import uuid from 'uuid/v1'
 
 class ImageModel {
   id = ''
-  @observable src = ''
-  @observable width = 0
-  @observable height = 0
-  @observable linked = false
-  @observable checked = false
-  @observable visible = false
-  @observable filtered = false
+  src = ''
+  width = 0
+  height = 0
+  linked = false
+  checked = false
+  visible = false
+  filtered = false
 
   constructor (src, linked = false) {
     this.id = uuid()
@@ -18,39 +18,51 @@ class ImageModel {
   }
 }
 
-export default class ImageListModel {
+decorate(ImageModel, {
+  id: observable.ref,
+  src: observable,
+  width: observable,
+  height: observable,
+  linked: observable,
+  checked: observable,
+  visible: observable,
+  filtered: observable,
+})
+
+
+class ImageListModel {
   sources = []
-  @observable data = []
+  data = []
 
   /********************************************************************
    * Getter
    ********************************************************************/
 
-  @computed get isCheckedAll () {
+  get isCheckedAll () {
     return this.data.every(image => image.checked)
   }
 
-  @computed get isUncheckedAll () {
+  get isUncheckedAll () {
     return this.data.every(image => !image.checked)
   }
 
-  @computed get isIndeterminate () {
+  get isIndeterminate () {
     return !this.isCheckedAll && !this.isUncheckedAll
   }
 
-  @computed get checkedImages () {
+  get checkedImages () {
     return this.data.filter(image => image.checked)
   }
 
-  @computed get uncheckedImages () {
+  get uncheckedImages () {
     return this.data.filter(image => !image.checked)
   }
 
-  @computed get linkedImages () {
+  get linkedImages () {
     return this.data.filter(image => image.linked)
   }
 
-  @computed get notLinkedImages () {
+  get notLinkedImages () {
     return this.data.filter(image => !image.linked)
   }
 
@@ -70,15 +82,12 @@ export default class ImageListModel {
    * Action
    ********************************************************************/
 
-  @action.bound
   remove () {
   }
 
-  @action.bound
   check () {
   }
 
-  @action.bound
   checkAll () {
     this.data = this.data.map(image => {
       image.checked = true
@@ -86,7 +95,6 @@ export default class ImageListModel {
     })
   }
 
-  @action.bound
   uncheckAll () {
     this.data = this.data.map(image => {
       image.checked = false
@@ -94,14 +102,12 @@ export default class ImageListModel {
     })
   }
 
-  @action.bound
   download () {
     this.checkedImages.forEach(async image => {
       chrome.downlods.download({url: image.src})
     })
   }
 
-  @action.bound
   filterByNormal (filterValue) {
     if (filterValue === '' || filterValue === null) {
       // do not anything
@@ -133,7 +139,6 @@ export default class ImageListModel {
     })
   }
 
-  @action.bound
   filterByWildCard (filterValue) {
     const newFilterValue = filterValue.replace(/([.^$[\]\\(){}|-])/g, '\\$1').replace(/([?*+])/, '.$1')
 
@@ -148,7 +153,6 @@ export default class ImageListModel {
     })
   }
 
-  @action.bound
   filterByRegex (filterValue) {
     this.data = this.data.filter(data => {
       try {
@@ -161,21 +165,22 @@ export default class ImageListModel {
     })
   }
 
-  @action.bound
   filterByImageSize (option) {
     this.data = this.data.filter(image => ImageListModel.shouldFilterBySize(image, option))
   }
 
-  @action.bound
   filterByLinkedImage (onlyImagesFromLinks) {
     if (onlyImagesFromLinks) {
       this.data = this.sources
         .filter(image => image.visible && image.linked)
-    }
-    else {
+    } else {
       this.data = this.sources.filter(image => image.visible)
     }
   }
+
+  /********************************************************************
+   * Others
+   ********************************************************************/
 
   /**
    * whether to filter or not
@@ -199,3 +204,31 @@ export default class ImageListModel {
     return minWidthIsOk && maxWidthIsOk && minHeightIsOk && maxHeightIsOk
   }
 }
+
+decorate(ImageListModel, {
+  // observable
+  sources: observable.ref,
+  data: observable.shallow,
+  // computed
+  isCheckedAll: computed,
+  isUncheckedAll: computed,
+  isIndeterminate: computed,
+  checkedImages: computed,
+  uncheckedImages: computed,
+  linkedImages: computed,
+  notLinkedImages: computed,
+  // action
+  remove: action.bound,
+  check: action.bound,
+  checkAll: action.bound,
+  uncheckAll: action.bound,
+  download: action.bound,
+  filterByNormal: action.bound,
+  filterByWildCard: action.bound,
+  filterByRegex: action.bound,
+  filterByImageSize: action.bound,
+  filterByLinkedImage: action.bound,
+})
+
+const imageListModel = new ImageListModel()
+export default imageListModel

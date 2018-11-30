@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { computed } from 'mobx'
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
 import { createGlobalStyle } from 'styled-components'
 import GridLayout from './GridLayout'
 import Header from './Header'
@@ -16,12 +15,9 @@ const GlobalStyles = createGlobalStyle`
   }
 `
 
-@inject('imageList')
-@observer
-class App extends Component {
-  // imageList = []
-  @computed get imageList() {
-    return this.props.imageList
+const App = observer(class App extends Component {
+  get imageList() {
+    return this.props.imageListModel
   }
 
   componentWillMount () {
@@ -72,6 +68,6 @@ class App extends Component {
     this.imageList.linkedImages = linkedImages
     this.imageList.notLinkedImages = images
   }
-}
+})
 
 export default App

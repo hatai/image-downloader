@@ -1,20 +1,20 @@
-import { observable, computed, action } from 'mobx'
+import { observable, computed, action, decorate } from 'mobx'
 import { saveOptions } from '../utils/index'
 
-export default class OptionModel {
-  @observable subFolder
-  @observable filter
+class OptionModel {
+  subFolder
+  filter
   // filterType 0: normal, 1: wildcard, 2: regex
-  @observable filterType
-  @observable minWidth
-  @observable minWidthEnabled
-  @observable maxWidth
-  @observable maxWidthEnabled
-  @observable minHeight
-  @observable minHeightEnabled
-  @observable maxHeight
-  @observable maxHeightEnabled
-  @observable onlyImagesFromLinks
+   filterType
+   minWidth
+   minWidthEnabled
+   maxWidth
+   maxWidthEnabled
+   minHeight
+   minHeightEnabled
+   maxHeight
+   maxHeightEnabled
+   onlyImagesFromLinks
 
   constructor () {
     this.subFolder = ''
@@ -31,7 +31,11 @@ export default class OptionModel {
     this.onlyImagesFromLinks = false
   }
 
-  @computed get values () {
+  /********************************************************************
+   * Computed
+   ********************************************************************/
+
+  get values () {
     const {
       subFolder, filter, filterType, onlyImagesFromLinks,
       minWidth, minWidthEnabled, maxWidth, maxWidthEnabled,
@@ -45,7 +49,7 @@ export default class OptionModel {
     }
   }
 
-  @computed set values (values) {
+  set values (values) {
     if (values === null) {
       return
     }
@@ -53,7 +57,10 @@ export default class OptionModel {
     Object.keys(values).forEach(key => this[key] = values[key])
   }
 
-  @action.bound
+  /********************************************************************
+   * Action
+   ********************************************************************/
+
   saveOptionsToLocalStorage () {
     saveOptions({key: 'options', value: Object.assign({}, this.values)})
       .catch(error => {
@@ -63,3 +70,26 @@ export default class OptionModel {
       })
   }
 }
+
+decorate(OptionModel, {
+  // observable
+  subFolder: observable,
+  filter: observable,
+  filterType: observable,
+  minWidth: observable,
+  minWidthEnabled: observable,
+  maxWidth: observable,
+  maxWidthEnabled: observable,
+  minHeight: observable,
+  minHeightEnabled: observable,
+  maxHeight: observable,
+  maxHeightEnabled: observable,
+  onlyImagesFromLinks: observable,
+  // computed
+  values: computed,
+  // action
+  saveOptionsToLocalStorage: action.bound,
+})
+
+const optionModel = new OptionModel()
+export default optionModel
