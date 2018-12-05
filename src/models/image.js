@@ -1,20 +1,22 @@
-import { observable, computed, action, decorate } from 'mobx'
-import uuid from 'uuid/v1'
+/* eslint-env webextensions */
+
+import { observable, computed, action, decorate } from 'mobx';
+import uuid from 'uuid/v1';
 
 class ImageModel {
-  id = ''
-  src = ''
-  width = 0
-  height = 0
-  linked = false
-  checked = false
-  visible = false
-  filtered = false
+  id = '';
+  src = '';
+  width = 0;
+  height = 0;
+  linked = false;
+  checked = false;
+  visible = false;
+  filtered = false;
 
-  constructor (src, linked = false) {
-    this.id = uuid()
-    this.src = src
-    this.linked = linked
+  constructor(src, linked = false) {
+    this.id = uuid();
+    this.src = src;
+    this.linked = linked;
   }
 }
 
@@ -26,182 +28,158 @@ decorate(ImageModel, {
   linked: observable,
   checked: observable,
   visible: observable,
-  filtered: observable,
-})
-
+  filtered: observable
+});
 
 class ImageListModel {
-  sources = []
-  data = []
+  sources = [];
+  data = [];
 
   /********************************************************************
    * Getter
    ********************************************************************/
 
-  get isCheckedAll () {
-    return this.data.every(image => image.checked)
+  get images() {
+    return this.sources;
   }
 
-  get isUncheckedAll () {
-    return this.data.every(image => !image.checked)
+  get isCheckedAll() {
+    return this.data.every(image => image.checked);
   }
 
-  get isIndeterminate () {
-    return !this.isCheckedAll && !this.isUncheckedAll
+  get isUncheckedAll() {
+    return this.data.every(image => !image.checked);
   }
 
-  get checkedImages () {
-    return this.data.filter(image => image.checked)
+  get isIndeterminate() {
+    return !this.isCheckedAll && !this.isUncheckedAll;
   }
 
-  get uncheckedImages () {
-    return this.data.filter(image => !image.checked)
+  get checkedImages() {
+    return this.data.filter(image => image.checked);
   }
 
-  get linkedImages () {
-    return this.data.filter(image => image.linked)
+  get uncheckedImages() {
+    return this.data.filter(image => !image.checked);
   }
 
-  get notLinkedImages () {
-    return this.data.filter(image => !image.linked)
+  get linkedImages() {
+    return this.data.filter(image => image.linked);
+  }
+
+  get notLinkedImages() {
+    return this.data.filter(image => !image.linked);
   }
 
   /********************************************************************
    * Setter
    ********************************************************************/
 
-  set linkedImages (images) {
-    this.sources = [].concat(this.sources, images.map(image => new ImageModel(image, true)))
+  set linkedImages(images) {
+    this.sources = [].concat(
+      this.sources,
+      images.map(image => new ImageModel(image, true))
+    );
   }
 
-  set notLinkedImages (images) {
-    this.sources = [].concat(this.sources, images.map(image => new ImageModel(image, false)))
+  set notLinkedImages(images) {
+    this.sources = [].concat(
+      this.sources,
+      images.map(image => new ImageModel(image, false))
+    );
   }
 
   /********************************************************************
    * Action
    ********************************************************************/
 
-  remove () {
-  }
+  remove() {}
 
-  check () {
-  }
+  check() {}
 
-  checkAll () {
+  checkAll() {
     this.data = this.data.map(image => {
-      image.checked = true
-      return image
-    })
+      image.checked = true;
+      return image;
+    });
   }
 
-  uncheckAll () {
+  uncheckAll() {
     this.data = this.data.map(image => {
-      image.checked = false
-      return image
-    })
+      image.checked = false;
+      return image;
+    });
   }
 
-  download () {
-    this.checkedImages.forEach(async image => {
-      chrome.downlods.download({url: image.src})
-    })
-  }
+  doFilter() {}
 
-  filterByNormal (filterValue) {
+  filterByNormal(filterValue) {
     if (filterValue === '' || filterValue === null) {
       // do not anything
-      return
+      return;
     }
 
-    const terms = filterValue.split(' ')
+    const terms = filterValue.split(' ');
     this.data = this.data.filter(data => {
       for (let i = 0; i < terms.length; i++) {
-        let term = terms[i]
+        let term = terms[i];
 
         if (term.length !== 0) {
-          let expected = (term[0] !== '-')
+          let expected = term[0] !== '-';
 
           if (!expected) {
-            term = term.substr(1)
+            term = term.substr(1);
 
             if (term.length === 0) {
-              continue
+              continue;
             }
           }
 
-          return (data.src.indexOf(term) !== -1) === expected
+          return (data.src.indexOf(term) !== -1) === expected;
         }
       }
 
       // set visible
-      return false
-    })
+      return false;
+    });
   }
 
-  filterByWildCard (filterValue) {
-    const newFilterValue = filterValue.replace(/([.^$[\]\\(){}|-])/g, '\\$1').replace(/([?*+])/, '.$1')
+  filterByWildCard(filterValue) {
+    const newFilterValue = filterValue
+      .replace(/([.^$[\]\\(){}|-])/g, '\\$1')
+      .replace(/([?*+])/, '.$1');
 
     this.data = this.data.filter(data => {
       try {
-        return data.src.match(newFilterValue)
-
+        return data.src.match(newFilterValue);
       } catch (e) {
         // set not visible
-        return false
+        return false;
       }
-    })
+    });
   }
 
-  filterByRegex (filterValue) {
+  filterByRegex(filterValue) {
     this.data = this.data.filter(data => {
       try {
-        return data.src.match(filterValue)
-
+        return data.src.match(filterValue);
       } catch (e) {
         // set not visible
-        return false
+        return false;
       }
-    })
+    });
   }
 
-  filterByImageSize (option) {
-    this.data = this.data.filter(image => ImageListModel.shouldFilterBySize(image, option))
+  filterByImageSize(option) {
+    this.data = this.data.filter(image => shouldFilterBySize(image, option));
   }
 
-  filterByLinkedImage (onlyImagesFromLinks) {
+  filterByLinkedImage(onlyImagesFromLinks) {
     if (onlyImagesFromLinks) {
-      this.data = this.sources
-        .filter(image => image.visible && image.linked)
+      this.data = this.sources.filter(image => image.visible && image.linked);
     } else {
-      this.data = this.sources.filter(image => image.visible)
+      this.data = this.sources.filter(image => image.visible);
     }
-  }
-
-  /********************************************************************
-   * Others
-   ********************************************************************/
-
-  /**
-   * whether to filter or not
-   * @param image
-   * @param option
-   * @returns {boolean}
-   */
-  static shouldFilterBySize (image, option) {
-    const minWidthIsOk = option.minWidthEnabled === false
-      || (option.minWidthEnabled && image.width >= option.minWidth)
-
-    const maxWidthIsOk = option.maxWidthEnabled === false
-      || (option.maxWidthEnabled && image.width <= option.maxWidth)
-
-    const minHeightIsOk = option.minHeightEnabled === false
-      || (option.minHeightEnabled && image.height >= option.minHeight)
-
-    const maxHeightIsOk = option.maxHeightEnabled === false
-      || (option.maxHeightEnabled && image.height <= option.maxHeight)
-
-    return minWidthIsOk && maxWidthIsOk && minHeightIsOk && maxHeightIsOk
   }
 }
 
@@ -210,6 +188,7 @@ decorate(ImageListModel, {
   sources: observable.ref,
   data: observable.shallow,
   // computed
+  images: computed,
   isCheckedAll: computed,
   isUncheckedAll: computed,
   isIndeterminate: computed,
@@ -222,13 +201,39 @@ decorate(ImageListModel, {
   check: action.bound,
   checkAll: action.bound,
   uncheckAll: action.bound,
-  download: action.bound,
+  doFilter: action.bound,
   filterByNormal: action.bound,
   filterByWildCard: action.bound,
   filterByRegex: action.bound,
   filterByImageSize: action.bound,
-  filterByLinkedImage: action.bound,
-})
+  filterByLinkedImage: action.bound
+});
 
-const imageListModel = new ImageListModel()
-export default imageListModel
+/**
+ * whether to filter or not
+ * @param image
+ * @param option
+ * @returns {boolean}
+ */
+const shouldFilterBySize = (image, option) => {
+  const minWidthIsOk =
+    option.minWidthEnabled === false ||
+    (option.minWidthEnabled && image.width >= option.minWidth);
+
+  const maxWidthIsOk =
+    option.maxWidthEnabled === false ||
+    (option.maxWidthEnabled && image.width <= option.maxWidth);
+
+  const minHeightIsOk =
+    option.minHeightEnabled === false ||
+    (option.minHeightEnabled && image.height >= option.minHeight);
+
+  const maxHeightIsOk =
+    option.maxHeightEnabled === false ||
+    (option.maxHeightEnabled && image.height <= option.maxHeight);
+
+  return minWidthIsOk && maxWidthIsOk && minHeightIsOk && maxHeightIsOk;
+};
+
+const imageListModel = new ImageListModel();
+export default imageListModel;
