@@ -41,6 +41,7 @@ class ImageListModel {
 
   get images() {
     return this.sources;
+    // return this.data;
   }
 
   get isCheckedAll() {

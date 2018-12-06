@@ -1,15 +1,17 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react';
 // import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import color from '../utils/colors'
+import styled from 'styled-components';
+// import color from '../utils/colors'
 
 const div = styled.div`
   display: block;
 
-  *, :after, :before {
+  *,
+  :after,
+  :before {
     box-sizing: inherit;
   }
-`
+`;
 
 const AppCover = styled.div`
   position: fixed;
@@ -20,22 +22,22 @@ const AppCover = styled.div`
   min-height: 0;
   background-position: bottom;
   z-index: 100;
-  box-shadow: 0 0 25px #000;
-  transition: box-shadow .4s;
+  box-shadow: 0 0 25px 5px #000;
+  transition: box-shadow 0.4s;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   background-size: cover;
-  background-color: ${color.enterpriseMediumDarkGrey};
+  background-color: #171544;
   padding-top: 13px;
   padding-bottom: 13px;
   width: 100%;
-  
-  @media(max-width: 899px) {
+
+  @media (max-width: 899px) {
     background-position: 0;
   }
-`
+`;
 /*
 
 const Background = styled(div)`
@@ -63,20 +65,17 @@ const Menu = styled(div)`
   display: flex;
   justify-content: space-between;
   position: relative;
-`
+`;
 
-export default class Header extends Component{
+export default class Header extends Component {
   // static propTypes = {}
   // static defaultProps = {}
 
-  render () {
+  render() {
     return (
       <AppCover>
-        <Menu>
-          aa
-        </Menu>
+        <Menu>aa</Menu>
       </AppCover>
-    )
+    );
   }
-
 }

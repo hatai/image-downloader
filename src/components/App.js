@@ -11,8 +11,10 @@ import * as util from '../utils/index';
 
 const GlobalStyles = createGlobalStyle`
   body {
-    width: 760px;
+    width: 770px;
     height: 100%;
+    min-height: 560px;
+    max-height: 100%;
     background-color: ${color.charcoalGreyTwo};
   }
 `;
@@ -20,12 +22,10 @@ const GlobalStyles = createGlobalStyle`
 const App = observer(
   class App extends Component {
     componentWillMount() {
-      // TODO: Loading 画面の表示
       // TODO: 表示できる画像がなかった場合のメッセージ表示
-
-      this.initialize().catch(error => console.log(error));
-
-      this.getImages().catch(error => console.log(error));
+      Promise.all([this.initialize(), this.getImages()]).catch(error =>
+        console.log(error)
+      );
     }
 
     render() {
@@ -38,19 +38,24 @@ const App = observer(
           {/* TODO: オプションの表示 */}
           {/* TODO: 全部チェックするボタン */}
           {/* TODO: チェックされているものをダウンロードするボタン */}
+          {/* TODO: Header デザイン考える */}
           <Header />
 
           {/* TODO: スタイルの調整 */}
           <GridLayout>
-            {imageListModel.images.map(image => (
+            {imageListModel.images.map(imageModel => (
+              // TODO: 画像が表示されるまで Loading 画面表示
+              // TODO: Footer が画像に少しかぶるのを治す？
+              // TODO: マウスオーバー時のハイライト
               <Card
-                image={image}
-                src={image.src}
-                checked={image.checked}
+                imageModel={imageModel}
+                src={imageModel.src}
+                checked={imageModel.checked}
                 onLoad={this.handleOnLoad}
                 onError={this.handleOnError}
-                onDownloadButtonClick={this.handleOnDownloadButtonClick}
                 onEyeButtonClick={this.handleOnEyeButtonClick}
+                onOpenTabClick={this.handleOnOpenTabClick}
+                onDownloadButtonClick={this.handleOnDownloadButtonClick}
                 onCheckboxClick={this.handleOnCheckboxClick}
               />
             ))}
@@ -85,32 +90,36 @@ const App = observer(
       imageListModel.notLinkedImages = images;
     };
 
-    handleOnLoad = (event, image) => {
-      image.width = event.target.naturalWidth;
-      image.height = event.target.naturalHeight;
+    handleOnLoad = (event, imageModel) => {
+      imageModel.width = event.target.naturalWidth;
+      imageModel.height = event.target.naturalHeight;
     };
 
-    handleOnError = (event, image) => {
+    handleOnError = (event, imageModel) => {
       // TODO: エラー時の処理考える
-      image.visible = false;
+      imageModel.visible = false;
     };
 
-    handleOnDownloadButtonClick = image => {
-      chrome.downloads.download({ url: image.src });
-    };
-
-    handleOnEyeButtonClick = image => {
+    handleOnEyeButtonClick = imageModel => {
       //  TODO: EYE ボタンが押されたときの処理（モーダルで画像表示？）
     };
 
-    handleOnCheckboxClick = image => {
-      image.checked = !image.checked;
+    handleOnOpenTabClick = imageModel => {
+      chrome.tabs.create({ url: imageModel.src, active: false });
+    };
+
+    handleOnDownloadButtonClick = imageModel => {
+      chrome.downloads.download({ url: imageModel.src });
+    };
+
+    handleOnCheckboxClick = imageModel => {
+      imageModel.checked = !imageModel.checked;
     };
 
     downlodAllCheckedImages = () => {
       const { imageListModel } = this.props;
-      imageListModel.checkedImages.forEach(async image => {
-        chrome.downloads.download({ url: image.src });
+      imageListModel.checkedImages.forEach(async imageModel => {
+        chrome.downloads.download({ url: imageModel.src });
       });
     };
   }

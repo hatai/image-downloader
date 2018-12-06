@@ -4,16 +4,17 @@ import styled from 'styled-components';
 import swal from 'sweetalert2';
 import Icon from '@mdi/react';
 import {
-  mdiDownload,
-  mdiEye,
+  mdiArrowTopRightThick,
   mdiCheckboxBlankOutline,
-  mdiCheckboxMarkedOutline
+  mdiCheckboxMarkedOutline,
+  mdiDownload,
+  mdiEye
 } from '@mdi/js';
 import color from '../utils/colors';
 
 const Main = styled.div`
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   display: ${({ visible }) => (visible ? 'block' : 'none')};
 `;
 
@@ -21,7 +22,7 @@ const Wrapper = styled.div`
   height: 100%;
   display: block;
   border-radius: 3px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   overflow: hidden;
   background-size: 145px;
   background-color: ${color.voyagerDarkGrey};
@@ -103,11 +104,12 @@ const onEyeButtonClick = url => {
 
 export default class Card extends Component {
   static propTypes = {
-    image: PropTypes.object,
+    imageModel: PropTypes.object,
     src: PropTypes.string.isRequired,
     title: PropTypes.string,
     checked: PropTypes.bool.isRequired,
     onEyeButtonClick: PropTypes.func,
+    onOpenTabClick: PropTypes.func,
     onDownloadButtonClick: PropTypes.func,
     onCheckboxClick: PropTypes.func,
     onLoad: PropTypes.func,
@@ -115,8 +117,9 @@ export default class Card extends Component {
   };
 
   static defaultProps = {
-    image: {},
+    imageModel: {},
     onEyeButtonClick: onEyeButtonClick,
+    onOpenTabClick: emptyFunc,
     onDownloadButtonClick: emptyFunc,
     onCheckboxClick: emptyFunc,
     onLoad: emptyFunc,
@@ -128,27 +131,36 @@ export default class Card extends Component {
 
     this.state = {
       visible: false,
-      hooter: color.titleGreyDefault,
-      eye: color.paleGrey,
-      download: color.paleGrey,
-      checkbox: color.orionGreen
+      hooterColor: color.titleGreyDefault,
+      eyeColor: color.paleGrey,
+      openTabColor: color.paleGrey,
+      downloadColor: color.paleGrey,
+      checkboxColor: color.orionGreen
     };
   }
 
   render() {
     const {
-      image,
+      imageModel,
       src,
       title,
       checked,
       onEyeButtonClick,
+      onOpenTabClick,
       onDownloadButtonClick,
       onCheckboxClick,
       onLoad,
       onError
     } = this.props;
 
-    const { visible, eye, download, checkbox, hooter } = this.state;
+    const {
+      visible,
+      eyeColor,
+      openTabColor,
+      downloadColor,
+      checkboxColor,
+      hooterColor
+    } = this.state;
 
     return (
       <Main
@@ -165,45 +177,58 @@ export default class Card extends Component {
               async={true}
               onLoad={async event => {
                 this.setState({ visible: true });
-                onLoad(event, image);
+                onLoad(event, imageModel);
               }}
-              onError={async event => onError(event, image)}
+              onError={async event => onError(event, imageModel)}
             />
           </ImgWrapper>
 
-          <Footer background={hooter}>
+          <Footer background={hooterColor}>
             <Title>{title}</Title>
             <Actions>
               {/* eye button */}
               <Action
                 onMouseOver={this.onMouseOverEye}
                 onMouseLeave={this.onMouseLeaveEye}
-                onClick={() => onEyeButtonClick(image)}
+                onClick={() => onEyeButtonClick(imageModel)}
               >
-                <Icon path={mdiEye} size={1} color={eye} />
+                <Icon path={mdiEye} size={1} color={eyeColor} />
+              </Action>
+
+              {/* open image on new tab */}
+              <Action
+                onMouseOver={this.onMouseOverOpenTab}
+                onMouseLeave={this.onMouseLeaveOpenTab}
+                onClick={() => onOpenTabClick(imageModel)}
+              >
+                <Icon
+                  path={mdiArrowTopRightThick}
+                  size={1}
+                  color={openTabColor}
+                />
               </Action>
 
               {/* download button */}
               <Action
                 onMouseOver={this.onMouseOverDownload}
                 onMouseLeave={this.onMouseLeaveDownload}
-                onClick={() => onDownloadButtonClick(image)}
+                onClick={() => onDownloadButtonClick(imageModel)}
               >
-                <Icon path={mdiDownload} size={1} color={download} />
+                <Icon path={mdiDownload} size={1} color={downloadColor} />
               </Action>
 
               {/* checkbox */}
               <Action
                 onMouseOver={this.onMouseOverCheckbox}
                 onMouseLeave={this.onMouseLeaveCheckbox}
-                onClick={() => onCheckboxClick(image)}
+                onClick={() => onCheckboxClick(imageModel)}
               >
                 <Icon
                   path={
                     checked ? mdiCheckboxMarkedOutline : mdiCheckboxBlankOutline
                   }
                   size={1}
-                  color={checkbox}
+                  color={checkboxColor}
                 />
               </Action>
             </Actions>
@@ -214,34 +239,42 @@ export default class Card extends Component {
   }
 
   onHover = () => {
-    this.setState({ hooter: color.titleGreyLight });
+    this.setState({ hooterColor: color.titleGreyLight });
   };
 
   onLeave = () => {
-    this.setState({ hooter: color.titleGreyDefault });
+    this.setState({ hooterColor: color.titleGreyDefault });
   };
 
   onMouseOverEye = () => {
-    this.setState({ eye: color.starfleetMediumGrey });
+    this.setState({ eyeColor: color.starfleetMediumGrey });
   };
 
   onMouseLeaveEye = () => {
-    this.setState({ eye: color.paleGrey });
+    this.setState({ eyeColor: color.paleGrey });
+  };
+
+  onMouseOverOpenTab = () => {
+    this.setState({ openTabColor: color.starfleetMediumGrey });
+  };
+
+  onMouseLeaveOpenTab = () => {
+    this.setState({ openTabColor: color.paleGrey });
   };
 
   onMouseOverDownload = () => {
-    this.setState({ download: color.starfleetMediumGrey });
+    this.setState({ downloadColor: color.starfleetMediumGrey });
   };
 
   onMouseLeaveDownload = () => {
-    this.setState({ download: color.paleGrey });
+    this.setState({ downloadColor: color.paleGrey });
   };
 
   onMouseOverCheckbox = () => {
-    this.setState({ checkbox: color.darkMintGreen });
+    this.setState({ checkboxColor: color.darkMintGreen });
   };
 
   onMouseLeaveCheckbox = () => {
-    this.setState({ checkbox: color.orionGreen });
+    this.setState({ checkboxColor: color.orionGreen });
   };
 }
