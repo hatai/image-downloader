@@ -43,11 +43,11 @@ const App = observer(
 
           {/* TODO: スタイルの調整 */}
           <GridLayout>
-            {imageListModel.images.map(imageModel => (
-              // TODO: 画像が表示されるまで Loading 画面表示
-              // TODO: Footer が画像に少しかぶるのを治す？
+            {imageListModel.images.map((imageModel, i) => (
+              // TODO: Loading が表示されているときの幅の指定サイズをどうするか
               // TODO: マウスオーバー時のハイライト
               <Card
+                key={i}
                 imageModel={imageModel}
                 src={imageModel.src}
                 checked={imageModel.checked}

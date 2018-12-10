@@ -10,12 +10,12 @@ import {
   mdiDownload,
   mdiEye
 } from '@mdi/js';
+import Load from './common/Loader';
 import color from '../utils/colors';
 
 const Main = styled.div`
   width: 100%;
   margin-bottom: 15px;
-  display: ${({ visible }) => (visible ? 'block' : 'none')};
 `;
 
 const Wrapper = styled.div`
@@ -42,6 +42,8 @@ const Img = styled.img`
   max-width: 100%;
   min-width: 100%;
   border-style: none;
+  display: ${({ visible }) => (visible ? 'block' : 'none')};
+  padding-bottom: ${({ paddingBottom }) => `${paddingBottom}px`};
 `;
 
 const Footer = styled.div`
@@ -129,14 +131,28 @@ export default class Card extends Component {
   constructor(props) {
     super(props);
 
+    this.footer = React.createRef();
+
     this.state = {
       visible: false,
+      isLoaded: false,
+      footerHeight: 0,
       hooterColor: color.titleGreyDefault,
       eyeColor: color.paleGrey,
       openTabColor: color.paleGrey,
       downloadColor: color.paleGrey,
       checkboxColor: color.orionGreen
     };
+  }
+
+  componentDidMount() {
+    this.setState({ footerHeight: this.getFooterHeight() });
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.state.footerHeight !== prevState.footerHeight) {
+      this.setState({ footerHeight: this.getFooterHeight() });
+    }
   }
 
   render() {
@@ -155,6 +171,8 @@ export default class Card extends Component {
 
     const {
       visible,
+      isLoaded,
+      footerHeight,
       eyeColor,
       openTabColor,
       downloadColor,
@@ -162,28 +180,29 @@ export default class Card extends Component {
       hooterColor
     } = this.state;
 
+    console.log(footerHeight);
+
     return (
-      <Main
-        onMouseOver={this.onHover}
-        onMouseLeave={this.onLeave}
-        visible={visible}
-      >
+      <Main onMouseOver={this.onHover} onMouseLeave={this.onLeave}>
         <Wrapper>
           <ImgWrapper>
             <Img
               src={src}
               alt={src}
+              visible={visible}
               lazyload={'on'}
               async={true}
-              onLoad={async event => {
-                this.setState({ visible: true });
+              paddingBottom={footerHeight}
+              onLoad={event => {
                 onLoad(event, imageModel);
+                this.setState({ visible: true, isLoaded: true });
               }}
-              onError={async event => onError(event, imageModel)}
+              onError={event => onError(event, imageModel)}
             />
+            {isLoaded ? null : <Load />}
           </ImgWrapper>
 
-          <Footer background={hooterColor}>
+          <Footer background={hooterColor} ref={this.footer}>
             <Title>{title}</Title>
             <Actions>
               {/* eye button */}
@@ -237,6 +256,15 @@ export default class Card extends Component {
       </Main>
     );
   }
+
+  getFooterHeight = () => {
+    const { footer } = this;
+    if (footer.current == null) {
+      return 0;
+    }
+
+    return footer.current.clientHeight;
+  };
 
   onHover = () => {
     this.setState({ hooterColor: color.titleGreyLight });

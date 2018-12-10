@@ -7,18 +7,13 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public",
     "serve": "serve -s build"
   },
   "dependencies": {
     "@mdi/js": "^3.2.89",
     "@mdi/react": "^1.1.0",
-    "@storybook/addon-actions": "^4.0.11",
-    "@storybook/addon-centered": "^4.0.11",
-    "@storybook/addon-links": "^4.0.11",
-    "@storybook/addons": "^4.0.11",
-    "@storybook/react": "^4.0.11",
     "husky": "^1.2.0",
     "lint-staged": "^8.1.0",
     "mobx": "^5.7.0",
@@ -39,6 +34,15 @@
     "styled-components": "^4.1.2",
     "sweetalert2": "^7.29.2",
     "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@storybook/react": "^4.0.12",
+    "@storybook/addon-centered": "^4.0.11",
+    "@storybook/addon-actions": "^4.0.12",
+    "@storybook/addon-links": "^4.0.12",
+    "@storybook/addons": "^4.0.12",
+    "@babel/core": "^7.2.0",
+    "babel-loader": "^8.0.4"
   },
   "eslintConfig": {
     "extends": "react-app"
