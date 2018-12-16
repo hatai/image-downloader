@@ -45,31 +45,31 @@ class ImageListModel {
   }
 
   get isCheckedAll() {
-    return this.data.every(image => image.checked);
+    return this.images.every(image => image.checked);
   }
 
-  get isUncheckedAll() {
-    return this.data.every(image => !image.checked);
+  get isNotCheckedAll() {
+    return this.images.every(image => !image.checked);
   }
 
   get isIndeterminate() {
-    return !this.isCheckedAll && !this.isUncheckedAll;
+    return !this.isCheckedAll && !this.isNotCheckedAll;
   }
 
   get checkedImages() {
-    return this.data.filter(image => image.checked);
+    return this.images.filter(image => image.checked);
   }
 
   get uncheckedImages() {
-    return this.data.filter(image => !image.checked);
+    return this.images.filter(image => !image.checked);
   }
 
   get linkedImages() {
-    return this.data.filter(image => image.linked);
+    return this.images.filter(image => image.linked);
   }
 
   get notLinkedImages() {
-    return this.data.filter(image => !image.linked);
+    return this.images.filter(image => !image.linked);
   }
 
   /********************************************************************
@@ -99,14 +99,24 @@ class ImageListModel {
   check() {}
 
   checkAll() {
+    // TODO: 後で正しい処理に治す
     this.data = this.data.map(image => {
+      image.checked = true;
+      return image;
+    });
+    this.sources = this.sources.map(image => {
       image.checked = true;
       return image;
     });
   }
 
   uncheckAll() {
+    // TODO: 後で正しい処理に治す
     this.data = this.data.map(image => {
+      image.checked = false;
+      return image;
+    });
+    this.sources = this.sources.map(image => {
       image.checked = false;
       return image;
     });
@@ -191,7 +201,7 @@ decorate(ImageListModel, {
   // computed
   images: computed,
   isCheckedAll: computed,
-  isUncheckedAll: computed,
+  isNotCheckedAll: computed,
   isIndeterminate: computed,
   checkedImages: computed,
   uncheckedImages: computed,

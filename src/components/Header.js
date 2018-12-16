@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import color from '../utils/colors'
 
@@ -29,7 +29,9 @@ const AppCover = styled.div`
   align-items: center;
   justify-content: space-between;
   background-size: cover;
-  background-color: #171544;
+  // TODO: デザイン
+  //background-color: #171544;
+  background-color: #ffffff;
   padding-top: 13px;
   padding-bottom: 13px;
   width: 100%;
@@ -59,8 +61,9 @@ const Canvas = styled.canvas`
 
 const Menu = styled(div)`
   height: 36px;
-  width: 260px;
-  min-width: 405px;
+  //width: 260px;
+  //min-width: 405px;
+  width: 90vw;
   bottom: 0;
   display: flex;
   justify-content: space-between;
@@ -68,13 +71,22 @@ const Menu = styled(div)`
 `;
 
 export default class Header extends Component {
-  // static propTypes = {}
+  static propTypes = {
+    onToggleCheckbox: PropTypes.func,
+    onClickDownloadButton: PropTypes.func
+  };
   // static defaultProps = {}
 
   render() {
+    const { onToggleCheckbox, onClickDownloadButton } = this.props;
+
     return (
       <AppCover>
-        <Menu>aa</Menu>
+        <Menu>
+          <div onClick={onToggleCheckbox}>check all</div>
+          <div onClick={onClickDownloadButton}>download</div>
+          <div>options</div>
+        </Menu>
       </AppCover>
     );
   }

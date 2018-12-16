@@ -16,6 +16,7 @@ const GlobalStyles = createGlobalStyle`
     min-height: 560px;
     max-height: 100%;
     background-color: ${color.charcoalGreyTwo};
+    overflow-y: hidden;
   }
 `;
 
@@ -39,13 +40,18 @@ const App = observer(
           {/* TODO: 全部チェックするボタン */}
           {/* TODO: チェックされているものをダウンロードするボタン */}
           {/* TODO: Header デザイン考える */}
-          <Header />
+          <Header
+            onToggleCheckbox={this.handleOnToggleCheckbox}
+            onClickDownloadButton={this.downloadAllCheckedImages}
+          />
 
           {/* TODO: スタイルの調整 */}
           <GridLayout>
             {imageListModel.images.map((imageModel, i) => (
               // TODO: Loading が表示されているときの幅の指定サイズをどうするか
               // TODO: マウスオーバー時のハイライト
+              // TODO: マウスオーバーで画像サイズ表示
+              // TODO: title 部分の表示考える
               <Card
                 key={i}
                 imageModel={imageModel}
@@ -116,7 +122,17 @@ const App = observer(
       imageModel.checked = !imageModel.checked;
     };
 
-    downlodAllCheckedImages = () => {
+    handleOnToggleCheckbox = () => {
+      const { imageListModel } = this.props;
+
+      if (imageListModel.isCheckedAll) {
+        imageListModel.uncheckAll();
+      } else {
+        imageListModel.checkAll();
+      }
+    };
+
+    downloadAllCheckedImages = () => {
       const { imageListModel } = this.props;
       imageListModel.checkedImages.forEach(async imageModel => {
         chrome.downloads.download({ url: imageModel.src });

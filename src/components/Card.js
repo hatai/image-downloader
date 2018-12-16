@@ -180,8 +180,6 @@ export default class Card extends Component {
       hooterColor
     } = this.state;
 
-    console.log(footerHeight);
-
     return (
       <Main onMouseOver={this.onHover} onMouseLeave={this.onLeave}>
         <Wrapper>
