@@ -51,6 +51,7 @@ const App = observer(
               // TODO: マウスオーバー時のハイライト
               // TODO: マウスオーバーで画像サイズ表示
               // TODO: 一番左の列以外ボーダーラディアスが効いてない？
+              // TODO: title を Input をいい感じにしたやつに置き換える
               <Card
                 key={i}
                 imageModel={imageModel}
