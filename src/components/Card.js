@@ -39,6 +39,7 @@ const ImgWrapper = styled.div`
 `;
 
 const Img = styled.img`
+  user-select: none;
   max-width: 100%;
   min-width: 100%;
   border-style: none;
@@ -58,15 +59,38 @@ const Footer = styled.div`
 `;
 
 const Title = styled.div`
+  width: ${({ width }) => width};
+  max-height: 45px;
   font-weight: 600;
   line-height: 1.14;
   font-size: 14px;
   text-align: left;
   color: white;
   display: inline-block;
-  max-height: 45px;
-  overflow: hidden;
   padding: 0 15px;
+`;
+
+const TitleText = styled.div`
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  // TODO: スクロールバーのデザイン考える？
+  ::-webkit-scrollbar {
+    display: none;
+    height: 3px;
+    background-color: #f5f5f5;
+
+    &-thumb {
+      display: none;
+      background-color: #000000;
+    }
+
+    &-track {
+      display: none;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      background-color: #f5f5f5;
+    }
+  }
 `;
 
 const Actions = styled.div`
@@ -138,7 +162,7 @@ export default class Card extends Component {
       isLoaded: false,
       footerHeight: 0,
       hooterColor: color.titleGreyDefault,
-      eyeColor: color.paleGrey,
+      zoomColor: color.paleGrey,
       openTabColor: color.paleGrey,
       downloadColor: color.paleGrey,
       checkboxColor: color.orionGreen
@@ -173,12 +197,14 @@ export default class Card extends Component {
       visible,
       isLoaded,
       footerHeight,
-      eyeColor,
+      zoomColor,
       openTabColor,
       downloadColor,
       checkboxColor,
       hooterColor
     } = this.state;
+
+    const footerWidth = this.getFooterWidth();
 
     return (
       <Main onMouseOver={this.onHover} onMouseLeave={this.onLeave}>
@@ -201,7 +227,10 @@ export default class Card extends Component {
           </ImgWrapper>
 
           <Footer background={hooterColor} ref={this.footer}>
-            <Title>{title}</Title>
+            <Title width={footerWidth === 0 ? 'auto' : `${footerWidth - 30}px`}>
+              <TitleText>{title}</TitleText>
+            </Title>
+
             <Actions>
               {/* eye button */}
               <Action
@@ -209,7 +238,7 @@ export default class Card extends Component {
                 onMouseLeave={this.onMouseLeaveEye}
                 onClick={() => onZoomButtonClick(imageModel)}
               >
-                <Icon path={mdiMagnifyPlusOutline} size={1} color={eyeColor} />
+                <Icon path={mdiMagnifyPlusOutline} size={1} color={zoomColor} />
               </Action>
 
               {/* open image on new tab */}
@@ -255,6 +284,15 @@ export default class Card extends Component {
     );
   }
 
+  getFooterWidth = () => {
+    const { footer } = this;
+    if (footer.current == null) {
+      return 0;
+    }
+
+    return footer.current.clientWidth;
+  };
+
   getFooterHeight = () => {
     const { footer } = this;
     if (footer.current == null) {
@@ -273,11 +311,11 @@ export default class Card extends Component {
   };
 
   onMouseOverEye = () => {
-    this.setState({ eyeColor: color.starfleetMediumGrey });
+    this.setState({ zoomColor: color.starfleetMediumGrey });
   };
 
   onMouseLeaveEye = () => {
-    this.setState({ eyeColor: color.paleGrey });
+    this.setState({ zoomColor: color.paleGrey });
   };
 
   onMouseOverOpenTab = () => {

@@ -48,14 +48,13 @@ const App = observer(
           {/* TODO: スタイルの調整 */}
           <GridLayout>
             {imageListModel.images.map((imageModel, i) => (
-              // TODO: Loading が表示されているときの幅の指定サイズをどうするか
               // TODO: マウスオーバー時のハイライト
               // TODO: マウスオーバーで画像サイズ表示
-              // TODO: title 部分の表示考える
               <Card
                 key={i}
                 imageModel={imageModel}
                 src={imageModel.src}
+                title={imageModel.src}
                 checked={imageModel.checked}
                 onLoad={this.handleOnLoad}
                 onError={this.handleOnError}
