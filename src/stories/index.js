@@ -36,7 +36,7 @@ storiesOf('Card', module)
       }
       title={'Dummy'}
       checked={true}
-      onEyeButtonClick={action('Eye Button clicked')}
+      onZoomButtonClick={action('Eye Button clicked')}
       onDownloadButtonClick={action('download clicked')}
       onCheckboxClick={action('checkbox clicked')}
     />
@@ -48,7 +48,7 @@ storiesOf('Card', module)
       }
       title={'Dummy'}
       checked={false}
-      onEyeButtonClick={action('Eye Button clicked')}
+      onZoomButtonClick={action('Eye Button clicked')}
       onDownloadButtonClick={action('download clicked')}
       onCheckboxClick={action('checkbox clicked')}
     />
@@ -58,7 +58,7 @@ storiesOf('Card', module)
       src={''}
       title={'Dummy'}
       checked={false}
-      onEyeButtonClick={action('Eye Button clicked')}
+      onZoomButtonClick={action('Eye Button clicked')}
       onDownloadButtonClick={action('download clicked')}
       onCheckboxClick={action('checkbox clicked')}
     />
