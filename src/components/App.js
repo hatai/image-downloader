@@ -59,7 +59,7 @@ const App = observer(
                 checked={imageModel.checked}
                 onLoad={this.handleOnLoad}
                 onError={this.handleOnError}
-                onEyeButtonClick={this.handleOnEyeButtonClick}
+                onZoomButtonClick={this.handleOnZoomButtonClick}
                 onOpenTabClick={this.handleOnOpenTabClick}
                 onDownloadButtonClick={this.handleOnDownloadButtonClick}
                 onCheckboxClick={this.handleOnCheckboxClick}
@@ -90,7 +90,6 @@ const App = observer(
 
     getImages = async () => {
       const { imageListModel } = this.props;
-
       const { images, linkedImages } = await util.getImages();
       imageListModel.linkedImages = linkedImages;
       imageListModel.notLinkedImages = images;
@@ -106,7 +105,7 @@ const App = observer(
       imageModel.visible = false;
     };
 
-    handleOnEyeButtonClick = imageModel => {
+    handleOnZoomButtonClick = imageModel => {
       //  TODO: EYE ボタンが押されたときの処理（モーダルで画像表示？）
     };
 

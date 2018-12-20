@@ -94,14 +94,14 @@ storiesOf('GridLayout', module).add('default', () => (
           src={url}
           title={'Dummy'}
           checked={false}
-          onEyeButtonClick={() => {
+          onZoomButtonClick={() => {
             swal({
               showConfirmButton: false,
               background: `rgba(0,0,0,0)`,
               imageUrl: url,
               animation: false
             });
-            action('Eye Button clicked');
+            action(`Eye Button clicked: ${i}, ${url}`);
           }}
           onDownloadButtonClick={action('download clicked')}
           onCheckboxClick={action('checkbox clicked')}

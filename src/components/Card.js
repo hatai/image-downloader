@@ -8,7 +8,7 @@ import {
   mdiCheckboxBlankOutline,
   mdiCheckboxMarkedOutline,
   mdiDownload,
-  mdiEye
+  mdiMagnifyPlusOutline
 } from '@mdi/js';
 import Load from './common/Loader';
 import color from '../utils/colors';
@@ -95,7 +95,7 @@ const Action = styled.div`
 
 const emptyFunc = () => {};
 
-const onEyeButtonClick = url => {
+const onZoomButtonClick = url => {
   swal({
     showConfirmButton: false,
     background: `rgba(0,0,0,0)`,
@@ -110,7 +110,7 @@ export default class Card extends Component {
     src: PropTypes.string.isRequired,
     title: PropTypes.string,
     checked: PropTypes.bool.isRequired,
-    onEyeButtonClick: PropTypes.func,
+    onZoomButtonClick: PropTypes.func,
     onOpenTabClick: PropTypes.func,
     onDownloadButtonClick: PropTypes.func,
     onCheckboxClick: PropTypes.func,
@@ -120,7 +120,7 @@ export default class Card extends Component {
 
   static defaultProps = {
     imageModel: {},
-    onEyeButtonClick: onEyeButtonClick,
+    onZoomButtonClick: onZoomButtonClick,
     onOpenTabClick: emptyFunc,
     onDownloadButtonClick: emptyFunc,
     onCheckboxClick: emptyFunc,
@@ -161,7 +161,7 @@ export default class Card extends Component {
       src,
       title,
       checked,
-      onEyeButtonClick,
+      onZoomButtonClick,
       onOpenTabClick,
       onDownloadButtonClick,
       onCheckboxClick,
@@ -207,9 +207,9 @@ export default class Card extends Component {
               <Action
                 onMouseOver={this.onMouseOverEye}
                 onMouseLeave={this.onMouseLeaveEye}
-                onClick={() => onEyeButtonClick(imageModel)}
+                onClick={() => onZoomButtonClick(imageModel)}
               >
-                <Icon path={mdiEye} size={1} color={eyeColor} />
+                <Icon path={mdiMagnifyPlusOutline} size={1} color={eyeColor} />
               </Action>
 
               {/* open image on new tab */}
