@@ -43,6 +43,7 @@ const Img = styled.img`
   max-width: 100%;
   min-width: 100%;
   border-style: none;
+  border-radius: 3px 3px 0 0;
   display: ${({ visible }) => (visible ? 'block' : 'none')};
   padding-bottom: ${({ paddingBottom }) => `${paddingBottom}px`};
 `;
@@ -56,6 +57,7 @@ const Footer = styled.div`
   width: 100%;
   position: absolute;
   bottom: 0;
+  border-radius: 0 0 3px 3px;
 `;
 
 const Title = styled.div`
