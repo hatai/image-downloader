@@ -53,8 +53,8 @@ export default class GridLayout extends Component {
 
     return (
       <Container>
-        {children.map(child => (
-          <Grid>{child}</Grid>
+        {children.map((child, i) => (
+          <Grid key={i}>{child}</Grid>
         ))}
       </Container>
     );

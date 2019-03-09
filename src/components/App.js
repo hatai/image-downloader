@@ -1,13 +1,16 @@
 /* eslint-env webextensions */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
+import swal from 'sweetalert2';
 import GridLayout from './GridLayout';
 import Header from './Header';
 import Card from './Card';
 import color from '../utils/colors';
 import * as util from '../utils/index';
+import '../assets/style/index.scss';
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -16,68 +19,79 @@ const GlobalStyles = createGlobalStyle`
     min-height: 560px;
     max-height: 100%;
     background-color: ${color.charcoalGreyTwo};
-    overflow-y: hidden;
+    overflow-x: hidden;
   }
+`;
+
+const Container = styled.div`
+  padding-top: 65px;
 `;
 
 const App = observer(
   class App extends Component {
+    static propTypes = {
+      imageListModel: PropTypes.object.isRequired,
+      settingsModel: PropTypes.object.isRequired
+    };
+
     componentWillMount() {
       // TODO: 表示できる画像がなかった場合のメッセージ表示
       Promise.all([this.initialize(), this.getImages()]).catch(error =>
-        console.log(error)
+        console.log(error.toString())
       );
     }
 
     render() {
-      const { imageListModel } = this.props;
+      const { imageListModel, settingsModel } = this.props;
 
       return (
         <div>
           <GlobalStyles />
 
           {/* TODO: オプションの表示 */}
-          {/* TODO: 全部チェックするボタン */}
-          {/* TODO: チェックされているものをダウンロードするボタン */}
           {/* TODO: Header デザイン考える */}
           <Header
+            imageListModel={imageListModel}
+            settingsModel={settingsModel}
             onToggleCheckbox={this.handleOnToggleCheckbox}
             onClickDownloadButton={this.downloadAllCheckedImages}
           />
 
           {/* TODO: スタイルの調整 */}
-          <GridLayout>
-            {imageListModel.images.map((imageModel, i) => (
-              // TODO: マウスオーバー時のハイライト
-              // TODO: マウスオーバーで画像サイズ表示
-              // TODO: 一番左の列以外ボーダーラディアスが効いてない？
-              // TODO: title を Input をいい感じにしたやつに置き換える
-              <Card
-                key={i}
-                imageModel={imageModel}
-                src={imageModel.src}
-                title={imageModel.src}
-                checked={imageModel.checked}
-                onLoad={this.handleOnLoad}
-                onError={this.handleOnError}
-                onZoomButtonClick={this.handleOnZoomButtonClick}
-                onOpenTabClick={this.handleOnOpenTabClick}
-                onDownloadButtonClick={this.handleOnDownloadButtonClick}
-                onCheckboxClick={this.handleOnCheckboxClick}
-              />
-            ))}
-          </GridLayout>
+          <Container>
+            <GridLayout>
+              {imageListModel.images.map((imageModel, i) => (
+                // TODO: マウスオーバー時のハイライト
+                // TODO: マウスオーバーで画像サイズ表示
+                // TODO: 一番左の列以外ボーダーラディアスが効いてない？
+                // TODO: title を Input をいい感じにしたやつに置き換える
+                <Card
+                  key={i}
+                  imageModel={imageModel}
+                  src={imageModel.src}
+                  title={imageModel.src.split(/[?#]/)[0]}
+                  checked={imageModel.checked}
+                  onLoad={this.handleOnLoad}
+                  onError={this.handleOnError}
+                  onZoomButtonClick={this.handleOnZoomButtonClick}
+                  onOpenTabClick={this.handleOnOpenTabClick}
+                  onDownloadButtonClick={this.handleOnDownloadButtonClick}
+                  onCheckboxClick={this.handleOnCheckboxClick}
+                />
+              ))}
+            </GridLayout>
+          </Container>
         </div>
       );
     }
 
     initialize = async () => {
-      const { optionModel } = this.props;
+      const { settingsModel } = this.props;
 
       await this.setOptionsFromStorage();
       chrome.downloads.onDeterminingFilename.addListener((item, suggest) => {
         const suggestName = util.suggestNewFilename(
-          optionModel.subfolder,
+          settingsModel.subfolder,
           item.filename
         );
         suggest({ filename: suggestName });
@@ -85,8 +99,8 @@ const App = observer(
     };
 
     setOptionsFromStorage = async () => {
-      const { optionModel } = this.props;
-      optionModel.values = await util.getSavedOptions('options');
+      const { settingsModel } = this.props;
+      settingsModel.values = await util.getSavedOptions('options');
     };
 
     getImages = async () => {
@@ -107,7 +121,16 @@ const App = observer(
     };
 
     handleOnZoomButtonClick = imageModel => {
-      //  TODO: EYE ボタンが押されたときの処理（モーダルで画像表示？）
+      swal.fire({
+        text: imageModel.src.split(/[#?]/)[0],
+        imageUrl: imageModel.src,
+        imageWidth: imageModel.width,
+        imageHeight: imageModel.height,
+        // width: "auto",
+        background: `${color.voyagerDarkGrey}`,
+        showConfirmButton: false,
+        showCloseButton: true
+      });
     };
 
     handleOnOpenTabClick = imageModel => {

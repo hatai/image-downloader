@@ -5,12 +5,11 @@ import swal from 'sweetalert2';
 import Icon from '@mdi/react';
 import {
   mdiArrowTopRightThick,
-  mdiCheckboxBlankOutline,
-  mdiCheckboxMarkedOutline,
   mdiDownload,
   mdiMagnifyPlusOutline
 } from '@mdi/js';
 import Load from './common/Loader';
+import Checkbox from './common/Checkbox';
 import color from '../utils/colors';
 
 const Main = styled.div`
@@ -40,6 +39,7 @@ const ImgWrapper = styled.div`
 
 const Img = styled.img`
   user-select: none;
+  cursor: pointer;
   max-width: 100%;
   min-width: 100%;
   border-style: none;
@@ -224,6 +224,7 @@ export default class Card extends Component {
                 this.setState({ visible: true, isLoaded: true });
               }}
               onError={event => onError(event, imageModel)}
+              onClick={() => onCheckboxClick(imageModel)}
             />
             {isLoaded ? null : <Load />}
           </ImgWrapper>
@@ -234,7 +235,7 @@ export default class Card extends Component {
             </Title>
 
             <Actions>
-              {/* eye button */}
+              {/* zoom button */}
               <Action
                 onMouseOver={this.onMouseOverEye}
                 onMouseLeave={this.onMouseLeaveEye}
@@ -271,13 +272,7 @@ export default class Card extends Component {
                 onMouseLeave={this.onMouseLeaveCheckbox}
                 onClick={() => onCheckboxClick(imageModel)}
               >
-                <Icon
-                  path={
-                    checked ? mdiCheckboxMarkedOutline : mdiCheckboxBlankOutline
-                  }
-                  size={1}
-                  color={checkboxColor}
-                />
+                <Checkbox checked={checked} color={checkboxColor} />
               </Action>
             </Actions>
           </Footer>

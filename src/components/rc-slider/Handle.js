@@ -1,7 +1,7 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import classNames from 'classnames'
-import addEventListener from 'rc-util/lib/Dom/addEventListener'
+import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import addEventListener from 'rc-util/lib/Dom/addEventListener';
 
 export default class Handle extends React.Component {
   static propTypes = {
@@ -14,57 +14,65 @@ export default class Handle extends React.Component {
     min: PropTypes.number,
     max: PropTypes.number,
     value: PropTypes.number,
-    tabIndex: PropTypes.number,
-  }
+    tabIndex: PropTypes.number
+  };
 
   state = {
-    clickFocused: false,
-  }
+    clickFocused: false
+  };
 
-  componentDidMount () {
+  componentDidMount() {
     // mouseup won't trigger if mouse moved out of handle,
     // so we listen on document here.
-    this.onMouseUpListener = addEventListener(document, 'mouseup', this.handleMouseUp)
+    this.onMouseUpListener = addEventListener(
+      document,
+      'mouseup',
+      this.handleMouseUp
+    );
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.onMouseUpListener) {
-      this.onMouseUpListener.remove()
+      this.onMouseUpListener.remove();
     }
   }
 
-  setClickFocus (focused) {
-    this.setState({clickFocused: focused})
+  setHandleRef = node => {
+    this.handle = node;
+  };
+
+  setClickFocus(focused) {
+    this.setState({ clickFocused: focused });
   }
 
   handleMouseUp = () => {
     if (document.activeElement === this.handle) {
-      this.setClickFocus(true)
+      this.setClickFocus(true);
     }
-  }
+  };
 
   handleBlur = () => {
-    this.setClickFocus(false)
-  }
+    this.setClickFocus(false);
+  };
 
   handleKeyDown = () => {
-    this.setClickFocus(false)
+    this.setClickFocus(false);
+  };
+
+  clickFocus() {
+    this.setClickFocus(true);
+    this.focus();
   }
 
-  clickFocus () {
-    this.setClickFocus(true)
-    this.focus()
+  focus() {
+    this.handle.focus();
   }
 
-  focus () {
-    this.handle.focus()
+  blur() {
+    this.handle.blur();
   }
 
-  blur () {
-    this.handle.blur()
-  }
-
-  render () {
+  render() {
     const {
       prefixCls,
       vertical,
@@ -76,42 +84,39 @@ export default class Handle extends React.Component {
       value,
       tabIndex,
       ...restProps
-    } = this.props
+    } = this.props;
 
-    const className = classNames(
-      this.props.className,
-      {
-        [`${prefixCls}-handle-click-focused`]: this.state.clickFocused,
-        [`${prefixCls}-handle-disabled`]: !!disabled,
-      }
-    )
+    const className = classNames(this.props.className, {
+      [`${prefixCls}-handle-click-focused`]: this.state.clickFocused,
+      [`${prefixCls}-handle-disabled`]: !!disabled
+    });
 
     const positionStyle = vertical
-      ? {bottom: `${offset}%`}
-      : {left: `${offset}%`}
+      ? { bottom: `${offset}%` }
+      : { left: `${offset}%` };
     const elStyle = {
       ...style,
-      ...positionStyle,
-    }
+      ...positionStyle
+    };
 
     let ariaProps = {
       role: 'slider',
-      tabIndex: disabled ? null : (tabIndex || 0),
-      'aria-disabled': !!disabled,
-    }
+      tabIndex: disabled ? null : tabIndex || 0,
+      'aria-disabled': !!disabled
+    };
     if (value !== undefined) {
       ariaProps = {
         ...ariaProps,
         'aria-valuemin': min,
         'aria-valuemax': max,
-        'aria-valuenow': value,
-      }
+        'aria-valuenow': value
+      };
     }
 
     return (
       <div
         ref={node => {
-          this.handle = node
+          this.handle = node;
         }}
         {...ariaProps}
         {...restProps}
@@ -120,6 +125,6 @@ export default class Handle extends React.Component {
         onBlur={this.handleBlur}
         onKeyDown={this.handleKeyDown}
       />
-    )
+    );
   }
 }

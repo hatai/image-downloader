@@ -94,6 +94,11 @@ class ImageListModel {
    * Action
    ********************************************************************/
 
+  reset() {
+    this.sources = [];
+    this.data = [];
+  }
+
   remove() {}
 
   check() {}
@@ -181,8 +186,8 @@ class ImageListModel {
     });
   }
 
-  filterByImageSize(option) {
-    this.data = this.data.filter(image => shouldFilterBySize(image, option));
+  filterByImageSize(settings) {
+    this.data = this.data.filter(image => shouldFilterBySize(image, settings));
   }
 
   filterByLinkedImage(onlyImagesFromLinks) {
@@ -223,25 +228,25 @@ decorate(ImageListModel, {
 /**
  * whether to filter or not
  * @param image
- * @param option
+ * @param settings
  * @returns {boolean}
  */
-const shouldFilterBySize = (image, option) => {
+const shouldFilterBySize = (image, settings) => {
   const minWidthIsOk =
-    option.minWidthEnabled === false ||
-    (option.minWidthEnabled && image.width >= option.minWidth);
+    settings.minWidthEnabled === false ||
+    (settings.minWidthEnabled && image.width >= settings.minWidth);
 
   const maxWidthIsOk =
-    option.maxWidthEnabled === false ||
-    (option.maxWidthEnabled && image.width <= option.maxWidth);
+    settings.maxWidthEnabled === false ||
+    (settings.maxWidthEnabled && image.width <= settings.maxWidth);
 
   const minHeightIsOk =
-    option.minHeightEnabled === false ||
-    (option.minHeightEnabled && image.height >= option.minHeight);
+    settings.minHeightEnabled === false ||
+    (settings.minHeightEnabled && image.height >= settings.minHeight);
 
   const maxHeightIsOk =
-    option.maxHeightEnabled === false ||
-    (option.maxHeightEnabled && image.height <= option.maxHeight);
+    settings.maxHeightEnabled === false ||
+    (settings.maxHeightEnabled && image.height <= settings.maxHeight);
 
   return minWidthIsOk && maxWidthIsOk && minHeightIsOk && maxHeightIsOk;
 };

@@ -59,6 +59,7 @@ const colors = {
   qonosTeal: '#46c3bd',
   downvoteRed: '#db3535',
   shieldsupRedAlert: '#ec4081',
-}
+  indigoDark: '#171544'
+};
 
-export default colors
+export default colors;
