@@ -4,7 +4,7 @@ import React from 'react';
 const Track = props => {
   const { className, included, vertical, offset, length, style } = props;
 
-  const positonStyle = vertical
+  const positionStyle = vertical
     ? {
         bottom: `${offset}%`,
         height: `${length}%`
@@ -16,7 +16,7 @@ const Track = props => {
 
   const elStyle = {
     ...style,
-    ...positonStyle
+    ...positionStyle
   };
 
   return included ? <div className={className} style={elStyle} /> : null;

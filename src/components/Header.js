@@ -9,8 +9,6 @@ import swal from 'sweetalert2';
 import Checkbox from './common/Checkbox';
 import Settings from './Settings';
 import color from '../utils/colors';
-import imageListModel from '../models/image';
-import settingsModel from '../models/settings';
 
 const StyledDiv = styled.div`
   display: block;
@@ -34,10 +32,10 @@ const AppCover = styled(StyledDiv)`
   z-index: 100;
   box-shadow: 0 0 25px 5px #000;
   transition: box-shadow 0.4s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
+  //display: flex;
+  //flex-direction: column;
+  //align-items: center;
+  //justify-content: space-between;
   background-size: cover;
   background-color: ${color.indigo};
   padding-top: 13px;
@@ -48,8 +46,8 @@ const AppCover = styled(StyledDiv)`
     background-position: 0;
   }
 `;
-/*
 
+/*
 const Background = styled(StyledDiv)`
   position: absolute;
   top: 0;
@@ -72,10 +70,15 @@ const Menu = styled(StyledDiv)`
   //width: 260px;
   //min-width: 405px;
   width: 90vw;
+  margin-left: 5vw;
+  margin-right: 5vw;
   bottom: 0;
-  display: flex;
   justify-content: space-between;
   position: relative;
+
+  display: grid;
+  grid-template-columns: [check] 34% [download] auto [setting] auto;
+  grid-template-rows: auto;
 `;
 
 const Action = styled(StyledDiv)`
@@ -83,8 +86,11 @@ const Action = styled(StyledDiv)`
   cursor: pointer;
   width: auto;
   color: ${color.white};
-  text-align: right;
-  vertical-align: center;
+
+  grid-column-start: ${props => props.start || 'auto'};
+  grid-column-end: ${props => props.end || 'auto'};
+  grid-row-start: auto;
+  grid-row-end: auto;
 
   display: flex;
   flex-direction: row;
@@ -130,35 +136,42 @@ export default class Header extends Component {
       downloadIconColor,
       settingsIconColor
     } = this.state;
+
     const {
-      settingsModel,
+      imageListModel,
       onToggleCheckbox,
       onClickDownloadButton
     } = this.props;
+
+    const {
+      isCheckedAll,
+      isIndeterminate,
+      images,
+      checkedImages
+    } = imageListModel;
 
     return (
       <AppCover>
         <Menu>
           <Action
+            start={'check'}
+            end={'check'}
             onClick={onToggleCheckbox}
             onMouseOver={() => this.handleOnMouseOver('checkboxIconColor')}
             onMouseLeave={() => this.handleOnMouseLeave('checkboxIconColor')}
           >
             <Checkbox
-              checked={imageListModel.isCheckedAll}
-              indeterminate={imageListModel.isIndeterminate}
+              checked={isCheckedAll}
+              indeterminate={isIndeterminate}
               color={checkboxIconColor}
               size={'2em'}
             />
-            <p>
-              Check all{' '}
-              {`(${imageListModel.checkedImages.length}/${
-                imageListModel.images.length
-              })`}
-            </p>
+            <p>Check all{` (${checkedImages.length}/${images.length})`}</p>
           </Action>
 
           <Action
+            start={'download'}
+            end={'download'}
             onClick={onClickDownloadButton}
             onMouseOver={() => this.handleOnMouseOver('downloadIconColor')}
             onMouseLeave={() => this.handleOnMouseLeave('downloadIconColor')}
@@ -172,6 +185,8 @@ export default class Header extends Component {
           </Action>
 
           <Action
+            start={'setting'}
+            end={'setting'}
             onClick={this.showSettings}
             onMouseOver={() => this.handleOnMouseOver('settingsIconColor')}
             onMouseLeave={() => this.handleOnMouseLeave('settingsIconColor')}
@@ -189,6 +204,8 @@ export default class Header extends Component {
   }
 
   showSettings = () => {
+    const { settingsModel } = this.props;
+
     const id = uuid();
     swal.fire({
       titleText: 'Settings',

@@ -43,8 +43,7 @@ class Range extends React.Component {
     const recent = bounds[0] === max ? 0 : bounds.length - 1;
 
     if (Array.isArray(disabled)) {
-      // TODO: 適切なメッセージ
-      warning(disabled.length === bounds.length, 'Errorrrr');
+      warning(disabled.length === bounds.length, 'Error: Range:constructor()');
     }
 
     this.state = {
@@ -223,6 +222,7 @@ class Range extends React.Component {
           .map((v, i) => ({ index: i, disabled: v }))
           .filter(v => v.disabled === false)
           .map(v => v.index);
+
         if (notDisableds.length === 1) {
           boundNeedMoving = notDisableds[0];
         } else {

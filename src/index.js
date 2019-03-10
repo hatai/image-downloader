@@ -4,7 +4,6 @@ import App from './components/App';
 import imageListModel from './models/image';
 import settingsModel from './models/settings';
 import { unregister } from './registerServiceWorker';
-import './assets/style/rc-slider/index.css';
 
 (function(ls) {
   // initialization

@@ -5,7 +5,7 @@
 $prefixClass: rc-slider;
 $disabledColor: #ccc;
 $border-radius-base: 6px;
-$primary-color: #2db7f5;
+$primary-color: #01b96b;
 $tooltip-color: #fff;
 $tooltip-bg: tint(#666, 4%);
 $tooltip-arrow-width: 4px;
@@ -59,29 +59,28 @@ $ease-in-quint: cubic-bezier(0.755, 0.05, 0.855, 0.06);
     cursor: -webkit-grab;
     cursor: grab;
     border-radius: 50%;
-    border: solid 2px tint($primary-color, 50%);
+    border: solid 2px tint($primary-color, 20%);
     background-color: #fff;
     touch-action: pan-x;
 
     &:focus {
-      border-color: tint($primary-color, 20%);
-      box-shadow: 0 0 0 5px tint($primary-color, 50%);
+      border-color: tint($primary-color, 0%);
+      box-shadow: 0 0 0 5px tint($primary-color, 20%);
       outline: none;
     }
 
     &-click-focused:focus {
-      border-color: tint($primary-color, 50%);
+      border-color: tint($primary-color, 20%);
       box-shadow: unset;
     }
 
     &:hover {
-      border-color: tint($primary-color, 20%);
+      border-color: tint($primary-color, 00%);
     }
 
     &:active {
-      border-color: tint($primary-color, 20%);
-      box-shadow: 0 0 5px tint($primary-color, 20%);
-      cursor: -webkit-grabbing;
+      border-color: tint($primary-color, 0%);
+      box-shadow: 0 0 5px tint($primary-color, 0%);
       cursor: grabbing;
     }
 
@@ -210,9 +209,11 @@ $ease-in-quint: cubic-bezier(0.755, 0.05, 0.855, 0.06);
     &-dot {
       left: 2px;
       margin-bottom: -4px;
+
       &:first-child {
         margin-bottom: -4px;
       }
+
       &:last-child {
         margin-bottom: -4px;
       }

@@ -48,8 +48,7 @@ const App = observer(
         <div>
           <GlobalStyles />
 
-          {/* TODO: オプションの表示 */}
-          {/* TODO: Header デザイン考える */}
+          {/* TODO: 各ボタンを Grid で並べる */}
           <Header
             imageListModel={imageListModel}
             settingsModel={settingsModel}
@@ -57,14 +56,12 @@ const App = observer(
             onClickDownloadButton={this.downloadAllCheckedImages}
           />
 
-          {/* TODO: スタイルの調整 */}
+          {/* TODO: 画像のダウンロードはバックグラウンドスクリプトにやらせる */}
           <Container>
             <GridLayout>
               {imageListModel.images.map((imageModel, i) => (
                 // TODO: マウスオーバー時のハイライト
                 // TODO: マウスオーバーで画像サイズ表示
-                // TODO: 一番左の列以外ボーダーラディアスが効いてない？
-                // TODO: title を Input をいい感じにしたやつに置き換える
                 <Card
                   key={i}
                   imageModel={imageModel}

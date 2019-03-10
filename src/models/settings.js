@@ -2,7 +2,7 @@ import { observable, computed, action, decorate } from 'mobx';
 import { saveOptions } from '../utils/index';
 
 class SettingsModel {
-  subFolder = '';
+  subfolder = '';
   filter = '';
   // filterType 0: normal, 1: wildcard, 2: regex
   filterType = 0;
@@ -22,7 +22,7 @@ class SettingsModel {
 
   get values() {
     const {
-      subFolder,
+      subfolder,
       filter,
       filterType,
       onlyImagesFromLink,
@@ -37,7 +37,7 @@ class SettingsModel {
     } = this;
 
     return {
-      subFolder,
+      subfolder,
       filter,
       filterType,
       onlyImagesFromLink,
@@ -78,7 +78,7 @@ class SettingsModel {
 
 decorate(SettingsModel, {
   // observable
-  subFolder: observable,
+  subfolder: observable,
   filter: observable,
   filterType: observable,
   minWidth: observable,

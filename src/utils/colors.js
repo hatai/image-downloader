@@ -26,7 +26,7 @@ const colors = {
   battleshipGrey: '#747a84',
   coolGrey: '#b4b9c2',
   paleGrey: '#e2e5ea',
-  paleGrey_two: '#eff1f4',
+  paleGrey2: '#eff1f4',
   silverThree: '#d0d7d8',
   lightGreyBlue: '#8da6c9',
   darkGreyThree: '#222226',
@@ -59,7 +59,8 @@ const colors = {
   qonosTeal: '#46c3bd',
   downvoteRed: '#db3535',
   shieldsupRedAlert: '#ec4081',
-  indigoDark: '#171544'
+  indigoDark: '#171544',
+  dropDown: '#53565d'
 };
 
 export default colors;
