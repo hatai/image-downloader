@@ -77,7 +77,7 @@ const Menu = styled(StyledDiv)`
   position: relative;
 
   display: grid;
-  grid-template-columns: [check] 34% [download] auto [setting] auto;
+  grid-template-columns: [check] 28% [download] auto [setting] 20%;
   grid-template-rows: auto;
 `;
 
@@ -166,7 +166,7 @@ export default class Header extends Component {
               color={checkboxIconColor}
               size={'2em'}
             />
-            <p>Check all{` (${checkedImages.length}/${images.length})`}</p>
+            <p>{`Check all (${checkedImages.length}/${images.length})`}</p>
           </Action>
 
           <Action
