@@ -16,13 +16,8 @@ import DropDown from '../components/common/DropDown';
 import TextInput from '../components/common/TextInput';
 import color from '../utils/colors';
 import imageListModel from '../models/image';
-import settingsModel from '../models/settings';
 
 storiesOf('App', module).add('Default', () => {
-  const app = (
-    <App imageListModel={imageListModel} settingsModel={settingsModel} />
-  );
-
   imageListModel.reset();
   imageListModel.linkedImages = [
     'https://i.pinimg.com/originals/0c/da/23/0cda2360f6f0200cd2547e7ad77a7eb5.jpg',
@@ -41,7 +36,7 @@ storiesOf('App', module).add('Default', () => {
     'https://i.pinimg.com/564x/00/55/d1/0055d1e21f2e0d4152be9ed25f08d42c.jpg'
   ];
 
-  return app;
+  return <App />;
 });
 
 storiesOf('Card', module)
@@ -85,7 +80,7 @@ storiesOf('Components', module)
   .addDecorator(centered)
   .add('Header', () => (
     <div style={{ height: '3000px' }}>
-      <Header imageListModel={imageListModel} settingsModel={settingsModel} />
+      <Header />
     </div>
   ))
   .add('Loader', () => (
@@ -102,7 +97,7 @@ storiesOf('Components', module)
   ))
   .add('Settings', () => (
     <div style={{ width: 500, height: 500 }}>
-      <Settings settingsModel={settingsModel} />
+      <Settings />
     </div>
   ))
   .add('DropDown', () => (

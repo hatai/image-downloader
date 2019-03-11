@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import swal from 'sweetalert2';
@@ -16,6 +17,7 @@ import color from '../utils/colors';
 const Main = styled.div`
   width: 100%;
   margin-bottom: 15px;
+  display: ${props => (props.visible ? 'block' : 'none')};
 `;
 
 const Wrapper = styled.div`
@@ -108,201 +110,234 @@ const onZoomButtonClick = url => {
   });
 };
 
-export default class Card extends Component {
-  static propTypes = {
-    imageModel: PropTypes.object,
-    src: PropTypes.string.isRequired,
-    title: PropTypes.string,
-    checked: PropTypes.bool.isRequired,
-    onZoomButtonClick: PropTypes.func,
-    onOpenTabClick: PropTypes.func,
-    onDownloadButtonClick: PropTypes.func,
-    onCheckboxClick: PropTypes.func,
-    onLoad: PropTypes.func,
-    onError: PropTypes.func
-  };
-
-  static defaultProps = {
-    imageModel: {},
-    onZoomButtonClick: onZoomButtonClick,
-    onOpenTabClick: emptyFunc,
-    onDownloadButtonClick: emptyFunc,
-    onCheckboxClick: emptyFunc,
-    onLoad: emptyFunc,
-    onError: emptyFunc
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.footer = React.createRef();
-
-    this.state = {
-      visible: false,
-      isLoaded: false,
-      footerHeight: 0,
-      hooterColor: color.titleGreyDefault,
-      zoomColor: color.paleGrey,
-      openTabColor: color.paleGrey,
-      downloadColor: color.paleGrey,
-      checkboxColor: color.orionGreen
+export default observer(
+  class Card extends Component {
+    static propTypes = {
+      imageModel: PropTypes.object,
+      src: PropTypes.string.isRequired,
+      title: PropTypes.string,
+      checked: PropTypes.bool.isRequired,
+      onZoomButtonClick: PropTypes.func,
+      onOpenTabClick: PropTypes.func,
+      onDownloadButtonClick: PropTypes.func,
+      onCheckboxClick: PropTypes.func,
+      onLoad: PropTypes.func,
+      onError: PropTypes.func
     };
-  }
 
-  componentDidMount() {
-    this.setState({ footerHeight: this.getFooterHeight() });
-  }
+    static defaultProps = {
+      imageModel: {},
+      onZoomButtonClick: onZoomButtonClick,
+      onOpenTabClick: emptyFunc,
+      onDownloadButtonClick: emptyFunc,
+      onCheckboxClick: emptyFunc,
+      onLoad: emptyFunc,
+      onError: emptyFunc
+    };
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.state.footerHeight !== prevState.footerHeight) {
+    constructor(props) {
+      super(props);
+
+      this.footer = React.createRef();
+
+      this.state = {
+        visible: false,
+        isLoaded: false,
+        footerHeight: 0,
+        hooterColor: color.titleGreyDefault,
+        zoomColor: color.paleGrey,
+        openTabColor: color.paleGrey,
+        downloadColor: color.paleGrey,
+        checkboxColor: color.orionGreen
+      };
+    }
+
+    componentDidMount() {
       this.setState({ footerHeight: this.getFooterHeight() });
     }
-  }
 
-  getFooterHeight = () => {
-    const { footer } = this;
-    if (footer.current == null) {
-      return 0;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+      if (this.state.footerHeight !== prevState.footerHeight) {
+        this.setState({ footerHeight: this.getFooterHeight() });
+      }
     }
 
-    return footer.current.clientHeight;
-  };
+    getFooterHeight = () => {
+      const { footer } = this;
+      if (footer.current == null) {
+        return 0;
+      }
 
-  onHover = () => {
-    this.setState({ hooterColor: color.titleGreyLight });
-  };
+      return footer.current.clientHeight;
+    };
 
-  onLeave = () => {
-    this.setState({ hooterColor: color.titleGreyDefault });
-  };
+    onLoad = e => {
+      const { imageModel, onLoad } = this.props;
 
-  onMouseOverEye = () => {
-    this.setState({ zoomColor: color.starfleetMediumGrey });
-  };
+      onLoad(e, imageModel);
+      this.setState({ visible: true, isLoaded: true });
+    };
 
-  onMouseLeaveEye = () => {
-    this.setState({ zoomColor: color.paleGrey });
-  };
+    onError = e => {
+      const { imageModel, onError } = this.props;
+      onError(e, imageModel);
+    };
 
-  onMouseOverOpenTab = () => {
-    this.setState({ openTabColor: color.starfleetMediumGrey });
-  };
+    onImageClick = () => {
+      const { imageModel, onCheckboxClick } = this.props;
+      onCheckboxClick(imageModel);
+    };
 
-  onMouseLeaveOpenTab = () => {
-    this.setState({ openTabColor: color.paleGrey });
-  };
+    onHover = () => {
+      this.setState({ hooterColor: color.titleGreyLight });
+    };
 
-  onMouseOverDownload = () => {
-    this.setState({ downloadColor: color.starfleetMediumGrey });
-  };
+    onLeave = () => {
+      this.setState({ hooterColor: color.titleGreyDefault });
+    };
 
-  onMouseLeaveDownload = () => {
-    this.setState({ downloadColor: color.paleGrey });
-  };
+    onClickZoom = () => {
+      const { imageModel, onZoomButtonClick } = this.props;
+      onZoomButtonClick(imageModel);
+    };
 
-  onMouseOverCheckbox = () => {
-    this.setState({ checkboxColor: color.darkMintGreen });
-  };
+    onMouseOverZoom = () => {
+      this.setState({ zoomColor: color.starfleetMediumGrey });
+    };
 
-  onMouseLeaveCheckbox = () => {
-    this.setState({ checkboxColor: color.orionGreen });
-  };
+    onMouseLeaveZoom = () => {
+      this.setState({ zoomColor: color.paleGrey });
+    };
 
-  render() {
-    const {
-      imageModel,
-      src,
-      title,
-      checked,
-      onZoomButtonClick,
-      onOpenTabClick,
-      onDownloadButtonClick,
-      onCheckboxClick,
-      onLoad,
-      onError
-    } = this.props;
+    onClickOpenTab = () => {
+      const { imageModel, onOpenTabClick } = this.props;
+      onOpenTabClick(imageModel);
+    };
 
-    const {
-      visible,
-      isLoaded,
-      footerHeight,
-      zoomColor,
-      openTabColor,
-      downloadColor,
-      checkboxColor,
-      hooterColor
-    } = this.state;
+    onMouseOverOpenTab = () => {
+      this.setState({ openTabColor: color.starfleetMediumGrey });
+    };
 
-    return (
-      <Main onMouseOver={this.onHover} onMouseLeave={this.onLeave}>
-        <Wrapper>
-          <ImgWrapper>
-            <Img
-              src={src}
-              alt={src}
-              visible={visible}
-              lazyload={'on'}
-              async={true}
-              paddingBottom={footerHeight}
-              onLoad={event => {
-                onLoad(event, imageModel);
-                this.setState({ visible: true, isLoaded: true });
-              }}
-              onError={event => onError(event, imageModel)}
-              onClick={() => onCheckboxClick(imageModel)}
-            />
-            {isLoaded ? null : <Load />}
-          </ImgWrapper>
+    onMouseLeaveOpenTab = () => {
+      this.setState({ openTabColor: color.paleGrey });
+    };
 
-          <Footer background={hooterColor} ref={this.footer}>
-            <Title width={'79%'}>
-              <TextInput value={title} disabled />
-            </Title>
+    onClickDownload = () => {
+      const { imageModel, onDownloadButtonClick } = this.props;
+      onDownloadButtonClick(imageModel);
+    };
 
-            <Actions>
-              {/* zoom button */}
-              <Action
-                onMouseOver={this.onMouseOverEye}
-                onMouseLeave={this.onMouseLeaveEye}
-                onClick={() => onZoomButtonClick(imageModel)}
-              >
-                <Icon path={mdiMagnifyPlusOutline} size={1} color={zoomColor} />
-              </Action>
+    onMouseOverDownload = () => {
+      this.setState({ downloadColor: color.starfleetMediumGrey });
+    };
 
-              {/* open image on new tab */}
-              <Action
-                onMouseOver={this.onMouseOverOpenTab}
-                onMouseLeave={this.onMouseLeaveOpenTab}
-                onClick={() => onOpenTabClick(imageModel)}
-              >
-                <Icon
-                  path={mdiArrowTopRightThick}
-                  size={1}
-                  color={openTabColor}
-                />
-              </Action>
+    onMouseLeaveDownload = () => {
+      this.setState({ downloadColor: color.paleGrey });
+    };
 
-              {/* download button */}
-              <Action
-                onMouseOver={this.onMouseOverDownload}
-                onMouseLeave={this.onMouseLeaveDownload}
-                onClick={() => onDownloadButtonClick(imageModel)}
-              >
-                <Icon path={mdiDownload} size={1} color={downloadColor} />
-              </Action>
+    onClickCheckbox = () => {
+      const { imageModel, onCheckboxClick } = this.props;
+      onCheckboxClick(imageModel);
+    };
 
-              {/* checkbox */}
-              <Action
-                onMouseOver={this.onMouseOverCheckbox}
-                onMouseLeave={this.onMouseLeaveCheckbox}
-                onClick={() => onCheckboxClick(imageModel)}
-              >
-                <Checkbox checked={checked} color={checkboxColor} />
-              </Action>
-            </Actions>
-          </Footer>
-        </Wrapper>
-      </Main>
-    );
+    onMouseOverCheckbox = () => {
+      this.setState({ checkboxColor: color.darkMintGreen });
+    };
+
+    onMouseLeaveCheckbox = () => {
+      this.setState({ checkboxColor: color.orionGreen });
+    };
+
+    render() {
+      const { imageModel, src, title, checked } = this.props;
+
+      const {
+        visible,
+        isLoaded,
+        footerHeight,
+        zoomColor,
+        openTabColor,
+        downloadColor,
+        checkboxColor,
+        hooterColor
+      } = this.state;
+
+      return (
+        <Main
+          visible={imageModel.visible}
+          onMouseOver={this.onHover}
+          onMouseLeave={this.onLeave}
+        >
+          <Wrapper>
+            <ImgWrapper>
+              <Img
+                src={src}
+                alt={src}
+                visible={visible}
+                lazyload={'on'}
+                async={true}
+                paddingBottom={footerHeight}
+                onLoad={this.onLoad}
+                onError={this.onError}
+                onClick={this.onImageClick}
+              />
+              {isLoaded ? null : <Load />}
+            </ImgWrapper>
+
+            <Footer background={hooterColor} ref={this.footer}>
+              <Title width={'79%'}>
+                <TextInput value={title} disabled />
+              </Title>
+
+              <Actions>
+                {/* zoom button */}
+                <Action
+                  onMouseOver={this.onMouseOverZoom}
+                  onMouseLeave={this.onMouseLeaveZoom}
+                  onClick={this.onClickZoom}
+                >
+                  <Icon
+                    path={mdiMagnifyPlusOutline}
+                    size={1}
+                    color={zoomColor}
+                  />
+                </Action>
+
+                {/* open image on new tab */}
+                <Action
+                  onMouseOver={this.onMouseOverOpenTab}
+                  onMouseLeave={this.onMouseLeaveOpenTab}
+                  onClick={this.onClickOpenTab}
+                >
+                  <Icon
+                    path={mdiArrowTopRightThick}
+                    size={1}
+                    color={openTabColor}
+                  />
+                </Action>
+
+                {/* download button */}
+                <Action
+                  onMouseOver={this.onMouseOverDownload}
+                  onMouseLeave={this.onMouseLeaveDownload}
+                  onClick={this.onClickDownload}
+                >
+                  <Icon path={mdiDownload} size={1} color={downloadColor} />
+                </Action>
+
+                {/* checkbox */}
+                <Action
+                  onMouseOver={this.onMouseOverCheckbox}
+                  onMouseLeave={this.onMouseLeaveCheckbox}
+                  onClick={this.onClickCheckbox}
+                >
+                  <Checkbox checked={checked} color={checkboxColor} />
+                </Action>
+              </Actions>
+            </Footer>
+          </Wrapper>
+        </Main>
+      );
+    }
   }
-}
+);

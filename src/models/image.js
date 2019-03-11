@@ -2,6 +2,7 @@
 
 import { observable, computed, action, decorate } from 'mobx';
 import uuid from 'uuid/v1';
+import warning from 'warning';
 
 class ImageModel {
   id = '';
@@ -10,13 +11,20 @@ class ImageModel {
   height = 0;
   linked = false;
   checked = false;
-  visible = false;
-  filtered = false;
+  visible = true;
+  downloaded = false;
+  loadFailed = false;
 
   constructor(src, linked = false) {
     this.id = uuid();
     this.src = src;
     this.linked = linked;
+  }
+
+  download() {
+    chrome.downloads.download({ url: this.src });
+
+    this.downloaded = true;
   }
 }
 
@@ -28,20 +36,18 @@ decorate(ImageModel, {
   linked: observable,
   checked: observable,
   visible: observable,
-  filtered: observable
+  loadFailed: observable
 });
 
 class ImageListModel {
   sources = [];
-  data = [];
 
   /********************************************************************
    * Getter
    ********************************************************************/
 
   get images() {
-    return this.sources;
-    // return this.data;
+    return this.sources.filter(image => image.visible);
   }
 
   get isCheckedAll() {
@@ -57,11 +63,11 @@ class ImageListModel {
   }
 
   get checkedImages() {
-    return this.images.filter(image => image.checked);
+    return this.images.filter(image => image.visible && image.checked);
   }
 
   get uncheckedImages() {
-    return this.images.filter(image => !image.checked);
+    return this.images.filter(image => image.visible && !image.checked);
   }
 
   get linkedImages() {
@@ -91,12 +97,23 @@ class ImageListModel {
   }
 
   /********************************************************************
+   * Method
+   ********************************************************************/
+
+  downloadAll() {
+    this.images
+      .filter(image => image.visible)
+      .forEach(async image => {
+        image.download();
+      });
+  }
+
+  /********************************************************************
    * Action
    ********************************************************************/
 
   reset() {
     this.sources = [];
-    this.data = [];
   }
 
   remove() {}
@@ -104,30 +121,83 @@ class ImageListModel {
   check() {}
 
   checkAll() {
-    // TODO: 後で正しい処理に治す
-    this.data = this.data.map(image => {
-      image.checked = true;
-      return image;
-    });
-    this.sources = this.sources.map(image => {
-      image.checked = true;
-      return image;
-    });
+    this.images
+      .filter(image => image.visible)
+      .forEach(image => {
+        image.checked = true;
+      });
   }
 
   uncheckAll() {
-    // TODO: 後で正しい処理に治す
-    this.data = this.data.map(image => {
-      image.checked = false;
-      return image;
+    this.images
+      .filter(image => image.visible)
+      .forEach(image => {
+        image.checked = false;
+      });
+  }
+
+  doFilter(settings) {
+    const {
+      filter,
+      filterType,
+      onlyImagesFromLink,
+      minWidth,
+      minWidthEnabled,
+      maxWidth,
+      maxWidthEnabled,
+      minHeight,
+      minHeightEnabled,
+      maxHeight,
+      maxHeightEnabled
+    } = settings;
+
+    // reset
+    this.sources.forEach(image => {
+      image.visible = !image.loadFailed;
     });
-    this.sources = this.sources.map(image => {
-      image.checked = false;
-      return image;
+
+    this.filterByLinkedImage(onlyImagesFromLink);
+
+    switch (filterType) {
+      case 0:
+        this.filterByNormal(filter);
+        break;
+
+      case 1:
+        this.filterByWildCard(filter);
+        break;
+
+      case 2:
+        this.filterByRegex(filter);
+        break;
+
+      default:
+        break;
+    }
+
+    this.filterByImageSize({
+      minWidthEnabled,
+      minWidth,
+      maxWidthEnabled,
+      maxWidth,
+      minHeightEnabled,
+      minHeight,
+      maxHeightEnabled,
+      maxHeight
     });
   }
 
-  doFilter() {}
+  filterByLinkedImage(onlyImagesFromLinks) {
+    this.images
+      .filter(image => image.visible)
+      .forEach(image => {
+        if (onlyImagesFromLinks) {
+          image.visible = image.linked;
+        } else {
+          image.visible = true;
+        }
+      });
+  }
 
   filterByNormal(filterValue) {
     if (filterValue === '' || filterValue === null) {
@@ -136,73 +206,89 @@ class ImageListModel {
     }
 
     const terms = filterValue.split(' ');
-    this.data = this.data.filter(data => {
-      for (let i = 0; i < terms.length; i++) {
-        let term = terms[i];
+    this.images
+      .filter(image => image.visible)
+      .forEach(image => {
+        for (let i = 0; i < terms.length; i++) {
+          let term = terms[i];
 
-        if (term.length !== 0) {
-          let expected = term[0] !== '-';
+          if (term.length !== 0) {
+            let expected = term[0] !== '-';
 
-          if (!expected) {
-            term = term.substr(1);
+            if (!expected) {
+              term = term.substr(1);
 
-            if (term.length === 0) {
-              continue;
+              if (term.length === 0) {
+                continue;
+              }
             }
+
+            image.visible = (image.src.indexOf(term) !== -1) === expected;
           }
-
-          return (data.src.indexOf(term) !== -1) === expected;
         }
-      }
 
-      // set visible
-      return false;
-    });
+        // set not visible
+        image.visible = false;
+      });
   }
 
   filterByWildCard(filterValue) {
+    if (filterValue === '' || filterValue === null) {
+      // do not anything
+      return;
+    }
+
     const newFilterValue = filterValue
       .replace(/([.^$[\]\\(){}|-])/g, '\\$1')
       .replace(/([?*+])/, '.$1');
 
-    this.data = this.data.filter(data => {
-      try {
-        return data.src.match(newFilterValue);
-      } catch (e) {
-        // set not visible
-        return false;
+    try {
+      if (this.images.length > 0) {
+        this.images[0].src.match(newFilterValue);
       }
-    });
+
+      this.images
+        .filter(image => image.visible)
+        .forEach(image => {
+          image.visible = image.src.match(newFilterValue);
+        });
+    } catch (e) {
+      warning(e);
+    }
   }
 
   filterByRegex(filterValue) {
-    this.data = this.data.filter(data => {
-      try {
-        return data.src.match(filterValue);
-      } catch (e) {
-        // set not visible
-        return false;
+    if (filterValue === '' || filterValue === null) {
+      // do not anything
+      return;
+    }
+
+    try {
+      if (this.images.length > 0) {
+        this.images[0].src.match(filterValue);
       }
-    });
+      this.images
+        .filter(image => image.visible)
+        .forEach(image => {
+          image.visible = image.src.match(filterValue);
+        });
+    } catch (e) {
+      warning(e);
+    }
   }
 
   filterByImageSize(settings) {
-    this.data = this.data.filter(image => shouldFilterBySize(image, settings));
-  }
-
-  filterByLinkedImage(onlyImagesFromLinks) {
-    if (onlyImagesFromLinks) {
-      this.data = this.sources.filter(image => image.visible && image.linked);
-    } else {
-      this.data = this.sources.filter(image => image.visible);
-    }
+    this.images
+      .filter(image => image.visible)
+      .forEach(image => {
+        image.visible = validateImageSize(image, settings);
+      });
   }
 }
 
 decorate(ImageListModel, {
   // observable
   sources: observable.ref,
-  data: observable.shallow,
   // computed
   images: computed,
   isCheckedAll: computed,
@@ -217,12 +303,7 @@ decorate(ImageListModel, {
   check: action.bound,
   checkAll: action.bound,
   uncheckAll: action.bound,
-  doFilter: action.bound,
-  filterByNormal: action.bound,
-  filterByWildCard: action.bound,
-  filterByRegex: action.bound,
-  filterByImageSize: action.bound,
-  filterByLinkedImage: action.bound
+  doFilter: action.bound
 });
 
 /**
@@ -231,7 +312,7 @@ decorate(ImageListModel, {
  * @param settings
  * @returns {boolean}
  */
-const shouldFilterBySize = (image, settings) => {
+const validateImageSize = (image, settings) => {
   const minWidthIsOk =
     settings.minWidthEnabled === false ||
     (settings.minWidthEnabled && image.width >= settings.minWidth);

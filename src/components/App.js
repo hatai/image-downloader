@@ -1,7 +1,6 @@
 /* eslint-env webextensions */
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import styled, { createGlobalStyle } from 'styled-components';
 import swal from 'sweetalert2';
@@ -10,6 +9,8 @@ import Header from './Header';
 import Card from './Card';
 import color from '../utils/colors';
 import * as util from '../utils/index';
+import imageListModel from '../models/image';
+import settingsModel from '../models/settings';
 import '../assets/style/index.scss';
 
 const GlobalStyles = createGlobalStyle`
@@ -29,26 +30,28 @@ const Container = styled.div`
 
 const App = observer(
   class App extends Component {
-    static propTypes = {
-      imageListModel: PropTypes.object.isRequired,
-      settingsModel: PropTypes.object.isRequired
-    };
+    static propTypes = {};
 
     componentWillMount() {
+      void this.initialize();
+    }
+
+    componentDidMount() {
       // TODO: 表示できる画像がなかった場合のメッセージ表示
-      Promise.all([this.initialize(), this.getImages()]).catch(error =>
-        console.log(error.toString())
-      );
+      this.getImages().then(() => {
+        imageListModel.doFilter(settingsModel);
+      });
     }
 
     render() {
-      const { imageListModel, settingsModel } = this.props;
-
       return (
         <div>
+          {/* TODO: スクロールバーのせいでいろいろと面倒なので治す */}
+          {/* TODO: 設定をローカルストレージに保存 */}
+          {/* TODO: 設定をサイトごとに保持？ */}
           <GlobalStyles />
 
-          {/* TODO: 各ボタンを Grid で並べる */}
+          {/* TODO: デザインもうちょっとカッコよくしたい */}
           <Header
             imageListModel={imageListModel}
             settingsModel={settingsModel}
@@ -56,7 +59,8 @@ const App = observer(
             onClickDownloadButton={this.downloadAllCheckedImages}
           />
 
-          {/* TODO: 画像のダウンロードはバックグラウンドスクリプトにやらせる */}
+          {/* TODO: 画像のダウンロードはバックグラウンドスクリプトにやらせる? */}
+          {/* TODO: 画像ダウンロード中のモーダル表示 */}
           <Container>
             <GridLayout>
               {imageListModel.images.map((imageModel, i) => (
@@ -83,8 +87,6 @@ const App = observer(
     }
 
     initialize = async () => {
-      const { settingsModel } = this.props;
-
       await this.setOptionsFromStorage();
       chrome.downloads.onDeterminingFilename.addListener((item, suggest) => {
         const suggestName = util.suggestNewFilename(
@@ -96,24 +98,25 @@ const App = observer(
     };
 
     setOptionsFromStorage = async () => {
-      const { settingsModel } = this.props;
       settingsModel.values = await util.getSavedOptions('options');
     };
 
     getImages = async () => {
-      const { imageListModel } = this.props;
       const { images, linkedImages } = await util.getImages();
       imageListModel.linkedImages = linkedImages;
       imageListModel.notLinkedImages = images;
     };
 
     handleOnLoad = (event, imageModel) => {
+      imageModel.loadFailed = false;
       imageModel.width = event.target.naturalWidth;
       imageModel.height = event.target.naturalHeight;
     };
 
     handleOnError = (event, imageModel) => {
       // TODO: エラー時の処理考える
+      // TODO: 一部読み込めなかった旨のトースト表示？
+      imageModel.loadFailed = true;
       imageModel.visible = false;
     };
 
@@ -123,7 +126,6 @@ const App = observer(
         imageUrl: imageModel.src,
         imageWidth: imageModel.width,
         imageHeight: imageModel.height,
-        // width: "auto",
         background: `${color.voyagerDarkGrey}`,
         showConfirmButton: false,
         showCloseButton: true
@@ -135,7 +137,7 @@ const App = observer(
     };
 
     handleOnDownloadButtonClick = imageModel => {
-      chrome.downloads.download({ url: imageModel.src });
+      imageModel.download();
     };
 
     handleOnCheckboxClick = imageModel => {
@@ -143,8 +145,6 @@ const App = observer(
     };
 
     handleOnToggleCheckbox = () => {
-      const { imageListModel } = this.props;
-
       if (imageListModel.isCheckedAll) {
         imageListModel.uncheckAll();
       } else {
@@ -153,10 +153,7 @@ const App = observer(
     };
 
     downloadAllCheckedImages = () => {
-      const { imageListModel } = this.props;
-      imageListModel.checkedImages.forEach(async imageModel => {
-        chrome.downloads.download({ url: imageModel.src });
-      });
+      imageListModel.downloadAll();
     };
   }
 );

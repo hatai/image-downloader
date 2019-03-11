@@ -1,4 +1,4 @@
-import { observable, computed, action, decorate } from 'mobx';
+import { observable, action, decorate } from 'mobx';
 import { saveOptions } from '../utils/index';
 
 class SettingsModel {
@@ -15,50 +15,6 @@ class SettingsModel {
   maxHeight = 3000;
   maxHeightEnabled = false;
   onlyImagesFromLink = false;
-
-  /********************************************************************
-   * Computed
-   ********************************************************************/
-
-  get values() {
-    const {
-      subfolder,
-      filter,
-      filterType,
-      onlyImagesFromLink,
-      minWidth,
-      minWidthEnabled,
-      maxWidth,
-      maxWidthEnabled,
-      minHeight,
-      minHeightEnabled,
-      maxHeight,
-      maxHeightEnabled
-    } = this;
-
-    return {
-      subfolder,
-      filter,
-      filterType,
-      onlyImagesFromLink,
-      minWidth,
-      minWidthEnabled,
-      maxWidth,
-      maxWidthEnabled,
-      minHeight,
-      minHeightEnabled,
-      maxHeight,
-      maxHeightEnabled
-    };
-  }
-
-  set values(values) {
-    if (values === null) {
-      return;
-    }
-
-    Object.keys(values).forEach(key => (this[key] = values[key]));
-  }
 
   /********************************************************************
    * Action
@@ -90,8 +46,6 @@ decorate(SettingsModel, {
   maxHeight: observable,
   maxHeightEnabled: observable,
   onlyImagesFromLink: observable,
-  // computed
-  values: computed,
   // action
   saveOptionsToLocalStorage: action.bound
 });

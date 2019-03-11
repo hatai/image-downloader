@@ -14,9 +14,9 @@ const Marks = ({
   onClickLabel
 }) => {
   const marksKeys = Object.keys(marks);
-  const marksCount = marksKeys.length;
-  const unit = marksCount > 1 ? 100 / (marksCount - 1) : 100;
-  const markWidth = unit * 0.9;
+  // const marksCount = marksKeys.length;
+  // const unit = marksCount > 1 ? 100 / (marksCount - 1) : 100;
+  // const markWidth = unit * 0.9;
 
   const range = max - min;
   const elements = marksKeys

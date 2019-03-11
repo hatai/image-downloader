@@ -6,6 +6,8 @@ import Checkbox from './common/Checkbox';
 import DropDown from './common/DropDown';
 import TextInput from './common/TextInput';
 import Range from './rc-slider/Range';
+import imageListModel from '../models/image';
+import settingsModel from '../models/settings';
 import color from '../utils/colors';
 
 const Container = styled.div`
@@ -59,8 +61,7 @@ const SmallLabel = styled.div`
 const Settings = observer(
   class Settings extends Component {
     static propTypes = {
-      id: PropTypes.string,
-      settingsModel: PropTypes.object.isRequired
+      id: PropTypes.string
     };
 
     static defaultProps = {
@@ -74,44 +75,78 @@ const Settings = observer(
     }
 
     setSubfolderValue = e => {
-      const { settingsModel } = this.props;
       settingsModel.subfolder = e.target.value;
+
+      void this.doFilter(settingsModel);
     };
 
     setFilterType = (selected, i) => {
-      const { settingsModel } = this.props;
       settingsModel.filterType = i;
+
+      void this.doFilter(settingsModel);
     };
 
     setFilterValue = e => {
-      const { settingsModel } = this.props;
       settingsModel.filter = e.target.value;
+
+      void this.doFilter(settingsModel);
     };
 
     setWidth = ([min, max]) => {
-      const { settingsModel } = this.props;
       if (settingsModel.minWidthEnabled || settingsModel.maxWidthEnabled) {
         settingsModel.minWidth = min;
         settingsModel.maxWidth = max;
       }
+
+      void this.doFilter(settingsModel);
+    };
+
+    onClickMinWidth = () => {
+      settingsModel.minWidthEnabled = !settingsModel.minWidthEnabled;
+
+      void this.doFilter(settingsModel);
+    };
+
+    onClickMaxWidth = () => {
+      settingsModel.maxWidthEnabled = !settingsModel.maxWidthEnabled;
+
+      void this.doFilter(settingsModel);
     };
 
     setHeight = ([min, max]) => {
-      const { settingsModel } = this.props;
       if (settingsModel.minHeightEnabled || settingsModel.maxHeightEnabled) {
         settingsModel.minHeight = min;
         settingsModel.maxHeight = max;
       }
+
+      void this.doFilter(settingsModel);
+    };
+
+    onClickMinHeight = () => {
+      settingsModel.minHeightEnabled = !settingsModel.minHeightEnabled;
+
+      void this.doFilter(settingsModel);
+    };
+
+    onClickMaxHeight = () => {
+      settingsModel.maxHeightEnabled = !settingsModel.maxHeightEnabled;
+
+      void this.doFilter(settingsModel);
     };
 
     setOnlyImagesFromLinks = () => {
-      const { settingsModel } = this.props;
       const { onlyImagesFromLink } = settingsModel;
       settingsModel.onlyImagesFromLink = !onlyImagesFromLink;
+
+      void this.doFilter(settingsModel);
+    };
+
+    doFilter = async () => {
+      imageListModel.doFilter(settingsModel);
     };
 
     render() {
-      const { id, settingsModel } = this.props;
+      const { id } = this.props;
       const {
         subfolder,
         filter,
@@ -177,9 +212,7 @@ const Settings = observer(
             <GridItem columnStart={8} columnEnd={10} rowStart={'fifth'}>
               <Checkbox
                 checked={minWidthEnabled}
-                onClick={() => {
-                  settingsModel.minWidthEnabled = !minWidthEnabled;
-                }}
+                onClick={this.onClickMinWidth}
               />
             </GridItem>
             <GridItem columnStart={10} columnEnd={13} rowStart={'fifth'}>
@@ -203,9 +236,7 @@ const Settings = observer(
             <GridItem columnStart={39} columnEnd={'end'} rowStart={'fifth'}>
               <Checkbox
                 checked={maxWidthEnabled}
-                onClick={() => {
-                  settingsModel.maxWidthEnabled = !maxWidthEnabled;
-                }}
+                onClick={this.onClickMaxWidth}
               />
             </GridItem>
 
@@ -215,9 +246,7 @@ const Settings = observer(
             <GridItem columnStart={8} columnEnd={10} rowStart={'sixth'}>
               <Checkbox
                 checked={minHeightEnabled}
-                onClick={() => {
-                  settingsModel.minHeightEnabled = !minHeightEnabled;
-                }}
+                onClick={this.onClickMinHeight}
               />
             </GridItem>
             <GridItem columnStart={10} columnEnd={13} rowStart={'sixth'}>
@@ -241,9 +270,7 @@ const Settings = observer(
             <GridItem columnStart={39} columnEnd={'end'} rowStart={'sixth'}>
               <Checkbox
                 checked={maxHeightEnabled}
-                onClick={() => {
-                  settingsModel.maxHeightEnabled = !maxHeightEnabled;
-                }}
+                onClick={this.onClickMaxHeight}
               />
             </GridItem>
 

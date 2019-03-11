@@ -8,6 +8,8 @@ import { mdiCloudDownloadOutline, mdiSettingsOutline } from '@mdi/js';
 import swal from 'sweetalert2';
 import Checkbox from './common/Checkbox';
 import Settings from './Settings';
+import imageListModel from '../models/image';
+import settingsModel from '../models/settings';
 import color from '../utils/colors';
 
 const StyledDiv = styled.div`
@@ -109,8 +111,6 @@ const Action = styled(StyledDiv)`
 
 export default class Header extends Component {
   static propTypes = {
-    imageListModel: PropTypes.object,
-    settingsModel: PropTypes.object,
     onToggleCheckbox: PropTypes.func,
     onClickDownloadButton: PropTypes.func
   };
@@ -130,6 +130,31 @@ export default class Header extends Component {
     };
   }
 
+  showSettings = () => {
+    const id = uuid();
+    swal.fire({
+      titleText: 'Settings',
+      html: `<div id="${id}"></div>`,
+      background: `${color.voyagerDarkGrey}`,
+      showCloseButton: true,
+      showConfirmButton: false,
+      onOpen: () => {
+        ReactDOM.render(
+          <Settings settingsModel={settingsModel} />,
+          document.getElementById(id)
+        );
+      }
+    });
+  };
+
+  handleOnMouseOver = type => {
+    this.setState({ [type]: color.darkMintGreen });
+  };
+
+  handleOnMouseLeave = type => {
+    this.setState({ [type]: color.orionGreen });
+  };
+
   render() {
     const {
       checkboxIconColor,
@@ -137,11 +162,7 @@ export default class Header extends Component {
       settingsIconColor
     } = this.state;
 
-    const {
-      imageListModel,
-      onToggleCheckbox,
-      onClickDownloadButton
-    } = this.props;
+    const { onToggleCheckbox, onClickDownloadButton } = this.props;
 
     const {
       isCheckedAll,
@@ -202,31 +223,4 @@ export default class Header extends Component {
       </AppCover>
     );
   }
-
-  showSettings = () => {
-    const { settingsModel } = this.props;
-
-    const id = uuid();
-    swal.fire({
-      titleText: 'Settings',
-      html: `<div id="${id}"></div>`,
-      background: `${color.voyagerDarkGrey}`,
-      showCloseButton: true,
-      showConfirmButton: false,
-      onOpen: () => {
-        ReactDOM.render(
-          <Settings settingsModel={settingsModel} />,
-          document.getElementById(id)
-        );
-      }
-    });
-  };
-
-  handleOnMouseOver = type => {
-    this.setState({ [type]: color.darkMintGreen });
-  };
-
-  handleOnMouseLeave = type => {
-    this.setState({ [type]: color.orionGreen });
-  };
 }
