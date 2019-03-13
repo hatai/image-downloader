@@ -17,34 +17,8 @@ const Container = styled.div`
   align-content: center;
 `;
 
-export default class Checkbox extends Component {
-  static propTypes = {
-    checked: PropTypes.bool,
-    indeterminate: PropTypes.bool,
-    size: PropTypes.string,
-    color: PropTypes.string,
-    onClick: PropTypes.func
-  };
-
-  static defaultProps = {
-    checked: false,
-    indeterminate: false,
-    size: '22px',
-    color: color.orionGreen,
-    onClick: () => {}
-  };
-
-  render() {
-    const { size, color, onClick } = this.props;
-    return (
-      <Container onClick={onClick}>
-        <Icon path={this.getIcon()} color={color} size={size} />
-      </Container>
-    );
-  }
-
-  getIcon = () => {
-    const { checked, indeterminate } = this.props;
+const Checkbox = ({ checked, indeterminate, size, color, onClick }) => {
+  const getIcon = () => {
     if (indeterminate) {
       return mdiMinusBoxOutline;
     }
@@ -55,4 +29,28 @@ export default class Checkbox extends Component {
 
     return mdiCheckboxBlankOutline;
   };
-}
+
+  return (
+    <Container onClick={onClick}>
+      <Icon path={getIcon()} color={color} size={size} />
+    </Container>
+  );
+};
+
+Checkbox.propTypes = {
+  checked: PropTypes.bool,
+  indeterminate: PropTypes.bool,
+  size: PropTypes.string,
+  color: PropTypes.string,
+  onClick: PropTypes.func
+};
+
+Checkbox.defaultProps = {
+  checked: false,
+  indeterminate: false,
+  size: '22px',
+  color: color.orionGreen,
+  onClick: () => {}
+};
+
+export default Checkbox;

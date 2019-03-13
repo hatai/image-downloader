@@ -1,6 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const Container = styled.div`
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+`;
+
 const Loader = styled.div`
   color: #ffffff;
   text-indent: -9999em;
@@ -51,9 +57,9 @@ const Loader = styled.div`
 `;
 
 const LoaderContainer = () => (
-  <div style={{ width: '100%', height: '240px', overFlow: 'hidden' }}>
+  <Container>
     <Loader />
-  </div>
+  </Container>
 );
 
 export default LoaderContainer;

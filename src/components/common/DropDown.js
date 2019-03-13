@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Icon from '@mdi/react';
@@ -99,85 +99,58 @@ const DropDownOption = styled(StyledDiv)`
   }
 `;
 
-export default class DropDown extends Component {
-  static propTypes = {
-    options: PropTypes.arrayOf(PropTypes.string),
-    active: PropTypes.string,
-    onClick: PropTypes.func
-  };
+const DropDown = ({ options, active, onClick }) => {
+  const [show, setShow] = useState(false);
 
-  static defaultProps = {
-    options: ['NEWEST', 'POPULAR', 'RANDOM'],
-    active: 'NEWEST',
-    onClick: () => {}
-  };
+  return (
+    <Container>
+      <Content>
+        <DropDownWrapper>
+          <DropDownTitle onClick={() => setShow(!show)}>
+            <span>{active}</span>
+            <span>
+              <DropDownIcon
+                path={mdiMenuDown}
+                size={'2em'}
+                color={color.coolGrey}
+              />
+            </span>
+          </DropDownTitle>
 
-  constructor(props) {
-    super(props);
+          <DropDownMenu show={show}>
+            <DropDownTriangle />
 
-    this.state = {
-      show: false
-    };
-  }
+            <DropDownList>
+              {options.map((option, i) => (
+                <DropDownOption
+                  key={i}
+                  active={option === active}
+                  onClick={() => {
+                    setShow(false);
+                    onClick(option, i);
+                  }}
+                >
+                  {option}
+                </DropDownOption>
+              ))}
+            </DropDownList>
+          </DropDownMenu>
+        </DropDownWrapper>
+      </Content>
+    </Container>
+  );
+};
 
-  showOptions = () => {
-    this.setState({ show: true });
-  };
+DropDown.propTypes = {
+  options: PropTypes.arrayOf(PropTypes.string),
+  active: PropTypes.string,
+  onClick: PropTypes.func
+};
 
-  hideOptions = () => {
-    this.setState({ show: false });
-  };
+DropDown.defaultProps = {
+  options: ['NEWEST', 'POPULAR', 'RANDOM'],
+  active: 'NEWEST',
+  onClick: () => {}
+};
 
-  clickTitle = () => {
-    if (this.state.show) {
-      this.hideOptions();
-    } else {
-      this.showOptions();
-    }
-  };
-
-  clickOption = (option, i) => {
-    this.hideOptions();
-    this.props.onClick(option, i);
-  };
-
-  render() {
-    const { show } = this.state;
-    const { options, active } = this.props;
-
-    return (
-      <Container>
-        <Content>
-          <DropDownWrapper>
-            <DropDownTitle onClick={this.clickTitle}>
-              <span>{active}</span>
-              <span>
-                <DropDownIcon
-                  path={mdiMenuDown}
-                  size={'2em'}
-                  color={color.coolGrey}
-                />
-              </span>
-            </DropDownTitle>
-
-            <DropDownMenu show={show}>
-              <DropDownTriangle />
-
-              <DropDownList>
-                {options.map((option, i) => (
-                  <DropDownOption
-                    key={i}
-                    active={option === active}
-                    onClick={() => this.clickOption(option, i)}
-                  >
-                    {option}
-                  </DropDownOption>
-                ))}
-              </DropDownList>
-            </DropDownMenu>
-          </DropDownWrapper>
-        </Content>
-      </Container>
-    );
-  }
-}
+export default DropDown;
