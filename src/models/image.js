@@ -1,5 +1,4 @@
 /* eslint-env webextensions */
-
 import { observable, computed, action, decorate } from 'mobx';
 import uuid from 'uuid/v1';
 import warning from 'warning';
@@ -21,14 +20,18 @@ class ImageModel {
     this.linked = linked;
   }
 
+  get url() {
+    return this.src.split(/[?#]/)[0];
+  }
+
   download() {
     chrome.downloads.download({ url: this.src });
-
     this.downloaded = true;
   }
 }
 
 decorate(ImageModel, {
+  // observable
   id: observable.ref,
   src: observable,
   width: observable,
@@ -36,7 +39,13 @@ decorate(ImageModel, {
   linked: observable,
   checked: observable,
   visible: observable,
-  loadFailed: observable
+  loadFailed: observable,
+
+  // computed
+  url: computed,
+
+  // action
+  download: action.bound
 });
 
 class ImageListModel {
@@ -102,7 +111,7 @@ class ImageListModel {
 
   downloadAll() {
     this.images
-      .filter(image => image.visible)
+      .filter(image => image.visible && image.checked)
       .forEach(async image => {
         image.download();
       });

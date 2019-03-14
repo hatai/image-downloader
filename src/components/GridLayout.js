@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types'
 import styled from 'styled-components';
-// import color from '../utils/colors'
 
 const Container = styled.div`
   margin: 0 auto;

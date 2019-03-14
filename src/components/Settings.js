@@ -58,7 +58,7 @@ const SmallLabel = styled.div`
   font-size: 0.6rem;
 `;
 
-const Settings = observer(
+export default observer(
   class Settings extends Component {
     static propTypes = {
       id: PropTypes.string
@@ -296,5 +296,3 @@ const Settings = observer(
     }
   }
 );
-
-export default Settings;

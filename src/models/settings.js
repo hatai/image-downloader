@@ -1,5 +1,9 @@
-import { observable, action, decorate } from 'mobx';
-import { saveOptions } from '../utils/index';
+/* eslint-env webextensions */
+import { observable, computed, action, decorate } from 'mobx';
+import warning from 'warning';
+import { getSavedOptions, saveOptions } from '../utils/index';
+
+const KEY = 'settings';
 
 class SettingsModel {
   subfolder = '';
@@ -16,18 +20,72 @@ class SettingsModel {
   maxHeightEnabled = false;
   onlyImagesFromLink = false;
 
+  get values() {
+    return {
+      subfolder: this.subfolder,
+      filter: this.filter,
+      filterType: this.filterType,
+      minWidth: this.minWidth,
+      minWidthEnabled: this.minWidthEnabled,
+      maxWidth: this.maxWidth,
+      maxWidthEnabled: this.maxWidthEnabled,
+      minHeight: this.minHeight,
+      minHeightEnabled: this.minHeightEnabled,
+      maxHeight: this.maxHeight,
+      maxHeightEnabled: this.maxHeightEnabled,
+      onlyImagesFromLink: this.onlyImagesFromLink
+    };
+  }
+
+  set values(values) {
+    const {
+      subfolder,
+      filter,
+      filterType,
+      minWidth,
+      minWidthEnabled,
+      maxWidth,
+      maxWidthEnabled,
+      minHeight,
+      minHeightEnabled,
+      maxHeight,
+      maxHeightEnabled,
+      onlyImagesFromLink
+    } = values;
+
+    this.subfolder = subfolder;
+    this.filter = filter;
+    this.filterType = filterType;
+    this.minWidth = minWidth;
+    this.minWidthEnabled = minWidthEnabled;
+    this.maxWidth = maxWidth;
+    this.maxWidthEnabled = maxWidthEnabled;
+    this.minHeight = minHeight;
+    this.minHeightEnabled = minHeightEnabled;
+    this.maxHeight = maxHeight;
+    this.maxHeightEnabled = maxHeightEnabled;
+    this.onlyImagesFromLink = onlyImagesFromLink;
+  }
+
   /********************************************************************
    * Action
    ********************************************************************/
 
-  saveOptionsToLocalStorage() {
+  applySettingsFromLocalStorage() {
+    const settings = getSavedOptions(KEY);
+    if (options === null) {
+      return;
+    }
+
+    this.values = settings;
+  }
+
+  saveSettingsToLocalStorage() {
     saveOptions({
-      key: 'options',
+      key: KEY,
       value: Object.assign({}, this.values)
     }).catch(error => {
-      console.log(error);
-      // eslint-disable-next-line no-undef
-      chrome.storage.local.clear();
+      warning(error);
     });
   }
 }
@@ -46,8 +104,11 @@ decorate(SettingsModel, {
   maxHeight: observable,
   maxHeightEnabled: observable,
   onlyImagesFromLink: observable,
+  // computed
+  values: computed,
   // action
-  saveOptionsToLocalStorage: action.bound
+  applySettingsFromLocalStorage: action.bound,
+  saveSettingsToLocalStorage: action.bound
 });
 
 const settingsModel = new SettingsModel();

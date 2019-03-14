@@ -114,9 +114,6 @@ export default observer(
   class Card extends Component {
     static propTypes = {
       imageModel: PropTypes.object,
-      src: PropTypes.string.isRequired,
-      title: PropTypes.string,
-      checked: PropTypes.bool.isRequired,
       onZoomButtonClick: PropTypes.func,
       onOpenTabClick: PropTypes.func,
       onDownloadButtonClick: PropTypes.func,
@@ -249,7 +246,7 @@ export default observer(
     };
 
     render() {
-      const { imageModel, src, title, checked } = this.props;
+      const { imageModel } = this.props;
 
       const {
         visible,
@@ -271,8 +268,8 @@ export default observer(
           <Wrapper>
             <ImgWrapper>
               <Img
-                src={src}
-                alt={src}
+                src={imageModel.src}
+                alt={imageModel.src}
                 visible={visible}
                 lazyload={'on'}
                 async={true}
@@ -286,7 +283,7 @@ export default observer(
 
             <Footer background={hooterColor} ref={this.footer}>
               <Title width={'79%'}>
-                <TextInput value={title} disabled />
+                <TextInput value={imageModel.url} disabled />
               </Title>
 
               <Actions>
@@ -331,7 +328,10 @@ export default observer(
                   onMouseLeave={this.onMouseLeaveCheckbox}
                   onClick={this.onClickCheckbox}
                 >
-                  <Checkbox checked={checked} color={checkboxColor} />
+                  <Checkbox
+                    checked={imageModel.checked}
+                    color={checkboxColor}
+                  />
                 </Action>
               </Actions>
             </Footer>

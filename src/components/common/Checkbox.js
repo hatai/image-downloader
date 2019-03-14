@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Icon from '@mdi/react';
@@ -18,21 +18,18 @@ const Container = styled.div`
 `;
 
 const Checkbox = ({ checked, indeterminate, size, color, onClick }) => {
-  const getIcon = () => {
-    if (indeterminate) {
-      return mdiMinusBoxOutline;
-    }
+  let icon = mdiCheckboxBlankOutline;
+  if (indeterminate) {
+    icon = mdiMinusBoxOutline;
+  }
 
-    if (checked) {
-      return mdiCheckboxMarkedOutline;
-    }
-
-    return mdiCheckboxBlankOutline;
-  };
+  if (checked) {
+    icon = mdiCheckboxMarkedOutline;
+  }
 
   return (
     <Container onClick={onClick}>
-      <Icon path={getIcon()} color={color} size={size} />
+      <Icon path={icon} color={color} size={size} />
     </Container>
   );
 };

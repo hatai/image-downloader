@@ -1,5 +1,4 @@
 /* eslint-env webextensions */
-
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -24,11 +23,15 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
+const Wrapper = styled.div`
+  width: calc(100vw - (100vw - 100%));
+`;
+
 const Container = styled.div`
   padding-top: 65px;
 `;
 
-const App = observer(
+export default observer(
   class App extends Component {
     static propTypes = {};
 
@@ -45,8 +48,8 @@ const App = observer(
 
     render() {
       return (
-        <div>
-          {/* TODO: スクロールバーのせいでいろいろと面倒なので治す */}
+        <Wrapper>
+          {/* TODO: スクロールバーのせいでいろいろと面倒なので治す(主に設定モーダル) */}
           {/* TODO: 設定をローカルストレージに保存 */}
           {/* TODO: 設定をサイトごとに保持？ */}
           <GlobalStyles />
@@ -69,9 +72,6 @@ const App = observer(
                 <Card
                   key={i}
                   imageModel={imageModel}
-                  src={imageModel.src}
-                  title={imageModel.src.split(/[?#]/)[0]}
-                  checked={imageModel.checked}
                   onLoad={this.handleOnLoad}
                   onError={this.handleOnError}
                   onZoomButtonClick={this.handleOnZoomButtonClick}
@@ -82,12 +82,13 @@ const App = observer(
               ))}
             </GridLayout>
           </Container>
-        </div>
+        </Wrapper>
       );
     }
 
     initialize = async () => {
-      await this.setOptionsFromStorage();
+      settingsModel.applySettingsFromLocalStorage();
+
       chrome.downloads.onDeterminingFilename.addListener((item, suggest) => {
         const suggestName = util.suggestNewFilename(
           settingsModel.subfolder,
@@ -95,10 +96,6 @@ const App = observer(
         );
         suggest({ filename: suggestName });
       });
-    };
-
-    setOptionsFromStorage = async () => {
-      settingsModel.values = await util.getSavedOptions('options');
     };
 
     getImages = async () => {
@@ -122,7 +119,7 @@ const App = observer(
 
     handleOnZoomButtonClick = imageModel => {
       swal.fire({
-        text: imageModel.src.split(/[#?]/)[0],
+        text: imageModel.url,
         imageUrl: imageModel.src,
         imageWidth: imageModel.width,
         imageHeight: imageModel.height,
@@ -157,5 +154,3 @@ const App = observer(
     };
   }
 );
-
-export default App;
