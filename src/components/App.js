@@ -73,8 +73,8 @@ export default observer(
       return (
         <Wrapper>
           {/* TODO: 設定をサイトごとに保持？ */}
-          {/* github pages 作る */}
-          {/* github pages インストール完了時とアップデート時に表示するようにする */}
+          {/* TODO: github pages 作る */}
+          {/* TODO: github pages インストール完了時とアップデート時に表示するようにする */}
           <GlobalStyles />
 
           <Header
