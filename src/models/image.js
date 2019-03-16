@@ -1,9 +1,7 @@
 /* eslint-env webextensions */
-import { observable, computed, action, decorate } from 'mobx';
+import { action, computed, decorate, observable } from 'mobx';
 import uuid from 'uuid/v1';
 import warning from 'warning';
-import Swal from 'sweetalert2';
-import color from '../utils/colors';
 
 class ImageModel {
   id = '';
@@ -112,28 +110,9 @@ class ImageListModel {
    ********************************************************************/
 
   downloadAll() {
-    const swal = Swal.mixin({
-      background: `${color.voyagerDarkGrey}`,
-      toast: true,
-      position: 'bottom-end',
-      // timer: 1500,
-      showConfirmButton: false
-    });
-
-    swal.fire({
-      text: 'Download started',
-      type: 'info'
-    });
-
     this.images
       .filter(image => image.visible && image.checked)
       .forEach(image => image.download());
-
-    swal.fire({
-      text: 'Download completed!!',
-      background: `${color.voyagerDarkGrey}`,
-      type: 'success'
-    });
   }
 
   /********************************************************************

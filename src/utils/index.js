@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 import { KEY } from './constants';
 
+export const isProduction = process.env.NODE_ENV !== 'production';
+
 /**
  * get images from active tab of current window
  * @return {Promise<void>}

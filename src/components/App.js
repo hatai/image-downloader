@@ -16,8 +16,7 @@ import '../assets/style/index.scss';
 
 const GlobalStyles = createGlobalStyle`
   body {
-    width: ${() =>
-      process.env.NODE_ENV !== 'production' ? '100vw' : 'calc(800px - 17px)'};
+    width: ${() => (util.isProduction ? '100vw' : 'calc(800px - 17px)')};
     height: 100%;
     min-height: 600px;
     max-height: 100%;
@@ -25,6 +24,7 @@ const GlobalStyles = createGlobalStyle`
     overflow-x: hidden;
     
     margin: 0 !important;
+    font-size: 75%;
   }
   
   #root {
@@ -35,7 +35,6 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const Wrapper = styled.div`
-  //width: calc(100vw - (100vw - 100%));
   margin: 8px 8px 16px;
 `;
 
@@ -83,11 +82,9 @@ export default observer(
             onClickDownloadButton={this.downloadAllCheckedImages}
           />
 
-          {/* TODO: 画像ダウンロードトースト表示の CSS 修正 */}
           <Container>
             <GridLayout>
               {imageListModel.images.map((imageModel, i) => (
-                // TODO: マウスオーバー時のハイライト
                 // TODO: マウスオーバーで画像サイズ表示
                 <Card
                   key={i}
@@ -144,7 +141,6 @@ export default observer(
         text: imageModel.url,
         imageUrl: imageModel.src,
         imageWidth: imageModel.width,
-        imageHeight: imageModel.height,
         background: `${color.voyagerDarkGrey}`,
         showConfirmButton: false,
         showCloseButton: true
@@ -172,7 +168,24 @@ export default observer(
     };
 
     downloadAllCheckedImages = () => {
+      const swal = Swal.mixin({
+        background: `${color.voyagerDarkGrey}`,
+        toast: false,
+        showConfirmButton: false,
+        showLoaderOnConfirm: true,
+        allowEnterKey: false,
+        allowEscapeKey: false,
+        allowOutsideClick: true
+      });
+
       imageListModel.downloadAll();
+
+      swal.fire({
+        title: 'Download Started!!',
+        type: 'success',
+        showCloseButton: true,
+        allowOutsideClick: true
+      });
     };
   }
 );

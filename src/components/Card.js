@@ -31,7 +31,7 @@ const Wrapper = styled.div`
   position: relative;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 4);
 
-  &&:hover {
+  :hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
   }
 `;
@@ -47,6 +47,7 @@ const Img = styled.img`
   min-width: 100%;
   border-style: none;
   border-radius: 3px 3px 0 0;
+  opacity: ${({ opacity }) => opacity};
   display: ${({ visible }) => (visible ? 'block' : 'none')};
   padding-bottom: ${({ paddingBottom }) => `${paddingBottom}px`};
 `;
@@ -141,6 +142,7 @@ export default observer(
         visible: false,
         isLoaded: false,
         footerHeight: 0,
+        imageOpacity: 0.95,
         hooterColor: color.titleGreyDefault,
         zoomColor: color.paleGrey,
         openTabColor: color.paleGrey,
@@ -183,6 +185,14 @@ export default observer(
     onImageClick = () => {
       const { imageModel, onCheckboxClick } = this.props;
       onCheckboxClick(imageModel);
+    };
+
+    onImageHover = () => {
+      this.setState({ imageOpacity: 1 });
+    };
+
+    onImageLeave = () => {
+      this.setState({ imageOpacity: 0.95 });
     };
 
     onHover = () => {
@@ -252,6 +262,7 @@ export default observer(
         visible,
         isLoaded,
         footerHeight,
+        imageOpacity,
         zoomColor,
         openTabColor,
         downloadColor,
@@ -274,9 +285,14 @@ export default observer(
                 lazyload={'on'}
                 async={true}
                 paddingBottom={footerHeight}
+                opacity={imageOpacity}
+                onLoadStart={this.onLoad}
                 onLoad={this.onLoad}
                 onError={this.onError}
                 onClick={this.onImageClick}
+                onDoubleClick={this.onClickZoom}
+                onMouseOver={this.onImageHover}
+                onMouseLeave={this.onImageLeave}
               />
               {isLoaded ? null : <Load />}
             </ImgWrapper>
