@@ -1,90 +1,81 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import classNames from 'classnames'
-import warning from 'warning'
+import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import warning from 'warning';
 
 const calcPoints = (vertical, marks, dots, step, min, max) => {
   warning(
     dots ? step > 0 : true,
     '`Slider[step]` should be a positive number in order to make Slider[dots] work.'
-  )
-  const points = Object.keys(marks).map(parseFloat)
-
+  );
+  const points = Object.keys(marks)
+    .map(parseFloat)
+    .sort((a, b) => a - b);
   if (dots) {
     for (let i = min; i <= max; i += step) {
-      if (!points.indexOf(i) >= 0)
-        points.push(i)
+      if (points.indexOf(i) === -1) {
+        points.push(i);
+      }
     }
   }
+  return points;
+};
 
-  return points
-}
+const Steps = ({
+  prefixCls,
+  vertical,
+  marks,
+  dots,
+  step,
+  included,
+  lowerBound,
+  upperBound,
+  max,
+  min,
+  dotStyle,
+  activeDotStyle
+}) => {
+  const range = max - min;
+  const elements = calcPoints(vertical, marks, dots, step, min, max).map(
+    point => {
+      const offset = `${(Math.abs(point - min) / range) * 100}%`;
 
-const Steps =
-  ({
-     prefixCls,
-     vertical,
-     marks,
-     dots,
-     step,
-     included,
-     lowerBound,
-     upperBound,
-     max,
-     min,
-     dotStyle,
-     activeDotStyle
+      const isActive =
+        (!included && point === upperBound) ||
+        (included && point <= upperBound && point >= lowerBound);
+      let style = vertical
+        ? { bottom: offset, ...dotStyle }
+        : { left: offset, ...dotStyle };
 
-   }) => {
-    const range = max - min
-    const elements = calcPoints(vertical, marks, dots, step, min, max)
-      .map((point) => {
-        const offset = `${Math.abs(point - min) / range * 100}%`
+      if (isActive) {
+        style = { ...style, ...activeDotStyle };
+      }
 
-        const isActived = (!included && point === upperBound)
-          || (included && point <= upperBound && point >= lowerBound)
-        let style = vertical
-          ? {bottom: offset, ...dotStyle}
-          : {left: offset, ...dotStyle}
+      const pointClassName = classNames({
+        [`${prefixCls}-dot`]: true,
+        [`${prefixCls}-dot-active`]: isActive
+      });
 
-        if (isActived) {
-          style = {...style, ...activeDotStyle}
-        }
+      return <span className={pointClassName} style={style} key={point} />;
+    }
+  );
 
-        const pointClassName = classNames({
-          [`${prefixCls}-dot`]: true,
-          [`${prefixCls}-dot-active`]: isActived,
-        })
-
-        return (
-          <span
-            className={pointClassName}
-            style={style}
-            key={point}
-          />
-        )
-      })
-
-    return (
-      <div className={`${prefixCls}-step`}>
-        {elements}
-      </div>
-    )
-  }
+  return <div className={`${prefixCls}-step`}>{elements}</div>;
+};
 
 Steps.propTypes = {
   prefixCls: PropTypes.string,
-  vertical: PropTypes.bool,
-  marks: PropTypes.object,
+  activeDotStyle: PropTypes.object,
+  dotStyle: PropTypes.object,
+  min: PropTypes.number,
+  max: PropTypes.number,
+  upperBound: PropTypes.number,
+  lowerBound: PropTypes.number,
+  included: PropTypes.bool,
   dots: PropTypes.bool,
   step: PropTypes.number,
-  included: PropTypes.bool,
-  lowerBound: PropTypes.number,
-  upperBound: PropTypes.number,
-  max: PropTypes.number,
-  min: PropTypes.number,
-  dotStyle: PropTypes.object,
-  activeDotStyle: PropTypes.object
-}
+  marks: PropTypes.object,
+  vertical: PropTypes.bool
+};
 
-export default Steps
+export default Steps;

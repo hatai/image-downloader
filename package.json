@@ -1,46 +1,71 @@
 {
   "name": "imagedownloader",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
-    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
-    "start-js": "react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
-    "build-js": "react-scripts build",
-    "build": "npm-run-all build-css build-js",
-    "test": "react-scripts test --env=jsdom",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "crx": "node ./scripts/crx.js",
-    "zip": "node ./scripts/zip.js"
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public",
+    "serve": "serve -s build"
   },
   "dependencies": {
-    "bulma": "^0.7.1",
-    "classnames": "^2.2.6",
-    "custom-react-scripts": "^0.2.2",
-    "foundation-sites": "^6.5.0-rc.2",
-    "mdi": "^2.2.43",
-    "node-sass": "^4.9.3",
-    "node-sass-chokidar": "^1.3.3",
-    "nouislider": "^11.1.0",
-    "npm-run-all": "^4.1.3",
-    "prop-types": "^15.6.2",
-    "rc-util": "^4.5.1",
-    "react": "^16.4.2",
+    "@mdi/js": "^3.5.95",
+    "@mdi/react": "^1.1.0",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.5",
+    "mobx": "^5.9.0",
+    "mobx-react": "^5.4.3",
+    "mobx-react-devtools": "^6.1.1",
+    "node-sass": "^4.11.0",
+    "prettier": "^1.16.4",
+    "prop-types": "^15.7.2",
+    "rc-util": "^4.6.0",
+    "react": "^16.8.4",
     "react-collapse": "^4.0.3",
-    "react-dom": "^16.4.2",
+    "react-dev-utils": "^8.0.0",
+    "react-dom": "^16.8.4",
     "react-motion": "^0.5.2",
-    "react-redux": "^5.0.7",
-    "redux": "^4.0.0",
-    "redux-box": "^1.6.1",
-    "shallowequal": "^1.1.0",
-    "sweetalert2": "^7.26.14",
+    "react-scripts": "^2.1.8",
+    "serve": "^10.1.2",
+    "shelljs": "^0.8.3",
+    "styled-components": "^4.1.3",
+    "sweetalert2": "^8.2.6",
     "uuid": "^3.3.2",
-    "warning": "^4.0.2",
-    "wnumb": "^1.1.0"
+    "classnames": "^2.2.6",
+    "shallowequal": "^1.1.0",
+    "warning": "^4.0.3"
   },
   "devDependencies": {
-    "babel-plugin-transform-decorators-legacy": "^1.3.5",
-    "shelljs": "^0.8.2"
+    "@babel/core": "^7.3.4",
+    "@storybook/addon-actions": "^5.0.1",
+    "@storybook/addon-centered": "^5.0.1",
+    "@storybook/addon-console": "^1.1.0",
+    "@storybook/addon-links": "^5.0.1",
+    "@storybook/addons": "^5.0.1",
+    "@storybook/react": "^5.0.1",
+    "babel-loader": "^8.0.5"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "lint-staged": {
+    "src/**/*.{js, jsx, ts, tsx, json, css, scss, md}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }

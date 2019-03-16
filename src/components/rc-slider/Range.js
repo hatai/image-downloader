@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import shallowEqual from 'shallowequal';
-import warning from "warning";
+import warning from 'warning';
 import Track from './common/Track';
 import createSlider from './common/createSlider';
 import * as utils from './utils';
@@ -14,16 +14,13 @@ class Range extends React.Component {
     defaultValue: PropTypes.arrayOf(PropTypes.number),
     value: PropTypes.arrayOf(PropTypes.number),
     count: PropTypes.number,
-    pushable: PropTypes.oneOfType([
-      PropTypes.bool,
-      PropTypes.number,
-    ]),
+    pushable: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
     allowCross: PropTypes.bool,
     disabled: PropTypes.oneOfType([
       PropTypes.bool,
       PropTypes.arrayOf(PropTypes.bool)
     ]),
-    tabIndex: PropTypes.arrayOf(PropTypes.number),
+    tabIndex: PropTypes.arrayOf(PropTypes.number)
   };
 
   static defaultProps = {
@@ -31,7 +28,7 @@ class Range extends React.Component {
     allowCross: true,
     pushable: false,
     disabled: false,
-    tabIndex: [],
+    tabIndex: []
   };
 
   constructor(props) {
@@ -39,29 +36,20 @@ class Range extends React.Component {
 
     const { count, min, max, disabled } = props;
     const initialValue = Array(...Array(count + 1)).map(() => min);
-    const defaultValue = 'defaultValue' in props
-      ? props.defaultValue
-      : initialValue;
-    const value = props.value !== undefined
-      ? props.value
-      : defaultValue;
+    const defaultValue =
+      'defaultValue' in props ? props.defaultValue : initialValue;
+    const value = props.value !== undefined ? props.value : defaultValue;
     const bounds = value.map((v, i) => this.trimAlignValue(v, i));
-    const recent = bounds[0] === max
-      ? 0
-      : bounds.length - 1;
+    const recent = bounds[0] === max ? 0 : bounds.length - 1;
 
     if (Array.isArray(disabled)) {
-      // TODO: 適切なメッセージ
-      warning(
-        disabled.length === bounds.length,
-        'Errorrrr'
-      )
+      warning(disabled.length === bounds.length, 'Error: Range:constructor()');
     }
 
     this.state = {
       handle: null,
       recent,
-      bounds,
+      bounds
     };
   }
 
@@ -69,24 +57,30 @@ class Range extends React.Component {
     if (!('value' in nextProps || 'min' in nextProps || 'max' in nextProps))
       return;
 
-    if (this.props.min === nextProps.min
-      && this.props.max === nextProps.max
-      && shallowEqual(this.props.value, nextProps.value)) {
+    if (
+      this.props.min === nextProps.min &&
+      this.props.max === nextProps.max &&
+      shallowEqual(this.props.value, nextProps.value)
+    ) {
       return;
     }
 
     const { bounds } = this.state;
     const value = nextProps.value || bounds;
-    const nextBounds = value.map((v, i) => this.trimAlignValue(v, i, nextProps));
-    if (nextBounds.length === bounds.length
-      && nextBounds.every((v, i) => v === bounds[i])) {
+    const nextBounds = value.map((v, i) =>
+      this.trimAlignValue(v, i, nextProps)
+    );
+    if (
+      nextBounds.length === bounds.length &&
+      nextBounds.every((v, i) => v === bounds[i])
+    ) {
       return;
     }
 
     this.setState({ bounds: nextBounds });
 
-    if (bounds.some(v => utils.isValueOutOfRange(v, nextProps))) {
-      const newValues = value.map((v) => {
+    if (value.some(v => utils.isValueOutOfRange(v, nextProps))) {
+      const newValues = value.map(v => {
         return utils.ensureValueInRange(v, nextProps);
       });
 
@@ -130,7 +124,7 @@ class Range extends React.Component {
 
     this.setState({
       handle: this.prevMovedHandleIndex,
-      recent: this.prevMovedHandleIndex,
+      recent: this.prevMovedHandleIndex
     });
 
     const prevValue = bounds[this.prevMovedHandleIndex];
@@ -143,10 +137,18 @@ class Range extends React.Component {
     this.onChange({ bounds: nextBounds });
   }
 
-  onEnd = () => {
+  onEnd = force => {
+    const { handle } = this.state;
     this.removeDocumentEvents();
-    this.props.onAfterChange(this.getValue());
-  }
+
+    if (handle || force) {
+      this.props.onAfterChange(this.getValue());
+    }
+
+    this.setState({
+      handle: null
+    });
+  };
 
   onMove(e, position) {
     utils.pauseEvent(e);
@@ -154,8 +156,7 @@ class Range extends React.Component {
     const state = this.state;
     const value = this.calcValueByPos(position);
     const oldValue = state.bounds[state.handle];
-    if (value === oldValue)
-      return;
+    if (value === oldValue) return;
 
     this.moveTo(value);
   }
@@ -167,11 +168,10 @@ class Range extends React.Component {
       utils.pauseEvent(e);
       const { state, props } = this;
       const { bounds, handle } = state;
-      const oldValue = bounds[handle];
+      const oldValue = bounds[handle === null ? state.recent : handle];
       const mutatedValue = valueMutator(oldValue, props);
       const value = this.trimAlignValue(mutatedValue);
-      if (value === oldValue)
-        return;
+      if (value === oldValue) return;
 
       const isFromKeyboardEvent = true;
       this.moveTo(value, isFromKeyboardEvent);
@@ -191,7 +191,10 @@ class Range extends React.Component {
       }
     }
 
-    if (Math.abs(bounds[closestBound + 1] - value) < Math.abs(bounds[closestBound] - value)) {
+    if (
+      Math.abs(bounds[closestBound + 1] - value) <
+      Math.abs(bounds[closestBound] - value)
+    ) {
       closestBound += 1;
     }
 
@@ -200,32 +203,28 @@ class Range extends React.Component {
 
   getBoundNeedMoving(value, closestBound) {
     const { bounds, recent } = this.state;
-    const { disabled } = this.props
+    const { disabled } = this.props;
     let boundNeedMoving = closestBound;
-    const isAtTheSamePoint = (bounds[closestBound + 1] === bounds[closestBound]);
+    const isAtTheSamePoint = bounds[closestBound + 1] === bounds[closestBound];
 
     if (isAtTheSamePoint && bounds[recent] === bounds[closestBound]) {
       boundNeedMoving = recent;
     }
 
-    if (isAtTheSamePoint && (value !== bounds[closestBound + 1])) {
-      boundNeedMoving = value < bounds[closestBound + 1]
-        ? closestBound
-        : closestBound + 1;
+    if (isAtTheSamePoint && value !== bounds[closestBound + 1]) {
+      boundNeedMoving =
+        value < bounds[closestBound + 1] ? closestBound : closestBound + 1;
     }
 
     if (Array.isArray(disabled)) {
       if (disabled[boundNeedMoving] === true) {
         const notDisableds = disabled
-          .map((v, i) => ({index: i, disabled: v}))
+          .map((v, i) => ({ index: i, disabled: v }))
           .filter(v => v.disabled === false)
-          .map(v => v.index)
+          .map(v => v.index);
+
         if (notDisableds.length === 1) {
-          boundNeedMoving = notDisableds[0]
-        } else {
-          notDisableds.forEach(bound => {
-            // TODO: 有効なハンドルで一番クリック位置に近いものを計算する
-          })
+          boundNeedMoving = notDisableds[0];
         }
       }
     }
@@ -270,9 +269,9 @@ class Range extends React.Component {
   moveTo(value, isFromKeyboardEvent) {
     const { state, props } = this;
     const nextBounds = [...state.bounds];
-    nextBounds[state.handle] = value;
-
-    let nextHandle = state.handle;
+    const handle = state.handle === null ? state.recent : state.handle;
+    nextBounds[handle] = value;
+    let nextHandle = handle;
     if (props.pushable !== false) {
       this.pushSurroundingHandles(nextBounds, nextHandle);
     } else if (props.allowCross) {
@@ -282,7 +281,7 @@ class Range extends React.Component {
 
     this.onChange({
       handle: nextHandle,
-      bounds: nextBounds,
+      bounds: nextBounds
     });
 
     if (isFromKeyboardEvent) {
@@ -323,9 +322,11 @@ class Range extends React.Component {
     }
 
     const diffToNext = direction * (bounds[nextHandle] - value);
-    if (!this.pushHandle(bounds, nextHandle, direction, threshold - diffToNext)) {
+    if (
+      !this.pushHandle(bounds, nextHandle, direction, threshold - diffToNext)
+    ) {
       // revert to original value if pushing is impossible
-      bounds[handle] = bounds[nextHandle] - (direction * threshold);
+      bounds[handle] = bounds[nextHandle] - direction * threshold;
     }
   }
 
@@ -360,7 +361,9 @@ class Range extends React.Component {
     const nextValue = points[nextPointIndex];
     const { pushable: threshold } = this.props;
     const diffToNext = direction * (bounds[nextHandle] - nextValue);
-    if (!this.pushHandle(bounds, nextHandle, direction, threshold - diffToNext)) {
+    if (
+      !this.pushHandle(bounds, nextHandle, direction, threshold - diffToNext)
+    ) {
       // couldn't push next handle, so we won't push this one either
       return false;
     }
@@ -373,7 +376,11 @@ class Range extends React.Component {
   trimAlignValue(v, handle, nextProps = {}) {
     const mergedProps = { ...this.props, ...nextProps };
     const valInRange = utils.ensureValueInRange(v, mergedProps);
-    const valNotConflict = this.ensureValueNotConflict(handle, valInRange, mergedProps);
+    const valNotConflict = this.ensureValueNotConflict(
+      handle,
+      valInRange,
+      mergedProps
+    );
 
     return utils.ensureValuePrecision(valNotConflict, mergedProps);
   }
@@ -381,18 +388,16 @@ class Range extends React.Component {
   ensureValueNotConflict(handle, val, { allowCross, pushable: thershold }) {
     const state = this.state || {};
     const { bounds } = state;
-    handle = handle === undefined
-      ? state.handle
-      : handle;
+    handle = handle === undefined ? state.handle : handle;
     thershold = Number(thershold);
 
     /* eslint-disable eqeqeq */
     if (!allowCross && handle != null && bounds !== undefined) {
-      if (handle > 0 && val <= (bounds[handle - 1] + thershold)) {
+      if (handle > 0 && val <= bounds[handle - 1] + thershold) {
         return bounds[handle - 1] + thershold;
       }
 
-      if (handle < bounds.length - 1 && val >= (bounds[handle + 1] - thershold)) {
+      if (handle < bounds.length - 1 && val >= bounds[handle + 1] - thershold) {
         return bounds[handle + 1] - thershold;
       }
     }
@@ -402,10 +407,7 @@ class Range extends React.Component {
   }
 
   render() {
-    const {
-      handle,
-      bounds,
-    } = this.state;
+    const { handle, bounds } = this.state;
 
     const {
       prefixCls,
@@ -417,52 +419,52 @@ class Range extends React.Component {
       handle: handleGenerator,
       trackStyle,
       handleStyle,
-      tabIndex,
+      tabIndex
     } = this.props;
 
     const offsets = bounds.map(v => this.calcOffset(v));
 
     const handleClassName = `${prefixCls}-handle`;
-    const handles = bounds.map((v, i) => handleGenerator({
-      className: classNames({
-        [handleClassName]: true,
-        [`${handleClassName}-${i + 1}`]: true,
-      }),
-      prefixCls,
-      vertical,
-      offset: offsets[i],
-      value: v,
-      dragging: handle === i,
-      index: i,
-      tabIndex: tabIndex[i] || 0,
-      min,
-      max,
-      disabled: Array.isArray(disabled) ? disabled[i] : disabled,
-      style: handleStyle[i],
-      ref: h => this.saveHandle(i, h),
-    }));
+    const handles = bounds.map((v, i) =>
+      handleGenerator({
+        className: classNames({
+          [handleClassName]: true,
+          [`${handleClassName}-${i + 1}`]: true
+        }),
+        prefixCls,
+        vertical,
+        offset: offsets[i],
+        value: v,
+        dragging: handle === i,
+        index: i,
+        tabIndex: tabIndex[i] || 0,
+        min,
+        max,
+        disabled: Array.isArray(disabled) ? disabled[i] : disabled,
+        style: handleStyle[i],
+        ref: h => this.saveHandle(i, h)
+      })
+    );
 
-    const tracks = bounds
-      .slice(0, -1)
-      .map((_, index) => {
-        const i = index + 1;
-        const trackClassName = classNames({
-          [`${prefixCls}-track`]: true,
-          [`${prefixCls}-track-${i}`]: true,
-        });
-
-        return (
-          <Track
-            className={trackClassName}
-            vertical={vertical}
-            included={included}
-            offset={offsets[i - 1]}
-            length={offsets[i] - offsets[i - 1]}
-            style={trackStyle[index]}
-            key={i}
-          />
-        );
+    const tracks = bounds.slice(0, -1).map((_, index) => {
+      const i = index + 1;
+      const trackClassName = classNames({
+        [`${prefixCls}-track`]: true,
+        [`${prefixCls}-track-${i}`]: true
       });
+
+      return (
+        <Track
+          className={trackClassName}
+          vertical={vertical}
+          included={included}
+          offset={offsets[i - 1]}
+          length={offsets[i] - offsets[i - 1]}
+          style={trackStyle[index]}
+          key={i}
+        />
+      );
+    });
 
     return { tracks, handles };
   }
