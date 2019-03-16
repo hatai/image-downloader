@@ -107,6 +107,7 @@ const Action = styled(StyledDiv)`
   p {
     margin: auto auto auto 5px;
     font-size: 1.25rem;
+    font-weight: 400;
   }
 `;
 

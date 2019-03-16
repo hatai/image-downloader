@@ -73,6 +73,8 @@ export default observer(
       return (
         <Wrapper>
           {/* TODO: 設定をサイトごとに保持？ */}
+          {/* github pages 作る */}
+          {/* github pages インストール完了時とアップデート時に表示するようにする */}
           <GlobalStyles />
 
           <Header
@@ -130,10 +132,18 @@ export default observer(
     };
 
     handleOnError = (event, imageModel) => {
-      // TODO: エラー時の処理考える
-      // TODO: 一部読み込めなかった旨のトースト表示？
       imageModel.loadFailed = true;
       imageModel.visible = false;
+
+      Swal.fire({
+        title: `Load Error: ${imageModel.src}`,
+        background: `${color.voyagerDarkGrey}`,
+        type: 'error',
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 4500
+      });
     };
 
     handleOnZoomButtonClick = imageModel => {
@@ -168,22 +178,21 @@ export default observer(
     };
 
     downloadAllCheckedImages = () => {
-      const swal = Swal.mixin({
-        background: `${color.voyagerDarkGrey}`,
-        toast: false,
-        showConfirmButton: false,
-        showLoaderOnConfirm: true,
-        allowEnterKey: false,
-        allowEscapeKey: false,
-        allowOutsideClick: true
-      });
+      if (imageListModel.checkedImages.length === 0) {
+        return;
+      }
 
       imageListModel.downloadAll();
 
-      swal.fire({
+      Swal.fire({
         title: 'Download Started!!',
         type: 'success',
-        showCloseButton: true,
+        showCloseButton: false,
+        background: `${color.voyagerDarkGrey}`,
+        toast: false,
+        showConfirmButton: false,
+        allowEnterKey: false,
+        allowEscapeKey: false,
         allowOutsideClick: true
       });
     };
