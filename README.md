@@ -35,7 +35,7 @@ You can find source code here: [](https://github.com/hatai/image-downloader)
     
 ## Licence
 
-Copyright (c) 2018 taigen hamada
+Copyright (c) 2019 taigen hamada
 
 Permission is hereby granted, free of charge, to any person obtaining 
 a copy of this software and associated documentation files (the "Software"),
