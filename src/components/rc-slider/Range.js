@@ -225,10 +225,6 @@ class Range extends React.Component {
 
         if (notDisableds.length === 1) {
           boundNeedMoving = notDisableds[0];
-        } else {
-          notDisableds.forEach(bound => {
-            // TODO: 有効なハンドルで一番クリック位置に近いものを計算する
-          });
         }
       }
     }

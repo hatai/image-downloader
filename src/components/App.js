@@ -1,8 +1,10 @@
 /* eslint-env webextensions */
 import React, { Component } from 'react';
+import { autorun } from 'mobx';
 import { observer } from 'mobx-react';
 import styled, { createGlobalStyle } from 'styled-components';
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
+import warning from 'warning';
 import GridLayout from './GridLayout';
 import Header from './Header';
 import Card from './Card';
@@ -14,17 +16,27 @@ import '../assets/style/index.scss';
 
 const GlobalStyles = createGlobalStyle`
   body {
-    width: 770px;
+    width: ${() =>
+      process.env.NODE_ENV !== 'production' ? '100vw' : 'calc(800px - 17px)'};
     height: 100%;
-    min-height: 560px;
+    min-height: 600px;
     max-height: 100%;
     background-color: ${color.charcoalGreyTwo};
+    overflow-x: hidden;
+    
+    margin: 0 !important;
+  }
+  
+  #root {
+    width: 100%;
+    height: 100%;
     overflow-x: hidden;
   }
 `;
 
 const Wrapper = styled.div`
-  width: calc(100vw - (100vw - 100%));
+  //width: calc(100vw - (100vw - 100%));
+  margin: 8px 8px 16px;
 `;
 
 const Container = styled.div`
@@ -36,25 +48,34 @@ export default observer(
     static propTypes = {};
 
     componentWillMount() {
-      void this.initialize();
+      try {
+        this.initialize();
+      } catch (e) {
+        warning(false, '%s', e);
+      }
+
+      this.getImages()
+        .then(() => {
+          // TODO: 表示できる画像がなかった場合のメッセージ表示?
+        })
+        .catch(error => {
+          warning(false, '%s', error);
+        });
     }
 
     componentDidMount() {
-      // TODO: 表示できる画像がなかった場合のメッセージ表示
-      this.getImages().then(() => {
-        imageListModel.doFilter(settingsModel);
+      autorun(() => {
+        util.saveSettingsToLocalStorage(settingsModel.values);
+        imageListModel.doFilter(settingsModel.values);
       });
     }
 
     render() {
       return (
         <Wrapper>
-          {/* TODO: スクロールバーのせいでいろいろと面倒なので治す(主に設定モーダル) */}
-          {/* TODO: 設定をローカルストレージに保存 */}
           {/* TODO: 設定をサイトごとに保持？ */}
           <GlobalStyles />
 
-          {/* TODO: デザインもうちょっとカッコよくしたい */}
           <Header
             imageListModel={imageListModel}
             settingsModel={settingsModel}
@@ -62,8 +83,7 @@ export default observer(
             onClickDownloadButton={this.downloadAllCheckedImages}
           />
 
-          {/* TODO: 画像のダウンロードはバックグラウンドスクリプトにやらせる? */}
-          {/* TODO: 画像ダウンロード中のモーダル表示 */}
+          {/* TODO: 画像ダウンロードトースト表示の CSS 修正 */}
           <Container>
             <GridLayout>
               {imageListModel.images.map((imageModel, i) => (
@@ -86,9 +106,7 @@ export default observer(
       );
     }
 
-    initialize = async () => {
-      settingsModel.applySettingsFromLocalStorage();
-
+    initialize = () => {
       chrome.downloads.onDeterminingFilename.addListener((item, suggest) => {
         const suggestName = util.suggestNewFilename(
           settingsModel.subfolder,
@@ -96,6 +114,8 @@ export default observer(
         );
         suggest({ filename: suggestName });
       });
+
+      settingsModel.applySettingsFromLocalStorage();
     };
 
     getImages = async () => {
@@ -108,6 +128,8 @@ export default observer(
       imageModel.loadFailed = false;
       imageModel.width = event.target.naturalWidth;
       imageModel.height = event.target.naturalHeight;
+
+      imageListModel.doFilter(settingsModel.values);
     };
 
     handleOnError = (event, imageModel) => {
@@ -118,7 +140,7 @@ export default observer(
     };
 
     handleOnZoomButtonClick = imageModel => {
-      swal.fire({
+      Swal.fire({
         text: imageModel.url,
         imageUrl: imageModel.src,
         imageWidth: imageModel.width,

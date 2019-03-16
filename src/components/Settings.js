@@ -6,7 +6,6 @@ import Checkbox from './common/Checkbox';
 import DropDown from './common/DropDown';
 import TextInput from './common/TextInput';
 import Range from './rc-slider/Range';
-import imageListModel from '../models/image';
 import settingsModel from '../models/settings';
 import color from '../utils/colors';
 
@@ -76,20 +75,14 @@ export default observer(
 
     setSubfolderValue = e => {
       settingsModel.subfolder = e.target.value;
-
-      void this.doFilter(settingsModel);
     };
 
     setFilterType = (selected, i) => {
       settingsModel.filterType = i;
-
-      void this.doFilter(settingsModel);
     };
 
     setFilterValue = e => {
       settingsModel.filter = e.target.value;
-
-      void this.doFilter(settingsModel);
     };
 
     setWidth = ([min, max]) => {
@@ -97,20 +90,14 @@ export default observer(
         settingsModel.minWidth = min;
         settingsModel.maxWidth = max;
       }
-
-      void this.doFilter(settingsModel);
     };
 
     onClickMinWidth = () => {
       settingsModel.minWidthEnabled = !settingsModel.minWidthEnabled;
-
-      void this.doFilter(settingsModel);
     };
 
     onClickMaxWidth = () => {
       settingsModel.maxWidthEnabled = !settingsModel.maxWidthEnabled;
-
-      void this.doFilter(settingsModel);
     };
 
     setHeight = ([min, max]) => {
@@ -118,31 +105,19 @@ export default observer(
         settingsModel.minHeight = min;
         settingsModel.maxHeight = max;
       }
-
-      void this.doFilter(settingsModel);
     };
 
     onClickMinHeight = () => {
       settingsModel.minHeightEnabled = !settingsModel.minHeightEnabled;
-
-      void this.doFilter(settingsModel);
     };
 
     onClickMaxHeight = () => {
       settingsModel.maxHeightEnabled = !settingsModel.maxHeightEnabled;
-
-      void this.doFilter(settingsModel);
     };
 
     setOnlyImagesFromLinks = () => {
       const { onlyImagesFromLink } = settingsModel;
       settingsModel.onlyImagesFromLink = !onlyImagesFromLink;
-
-      void this.doFilter(settingsModel);
-    };
-
-    doFilter = async () => {
-      imageListModel.doFilter(settingsModel);
     };
 
     render() {

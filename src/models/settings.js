@@ -1,9 +1,7 @@
 /* eslint-env webextensions */
-import { observable, computed, action, decorate } from 'mobx';
-import warning from 'warning';
-import { getSavedOptions, saveOptions } from '../utils/index';
-
-const KEY = 'settings';
+import { action, computed, decorate, observable } from 'mobx';
+import { getSavedOptions } from '../utils/index';
+import { KEY } from '../utils/constants';
 
 class SettingsModel {
   subfolder = '';
@@ -72,20 +70,12 @@ class SettingsModel {
    ********************************************************************/
 
   applySettingsFromLocalStorage() {
-    const settings = getSavedOptions(KEY);
-    if (options === null) {
-      return;
-    }
+    getSavedOptions(KEY).then(settings => {
+      if (settings === null) {
+        return;
+      }
 
-    this.values = settings;
-  }
-
-  saveSettingsToLocalStorage() {
-    saveOptions({
-      key: KEY,
-      value: Object.assign({}, this.values)
-    }).catch(error => {
-      warning(error);
+      this.values = settings;
     });
   }
 }
@@ -107,8 +97,7 @@ decorate(SettingsModel, {
   // computed
   values: computed,
   // action
-  applySettingsFromLocalStorage: action.bound,
-  saveSettingsToLocalStorage: action.bound
+  applySettingsFromLocalStorage: action.bound
 });
 
 const settingsModel = new SettingsModel();
