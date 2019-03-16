@@ -31,7 +31,9 @@ const Grid = styled.div`
     10px
     [sixth] auto
     10px
-    [seventh] auto;
+    [seventh] auto
+    10px
+    [eighth] auto [nineth] auto;
 `;
 
 const GridItem = styled.div`
@@ -120,6 +122,11 @@ export default observer(
       settingsModel.onlyImagesFromLink = !onlyImagesFromLink;
     };
 
+    setExcludeQueryImage = () => {
+      const { excludeQueryImage } = settingsModel;
+      settingsModel.excludeQueryImage = !excludeQueryImage;
+    };
+
     render() {
       const { id } = this.props;
       const {
@@ -134,7 +141,8 @@ export default observer(
         minHeight,
         minHeightEnabled,
         maxHeight,
-        maxHeightEnabled
+        maxHeightEnabled,
+        excludeQueryImage
       } = settingsModel;
 
       return (
@@ -264,6 +272,29 @@ export default observer(
               onClick={this.setOnlyImagesFromLinks}
             >
               <NormalLabel>Only images from links</NormalLabel>
+            </GridItem>
+
+            <GridItem
+              columnStart={1}
+              columnEnd={3}
+              rowStart={'eighth'}
+              onClick={this.setExcludeQueryImage}
+            >
+              <Checkbox checked={excludeQueryImage} />
+            </GridItem>
+            <GridItem
+              columnStart={4}
+              columnEnd={'end'}
+              rowStart={'eighth'}
+              onClick={this.setExcludeQueryImage}
+            >
+              <NormalLabel>Exclude images with query params</NormalLabel>
+            </GridItem>
+            <GridItem columnStart={4} columnEnd={'end'} rowStart={'ninth'}>
+              <SmallLabel>
+                ex.
+                https//example.com/search?imageURL=https://example.com/example.jpg
+              </SmallLabel>
             </GridItem>
           </Grid>
         </Container>

@@ -29,10 +29,13 @@ const Wrapper = styled.div`
   background-size: 145px;
   background-color: ${color.voyagerDarkGrey};
   position: relative;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 4);
+  box-shadow: 0 2px 4px 0
+    ${({ checked }) => (checked ? 'rgba(22, 130, 78, 4)' : 'rgba(0, 0, 0, 4)')};
 
   :hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
+    box-shadow: 0 8px 16px 0
+      ${({ checked }) =>
+        checked ? 'rgba(22, 130, 78, .16)' : 'rgba(0, 0, 0, .16)'};
   }
 `;
 
@@ -276,7 +279,7 @@ export default observer(
           onMouseOver={this.onHover}
           onMouseLeave={this.onLeave}
         >
-          <Wrapper>
+          <Wrapper checked={imageModel.checked}>
             <ImgWrapper>
               <Img
                 src={imageModel.src}

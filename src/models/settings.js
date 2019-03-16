@@ -3,6 +3,8 @@ import { action, computed, decorate, observable } from 'mobx';
 import { getSavedOptions } from '../utils/index';
 import { KEY } from '../utils/constants';
 
+const isValid = value => value !== undefined && value !== null;
+
 class SettingsModel {
   subfolder = '';
   filter = '';
@@ -17,6 +19,7 @@ class SettingsModel {
   maxHeight = 3000;
   maxHeightEnabled = false;
   onlyImagesFromLink = false;
+  excludeQueryImage = false;
 
   get values() {
     return {
@@ -31,7 +34,8 @@ class SettingsModel {
       minHeightEnabled: this.minHeightEnabled,
       maxHeight: this.maxHeight,
       maxHeightEnabled: this.maxHeightEnabled,
-      onlyImagesFromLink: this.onlyImagesFromLink
+      onlyImagesFromLink: this.onlyImagesFromLink,
+      excludeQueryImage: this.excludeQueryImage
     };
   }
 
@@ -48,21 +52,31 @@ class SettingsModel {
       minHeightEnabled,
       maxHeight,
       maxHeightEnabled,
-      onlyImagesFromLink
+      onlyImagesFromLink,
+      excludeQueryImage
     } = values;
 
-    this.subfolder = subfolder;
-    this.filter = filter;
-    this.filterType = filterType;
-    this.minWidth = minWidth;
-    this.minWidthEnabled = minWidthEnabled;
-    this.maxWidth = maxWidth;
-    this.maxWidthEnabled = maxWidthEnabled;
-    this.minHeight = minHeight;
-    this.minHeightEnabled = minHeightEnabled;
-    this.maxHeight = maxHeight;
-    this.maxHeightEnabled = maxHeightEnabled;
-    this.onlyImagesFromLink = onlyImagesFromLink;
+    this.subfolder = isValid(subfolder) ? subfolder : '';
+    this.filter = isValid(filter) ? filter : '';
+    this.filterType = isValid(filterType) ? filterType : 0;
+    this.minWidth = isValid(minWidth) ? minWidth : 0;
+    this.minWidthEnabled = isValid(minWidthEnabled) ? minWidthEnabled : false;
+    this.maxWidth = isValid(maxWidth) ? maxWidth : 3000;
+    this.maxWidthEnabled = isValid(maxWidthEnabled) ? maxWidthEnabled : false;
+    this.minHeight = isValid(minHeight) ? minHeight : 0;
+    this.minHeightEnabled = isValid(minHeightEnabled)
+      ? minHeightEnabled
+      : false;
+    this.maxHeight = isValid(maxHeight) ? maxHeight : 3000;
+    this.maxHeightEnabled = isValid(maxHeightEnabled)
+      ? maxHeightEnabled
+      : false;
+    this.onlyImagesFromLink = isValid(onlyImagesFromLink)
+      ? onlyImagesFromLink
+      : false;
+    this.excludeQueryImage = isValid(excludeQueryImage)
+      ? excludeQueryImage
+      : false;
   }
 
   /********************************************************************
@@ -94,6 +108,7 @@ decorate(SettingsModel, {
   maxHeight: observable,
   maxHeightEnabled: observable,
   onlyImagesFromLink: observable,
+  excludeQueryImage: observable,
   // computed
   values: computed,
   // action

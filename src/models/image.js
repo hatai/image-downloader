@@ -2,6 +2,7 @@
 import { action, computed, decorate, observable } from 'mobx';
 import uuid from 'uuid/v1';
 import warning from 'warning';
+import { REGEX_IMAGE } from '../utils/constants';
 
 class ImageModel {
   id = '';
@@ -21,6 +22,10 @@ class ImageModel {
   }
 
   get url() {
+    if (this.src.indexOf('data:image') === 0) {
+      return this.src;
+    }
+
     return this.src.split(/[?#]/)[0];
   }
 
@@ -123,10 +128,6 @@ class ImageListModel {
     this.sources = [];
   }
 
-  remove() {}
-
-  check() {}
-
   checkAll() {
     this.images
       .filter(image => image.visible)
@@ -147,7 +148,6 @@ class ImageListModel {
     const {
       filter,
       filterType,
-      onlyImagesFromLink,
       minWidth,
       minWidthEnabled,
       maxWidth,
@@ -155,7 +155,9 @@ class ImageListModel {
       minHeight,
       minHeightEnabled,
       maxHeight,
-      maxHeightEnabled
+      maxHeightEnabled,
+      onlyImagesFromLink,
+      excludeQueryImage
     } = settings;
 
     // reset
@@ -163,7 +165,13 @@ class ImageListModel {
       image.visible = !image.loadFailed;
     });
 
-    this.filterByLinkedImage(onlyImagesFromLink);
+    if (excludeQueryImage) {
+      this.filterByExcludeQueryImage();
+    }
+
+    if (onlyImagesFromLink) {
+      this.filterByLinkedImage();
+    }
 
     switch (filterType) {
       case 0:
@@ -194,14 +202,20 @@ class ImageListModel {
     });
   }
 
-  filterByLinkedImage(onlyImagesFromLinks) {
+  filterByLinkedImage() {
     this.images
       .filter(image => image.visible)
       .forEach(image => {
-        if (onlyImagesFromLinks) {
-          image.visible = image.linked;
-        } else {
-          image.visible = true;
+        image.visible = image.linked;
+      });
+  }
+
+  filterByExcludeQueryImage() {
+    this.images
+      .filter(image => image.visible)
+      .forEach(image => {
+        if (image.url.indexOf('data:image') !== 0) {
+          image.visible = REGEX_IMAGE.test(image.url);
         }
       });
   }
@@ -306,8 +320,6 @@ decorate(ImageListModel, {
   linkedImages: computed,
   notLinkedImages: computed,
   // action
-  remove: action.bound,
-  check: action.bound,
   checkAll: action.bound,
   uncheckAll: action.bound,
   doFilter: action.bound
