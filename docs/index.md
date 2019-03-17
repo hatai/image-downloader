@@ -40,6 +40,13 @@ If you need to bulk download images from a web page, with this extension you can
 * Customize image display width, columns, border size, and color
 * Hide filters, buttons and notifications you don't need
 
+## Known Issues
+
+This extension can't always extract the full-resolution images that open when you click a photo (e.g. in Facebook albums). 
+That's because the page doesn't directly link to the image, but uses a script. 
+If you need that kind of functionality, there are other extensions that can be useful 
+like Hover Zoom, even if you can't mass download images with it.
+
 ## Change log
 
 see: [releases](https://github.com/hatai/image-downloader/releases)
