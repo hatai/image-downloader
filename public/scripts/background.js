@@ -1,5 +1,3 @@
-chrome.runtime.onMessage.addListener(function(message, image) {
-  if (message === "download") {
-    chrome.downloads.download({ url: image });
-  }
+chrome.runtime.onInstalled.addListener(function() {
+  chrome.tabs.create({ url: "https://hatai.github.io/image-downloader/" });
 });
