@@ -78,8 +78,16 @@ function sendImages () {
         || imageDownloader.imageRegex.test(url);
     },
 
+    isRelativeURL: function(url) {
+      if (url.indexOf("data:image") === 0) {
+        return false
+      }
+
+      return /^(?!www\.|(?:http|ftp)s?:\/\/|[A-Za-z]:\\|\/\/).*/.test(url)
+    },
+
     relativeUrlToAbsolute: function(url) {
-      return imageDownloader.isImageURL(url)
+      return imageDownloader.isImageURL(url) && imageDownloader.isRelativeURL(url)
         ? new URL(url, window.location).toString()
         : url;
     },
