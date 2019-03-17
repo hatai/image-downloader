@@ -4,6 +4,23 @@
     <img src="./tile_big.png" alt="icon" width="440" height="280">
 </p>
 
+## NEWS
+
+### Version 2 is released!!
+
+I released version 2.
+I made various improvements.
+
+* New imgur like style
+* Add settings item
+* Rebuild almost code
+* Performance improvement
+
+Please report from [chrome web store](https://chrome.google.com/webstore/detail/image-downloader/leakgmkipjfnmnacgakpggmilnhlmbcg)
+if there are any improvements, bugs, etc...
+
+## Details
+
 > Note:
 > You can download this extension from 
 [Chrome Web Store](https://chrome.google.com/webstore/detail/image-downloader/leakgmkipjfnmnacgakpggmilnhlmbcg)
@@ -35,7 +52,7 @@ You can find source code here: [GitHub](https://github.com/hatai/image-downloade
     
 ## Licence
 
-Copyright (c) 2019 taigen hamada
+Copyright (c) 2019 hatai
 
 Permission is hereby granted, free of charge, to any person obtaining 
 a copy of this software and associated documentation files (the "Software"),
