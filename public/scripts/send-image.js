@@ -79,8 +79,8 @@ function sendImages () {
     },
 
     relativeUrlToAbsolute: function(url) {
-      return url.indexOf("/") === 0
-        ? `${window.location.origin}${url}`
+      return imageDownloader.isImageURL(url)
+        ? new URL(url, window.location).toString()
         : url;
     },
 
@@ -112,11 +112,11 @@ function sendImages () {
       .map(imageDownloader.relativeUrlToAbsolute)
     );
 
-  imageDownloader.linkedImages = imageDownloader.removeDuplicateOrEmpty(
-    imageDownloader.linkedImages
-      .slice()
-      .map(imageDownloader.relativeUrlToAbsolute)
-  );
+  imageDownloader.linkedImages = imageDownloader
+    .removeDuplicateOrEmpty(
+      imageDownloader.linkedImages.slice()
+        .map(imageDownloader.relativeUrlToAbsolute)
+    );
 
   chrome.runtime.sendMessage({
     linkedImages: imageDownloader.linkedImages,

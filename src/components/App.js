@@ -136,7 +136,7 @@ export default observer(
       imageModel.visible = false;
 
       Swal.fire({
-        title: `Load Error: ${imageModel.src}`,
+        title: `Load Failed: ${imageModel.src}`,
         background: `${color.voyagerDarkGrey}`,
         type: 'error',
         toast: true,
