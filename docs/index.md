@@ -13,7 +13,7 @@ I made various improvements.
 
 * New imgur like style
 * Add settings item
-* Rebuild almost code
+* Rebuild almost codes
 * Performance improvement
 
 Please report from [chrome web store](https://chrome.google.com/webstore/detail/image-downloader/leakgmkipjfnmnacgakpggmilnhlmbcg)
@@ -52,7 +52,7 @@ You can find source code here: [GitHub](https://github.com/hatai/image-downloade
     
 ## Licence
 
-Copyright (c) 2019 hatai
+Copyright (c) 2019 Taigen Hamada
 
 Permission is hereby granted, free of charge, to any person obtaining 
 a copy of this software and associated documentation files (the "Software"),
