@@ -46,7 +46,9 @@ export default observer(
   class App extends Component {
     static propTypes = {};
 
-    componentWillMount() {
+    constructor(props) {
+      super(props);
+
       try {
         this.initialize();
       } catch (e) {
@@ -73,8 +75,6 @@ export default observer(
       return (
         <Wrapper>
           {/* TODO: 設定をサイトごとに保持？ */}
-          {/* TODO: github pages 作る */}
-          {/* TODO: github pages インストール完了時とアップデート時に表示するようにする */}
           <GlobalStyles />
 
           <Header
@@ -142,6 +142,7 @@ export default observer(
         toast: true,
         position: 'bottom-end',
         showConfirmButton: false,
+        allowOutsideClick: false,
         timer: 4500
       });
     };
@@ -189,7 +190,6 @@ export default observer(
         type: 'success',
         showCloseButton: false,
         background: `${color.voyagerDarkGrey}`,
-        toast: false,
         showConfirmButton: false,
         allowEnterKey: false,
         allowEscapeKey: false,
