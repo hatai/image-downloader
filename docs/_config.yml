@@ -1,4 +1,4 @@
 theme: jekyll-theme-minimal
 title: IMAGE DOWNLOADER
-logo: ./tile_big.png
+logo: ./assets/icons/tile_big.png
 show_downloads: true

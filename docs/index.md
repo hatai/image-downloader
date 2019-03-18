@@ -1,7 +1,7 @@
 <h1 align="center">IMAGE DOWNLOADER</h1>
 
 <p align="center">
-    <img src="./tile_big.png" alt="icon" width="440" height="280">
+    <img src="./assets/icons/tile_big.png" alt="icon" width="440" height="280">
 </p>
 
 ## NEWS
@@ -16,7 +16,7 @@ I made various improvements.
 * Rebuild almost codes
 * Performance improvement
 
-Please report from [chrome web store](https://chrome.google.com/webstore/detail/image-downloader/leakgmkipjfnmnacgakpggmilnhlmbcg)
+Please report from [Chrome Web Store](https://chrome.google.com/webstore/detail/image-downloader/leakgmkipjfnmnacgakpggmilnhlmbcg)
 if there are any improvements, bugs, etc...
 
 ## Details
@@ -49,8 +49,29 @@ like Hover Zoom, even if you can't mass download images with it.
 
 ## Change log
 
-see: [releases](https://github.com/hatai/image-downloader/releases)
+### Version 2.1.0
+
+* fixed bugs
+* Add settings item
+
+### Version 2.0.0
+
+* New imgur like style
+* Rebuild almost codes
+* Performance improvement
     
+## Screenshots
+
+![default][screenshots_1]
+
+![modal][screenshots_2]
+
+![settings][screenshots_3]
+
+[screenshots_1]: ./assets/images/chrome_2019-03-18_10-32-46.png
+[screenshots_2]: ./assets/images/chrome_2019-03-18_10-34-54.png
+[screenshots_3]: ./assets/images/chrome_2019-03-18_10-33-44.png
+
 ## Credits
 
 This extension is and always will be free, open-source,

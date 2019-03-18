@@ -1,7 +1,7 @@
 <h1 align="center">IMAGE DOWNLOADER</h1>
 
 <p align="center">
-    <img src="https://github.com/hatai/image-downloader/blob/master/assets/icons/tile_small.png" alt="icon" width="440" height="280">
+    <img src="https://hatai.github.io/image-downloader/assets/icons/tile_big.png" alt="icon" width="440" height="280">
 </p>
 
 > Note:
