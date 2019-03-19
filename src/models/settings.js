@@ -19,7 +19,15 @@ class SettingsModel {
   maxHeight = 3000;
   maxHeightEnabled = false;
   onlyImagesFromLink = false;
-  excludeQueryImage = false;
+  excludeQueryImage = true;
+
+  get midWidth() {
+    return (this.minWidth + this.maxWidth) / 2;
+  }
+
+  get midHeight() {
+    return (this.minHeight + this.maxHeight) / 2;
+  }
 
   get values() {
     return {
@@ -110,6 +118,8 @@ decorate(SettingsModel, {
   onlyImagesFromLink: observable,
   excludeQueryImage: observable,
   // computed
+  midWidth: computed,
+  midHeight: computed,
   values: computed,
   // action
   applySettingsFromLocalStorage: action.bound

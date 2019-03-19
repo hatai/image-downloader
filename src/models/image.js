@@ -2,23 +2,26 @@
 import { action, computed, decorate, observable } from 'mobx';
 import uuid from 'uuid/v1';
 import warning from 'warning';
+import settingsModel from './settings';
 import { REGEX_IMAGE } from '../utils/constants';
 
 class ImageModel {
   id = '';
   src = '';
-  width = 3000;
-  height = 3000;
+  width = 0;
+  height = 0;
   linked = false;
   checked = false;
   visible = true;
   downloaded = false;
   loadFailed = false;
 
-  constructor(src, linked = false) {
+  constructor(src, width, height, linked = false) {
     this.id = uuid();
     this.src = src;
     this.linked = linked;
+    this.width = width;
+    this.height = height;
   }
 
   get url() {
@@ -99,14 +102,30 @@ class ImageListModel {
   set linkedImages(images) {
     this.sources = [].concat(
       this.sources,
-      images.map(image => new ImageModel(image, true))
+      images.map(
+        image =>
+          new ImageModel(
+            image,
+            settingsModel.midWidth,
+            settingsModel.midHeight,
+            true
+          )
+      )
     );
   }
 
   set notLinkedImages(images) {
     this.sources = [].concat(
       this.sources,
-      images.map(image => new ImageModel(image, false))
+      images.map(
+        image =>
+          new ImageModel(
+            image,
+            settingsModel.midWidth,
+            settingsModel.midHeight,
+            false
+          )
+      )
     );
   }
 

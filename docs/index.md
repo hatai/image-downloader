@@ -49,6 +49,14 @@ like Hover Zoom, even if you can't mass download images with it.
 
 ## Change log
 
+### Version 2.1.2
+
+* fix bugs
+
+### Version 2.1.1
+
+* upgrade node modules
+
 ### Version 2.1.0
 
 * fixed bugs
