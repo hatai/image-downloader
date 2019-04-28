@@ -118,7 +118,8 @@ export default observer(
     };
 
     getImages = async () => {
-      const { images, linkedImages } = await util.getImages();
+      const { hostname, images, linkedImages } = await util.getImages();
+      imageListModel.hostname = hostname;
       imageListModel.linkedImages = linkedImages;
       imageListModel.notLinkedImages = images;
     };
@@ -131,24 +132,23 @@ export default observer(
       imageListModel.doFilter(settingsModel.values);
     };
 
-    handleOnError = (event, imageModel) => {
+    handleOnError = async (event, imageModel) => {
       imageModel.loadFailed = true;
       imageModel.visible = false;
 
-      Swal.fire({
+      await Swal.fire({
         title: `Load Failed: ${imageModel.src}`,
         background: `${color.voyagerDarkGrey}`,
         type: 'error',
         toast: true,
         position: 'bottom-end',
         showConfirmButton: false,
-        allowOutsideClick: false,
-        timer: 4500
+        timer: 4000
       });
     };
 
-    handleOnZoomButtonClick = imageModel => {
-      Swal.fire({
+    handleOnZoomButtonClick = async imageModel => {
+      await Swal.fire({
         text: imageModel.url,
         imageUrl: imageModel.src,
         imageWidth: imageModel.width,
@@ -178,14 +178,14 @@ export default observer(
       }
     };
 
-    downloadAllCheckedImages = () => {
+    downloadAllCheckedImages = async () => {
       if (imageListModel.checkedImages.length === 0) {
         return;
       }
 
       imageListModel.downloadAll();
 
-      Swal.fire({
+      await Swal.fire({
         title: 'Download Started!!',
         type: 'success',
         showCloseButton: false,

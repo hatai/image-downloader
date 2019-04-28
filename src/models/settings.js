@@ -18,6 +18,7 @@ class SettingsModel {
   minHeightEnabled = false;
   maxHeight = 3000;
   maxHeightEnabled = false;
+  onlyImagesHasSameHostname = false;
   onlyImagesFromLink = false;
   excludeQueryImage = true;
 
@@ -42,6 +43,7 @@ class SettingsModel {
       minHeightEnabled: this.minHeightEnabled,
       maxHeight: this.maxHeight,
       maxHeightEnabled: this.maxHeightEnabled,
+      onlyImagesHasSameHostname: this.onlyImagesHasSameHostname,
       onlyImagesFromLink: this.onlyImagesFromLink,
       excludeQueryImage: this.excludeQueryImage
     };
@@ -60,6 +62,7 @@ class SettingsModel {
       minHeightEnabled,
       maxHeight,
       maxHeightEnabled,
+      onlyImagesHasSameHostname,
       onlyImagesFromLink,
       excludeQueryImage
     } = values;
@@ -78,6 +81,9 @@ class SettingsModel {
     this.maxHeight = isValid(maxHeight) ? maxHeight : 3000;
     this.maxHeightEnabled = isValid(maxHeightEnabled)
       ? maxHeightEnabled
+      : false;
+    this.onlyImagesHasSameHostname = isValid(onlyImagesHasSameHostname)
+      ? onlyImagesHasSameHostname
       : false;
     this.onlyImagesFromLink = isValid(onlyImagesFromLink)
       ? onlyImagesFromLink
@@ -115,6 +121,7 @@ decorate(SettingsModel, {
   minHeightEnabled: observable,
   maxHeight: observable,
   maxHeightEnabled: observable,
+  onlyImagesHasSameHostname: observable,
   onlyImagesFromLink: observable,
   excludeQueryImage: observable,
   // computed

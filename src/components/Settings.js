@@ -33,7 +33,9 @@ const Grid = styled.div`
     10px
     [seventh] auto
     10px
-    [eighth] auto [nineth] auto;
+    [eighth] auto
+    10px
+    [ninth] auto [tenth] auto;
 `;
 
 const GridItem = styled.div`
@@ -117,6 +119,11 @@ export default observer(
       settingsModel.maxHeightEnabled = !settingsModel.maxHeightEnabled;
     };
 
+    setOnlyImagesHasSameHostname = () => {
+      const { onlyImagesHasSameHostname } = settingsModel;
+      settingsModel.onlyImagesHasSameHostname = !onlyImagesHasSameHostname;
+    };
+
     setOnlyImagesFromLinks = () => {
       const { onlyImagesFromLink } = settingsModel;
       settingsModel.onlyImagesFromLink = !onlyImagesFromLink;
@@ -133,6 +140,7 @@ export default observer(
         subfolder,
         filter,
         filterType,
+        onlyImagesHasSameHostname,
         onlyImagesFromLink,
         minWidth,
         minWidthEnabled,
@@ -261,6 +269,23 @@ export default observer(
               columnStart={1}
               columnEnd={3}
               rowStart={'seventh'}
+              onClick={this.setOnlyImagesHasSameHostname}
+            >
+              <Checkbox checked={onlyImagesHasSameHostname} />
+            </GridItem>
+            <GridItem
+              columnStart={4}
+              columnEnd={'end'}
+              rowStart={'seventh'}
+              onClick={this.setOnlyImagesHasSameHostname}
+            >
+              <NormalLabel>Only images has same hostname</NormalLabel>
+            </GridItem>
+
+            <GridItem
+              columnStart={1}
+              columnEnd={3}
+              rowStart={'eighth'}
               onClick={this.setOnlyImagesFromLinks}
             >
               <Checkbox checked={onlyImagesFromLink} />
@@ -268,7 +293,7 @@ export default observer(
             <GridItem
               columnStart={4}
               columnEnd={'end'}
-              rowStart={'seventh'}
+              rowStart={'eighth'}
               onClick={this.setOnlyImagesFromLinks}
             >
               <NormalLabel>Only images from links</NormalLabel>
@@ -277,7 +302,7 @@ export default observer(
             <GridItem
               columnStart={1}
               columnEnd={3}
-              rowStart={'eighth'}
+              rowStart={'ninth'}
               onClick={this.setExcludeQueryImage}
             >
               <Checkbox checked={excludeQueryImage} />
@@ -285,12 +310,12 @@ export default observer(
             <GridItem
               columnStart={4}
               columnEnd={'end'}
-              rowStart={'eighth'}
+              rowStart={'ninth'}
               onClick={this.setExcludeQueryImage}
             >
               <NormalLabel>Exclude images with query params</NormalLabel>
             </GridItem>
-            <GridItem columnStart={4} columnEnd={'end'} rowStart={'ninth'}>
+            <GridItem columnStart={4} columnEnd={'end'} rowStart={'tenth'}>
               <SmallLabel>
                 ex.
                 https//example.com/search?imageURL=https://example.com/example.jpg

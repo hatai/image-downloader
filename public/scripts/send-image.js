@@ -10,7 +10,7 @@ function sendImages () {
       return []
         .slice
         .apply(document.querySelectorAll("img, a, [style]"))
-        .map(imageDownloader.extractImageFromElement);
+        .map(imageDownloader.extractImageFromElement)
     },
 
     extractImagesFromStyles: function() {
@@ -86,6 +86,16 @@ function sendImages () {
       return /^(?!www\.|(?:http|ftp)s?:\/\/|[A-Za-z]:\\|\/\/).*/.test(url)
     },
 
+    isCorrectURL: function(url) {
+      console.log(url)
+      if (url.indexOf("data:image") === 0) {
+        return true
+      }
+
+      const pathname = (new URL(url)).pathname;
+      return !pathname.includes('http://') && !pathname.includes('https://')
+    },
+
     relativeUrlToAbsolute: function(url) {
       return imageDownloader.isImageURL(url) && imageDownloader.isRelativeURL(url)
         ? new URL(url, window.location).toString()
@@ -118,15 +128,18 @@ function sendImages () {
         imageDownloader.extractImagesFromStyles()
       )
       .map(imageDownloader.relativeUrlToAbsolute)
-    );
+    )
+    .filter(imageDownloader.isCorrectURL);
 
   imageDownloader.linkedImages = imageDownloader
     .removeDuplicateOrEmpty(
       imageDownloader.linkedImages.slice()
         .map(imageDownloader.relativeUrlToAbsolute)
-    );
+    )
+    .filter(imageDownloader.isCorrectURL);
 
   chrome.runtime.sendMessage({
+    hostname: (new URL(location.href)).hostname,
     linkedImages: imageDownloader.linkedImages,
     images: imageDownloader.images
   });

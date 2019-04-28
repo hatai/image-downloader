@@ -8,6 +8,7 @@ import { REGEX_IMAGE } from '../utils/constants';
 class ImageModel {
   id = '';
   src = '';
+  hostname = '';
   width = 0;
   height = 0;
   linked = false;
@@ -19,6 +20,7 @@ class ImageModel {
   constructor(src, width, height, linked = false) {
     this.id = uuid();
     this.src = src;
+    this.hostname = new URL(src).hostname;
     this.linked = linked;
     this.width = width;
     this.height = height;
@@ -42,6 +44,7 @@ decorate(ImageModel, {
   // observable
   id: observable.ref,
   src: observable,
+  hostname: observable,
   width: observable,
   height: observable,
   linked: observable,
@@ -57,6 +60,7 @@ decorate(ImageModel, {
 });
 
 class ImageListModel {
+  hostname = '';
   sources = [];
 
   /********************************************************************
@@ -175,6 +179,7 @@ class ImageListModel {
       minHeightEnabled,
       maxHeight,
       maxHeightEnabled,
+      onlyImagesHasSameHostname,
       onlyImagesFromLink,
       excludeQueryImage
     } = settings;
@@ -186,6 +191,10 @@ class ImageListModel {
 
     if (excludeQueryImage) {
       this.filterByExcludeQueryImage();
+    }
+
+    if (onlyImagesHasSameHostname) {
+      this.filterByHostname();
     }
 
     if (onlyImagesFromLink) {
@@ -219,6 +228,14 @@ class ImageListModel {
       maxHeightEnabled,
       maxHeight
     });
+  }
+
+  filterByHostname() {
+    this.images
+      .filter(image => image.visible)
+      .forEach(image => {
+        image.visible = this.hostname === image.hostname;
+      });
   }
 
   filterByLinkedImage() {

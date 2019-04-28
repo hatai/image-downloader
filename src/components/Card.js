@@ -285,7 +285,7 @@ export default observer(
                 src={imageModel.src}
                 alt={imageModel.src}
                 visible={visible}
-                lazyload={'on'}
+                loading={'lazy'}
                 async={true}
                 paddingBottom={footerHeight}
                 opacity={imageOpacity}

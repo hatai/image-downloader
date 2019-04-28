@@ -49,6 +49,10 @@ like Hover Zoom, even if you can't mass download images with it.
 
 ## Change log
 
+### Version 2.2.0
+
+* add new option: "only images has same hostname"
+
 ### Version 2.1.2
 
 * fix bugs
