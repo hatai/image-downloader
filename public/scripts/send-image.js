@@ -74,12 +74,12 @@ function sendImages () {
     },
 
     isImageURL: function(url) {
-      return url.indexOf("data:image") === 0
+      return url.startsWith("data:image")
         || imageDownloader.imageRegex.test(url);
     },
 
     isRelativeURL: function(url) {
-      if (url.indexOf("data:image") === 0) {
+      if (url.startsWith("data:image")) {
         return false
       }
 
@@ -87,13 +87,20 @@ function sendImages () {
     },
 
     isCorrectURL: function(url) {
-      console.log(url)
-      if (url.indexOf("data:image") === 0) {
+      if (url.startsWith("data:image")) {
         return true
       }
 
-      const pathname = (new URL(url)).pathname;
-      return !pathname.includes('http://') && !pathname.includes('https://')
+      if (url.startsWith("//")) {
+        return false;
+      }
+
+      try {
+        const pathname = (new URL(url)).pathname;
+        return !pathname.includes('http://') && !pathname.includes('https://')
+      } catch (e) {
+        return false;
+      }
     },
 
     relativeUrlToAbsolute: function(url) {

@@ -92,10 +92,10 @@ storiesOf('Components', module)
               swal({
                 showConfirmButton: false,
                 background: `rgba(0,0,0,0)`,
-                imageUrl: url,
+                imageUrl: imageModel.src,
                 animation: false
               });
-              action(`Eye Button clicked: ${i}, ${url}`);
+              action(`Eye Button clicked: ${i}, ${imageModel.src}`);
             }}
             onDownloadButtonClick={action('download clicked')}
             onCheckboxClick={action('checkbox clicked')}
