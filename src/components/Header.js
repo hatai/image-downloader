@@ -50,24 +50,6 @@ const AppCover = styled(StyledDiv)`
   }
 `;
 
-/*
-const Background = styled(StyledDiv)`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 0;
-  overflow: hidden!important;
-`
-*/
-
-/*
-const Canvas = styled.canvas`
-  display: inline-block;
-`
-*/
-
 const Menu = styled(StyledDiv)`
   height: 36px;
   //width: 260px;
@@ -99,6 +81,7 @@ const Action = styled(StyledDiv)`
   flex-direction: row;
   flex-wrap: nowrap;
   align-content: center;
+  align-items: center;
 
   :hover {
     color: ${color.coolGrey};

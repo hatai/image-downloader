@@ -49,25 +49,29 @@ like Hover Zoom, even if you can't mass download images with it.
 
 ## Change log
 
+### Version 2.2.2
+
+* Fix layout collapse
+
 ### Version 2.2.1
 
-* fix some bugs
+* Fix some bugs
 
 ### Version 2.2.0
 
-* add new option: "only images has same hostname"
+* Add new option: "only images has same hostname"
 
 ### Version 2.1.2
 
-* fix bugs
+* Fix bugs
 
 ### Version 2.1.1
 
-* upgrade node modules
+* Upgrade node modules
 
 ### Version 2.1.0
 
-* fixed bugs
+* Fixed bugs
 * Add settings item
 
 ### Version 2.0.0
