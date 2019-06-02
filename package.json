@@ -13,6 +13,7 @@
   "dependencies": {
     "@mdi/js": "^3.6.95",
     "@mdi/react": "^1.1.1",
+    "animate.css": "^3.7.1",
     "classnames": "^2.2.6",
     "husky": "^2.3.0",
     "lint-staged": "^8.1.7",

@@ -14,6 +14,7 @@ import Settings from '../components/Settings';
 import Loader from '../components/common/Loader';
 import DropDown from '../components/common/DropDown';
 import TextInput from '../components/common/TextInput';
+import Progressbar from '../components/common/Progressbar';
 import color from '../utils/colors';
 import imageListModel from '../models/image';
 
@@ -103,4 +104,7 @@ storiesOf('Components', module)
         ))}
       </GridLayout>
     </div>
-  ));
+  ))
+  .add('Progressbar', () => {
+    return <Progressbar width={2} />;
+  });

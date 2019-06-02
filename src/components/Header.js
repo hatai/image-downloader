@@ -12,6 +12,7 @@ import imageListModel from '../models/image';
 import settingsModel from '../models/settings';
 import color from '../utils/colors';
 import { observer } from 'mobx-react';
+import Progressbar from './common/Progressbar';
 
 const StyledDiv = styled.div`
   display: block;
@@ -154,8 +155,11 @@ export default observer(
         isCheckedAll,
         isIndeterminate,
         images,
-        checkedImages
+        checkedImages,
+        progress
       } = imageListModel;
+
+      console.log(progress);
 
       return (
         <AppCover>
@@ -206,6 +210,8 @@ export default observer(
               <p>Settings</p>
             </Action>
           </Menu>
+
+          <Progressbar width={progress} />
         </AppCover>
       );
     }

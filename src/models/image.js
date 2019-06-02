@@ -15,6 +15,7 @@ class ImageModel {
   checked = false;
   visible = true;
   downloaded = false;
+  loaded = false;
   loadFailed = false;
 
   constructor(src, width, height, linked = false) {
@@ -50,6 +51,7 @@ decorate(ImageModel, {
   linked: observable,
   checked: observable,
   visible: observable,
+  loaded: observable,
   loadFailed: observable,
 
   // computed
@@ -97,6 +99,11 @@ class ImageListModel {
 
   get notLinkedImages() {
     return this.images.filter(image => !image.linked);
+  }
+
+  get progress() {
+    const countLoaded = this.images.filter(image => image.loaded).length;
+    return (countLoaded / this.images.length) * 100;
   }
 
   /********************************************************************
@@ -355,6 +362,7 @@ decorate(ImageListModel, {
   uncheckedImages: computed,
   linkedImages: computed,
   notLinkedImages: computed,
+  progress: computed,
   // action
   checkAll: action.bound,
   uncheckAll: action.bound,

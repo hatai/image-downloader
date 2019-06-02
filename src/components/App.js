@@ -87,7 +87,6 @@ export default observer(
           <Container>
             <GridLayout>
               {imageListModel.images.map((imageModel, i) => (
-                // TODO: マウスオーバーで画像サイズ表示
                 <Card
                   key={i}
                   imageModel={imageModel}
@@ -125,6 +124,7 @@ export default observer(
     };
 
     handleOnLoad = (event, imageModel) => {
+      imageModel.loaded = true;
       imageModel.loadFailed = false;
       imageModel.width = event.target.naturalWidth;
       imageModel.height = event.target.naturalHeight;

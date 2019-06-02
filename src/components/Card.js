@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -13,6 +13,7 @@ import Load from './common/Loader';
 import Checkbox from './common/Checkbox';
 import TextInput from './common/TextInput';
 import color from '../utils/colors';
+import 'animate.css/animate.min.css';
 
 const Main = styled.div`
   width: 100%;
@@ -53,6 +54,30 @@ const Img = styled.img`
   opacity: ${({ opacity }) => opacity};
   display: ${({ visible }) => (visible ? 'block' : 'none')};
   padding-bottom: ${({ paddingBottom }) => `${paddingBottom}px`};
+`;
+
+const SizeBox = styled.div`
+  width: 100%;
+  height: 40px;
+
+  background: rgb(51, 51, 51);
+  background: linear-gradient(
+    0deg,
+    rgba(51, 51, 51, 0.3376244388409515) 73%,
+    rgba(255, 255, 255, 0) 100%
+  );
+
+  position: absolute;
+  bottom: 92px;
+  z-index: 100;
+
+  p {
+    color: #c8c8c8;
+    text-align: end;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-right: 8px;
+  }
 `;
 
 const Footer = styled.div`
@@ -108,10 +133,27 @@ const emptyFunc = () => {};
 const onZoomButtonClick = url => {
   swal({
     showConfirmButton: false,
-    background: `rgba(0,0,0,0)`,
+    background: `rgba(0, 0, 0, 0)`,
     imageUrl: url,
     animation: false
   });
+};
+
+// TODO: この要素の上にマウスカーソルが来たときしか発動しないのでどうにかする
+const Sizebox = ({ width, height }) => {
+  const [className, setClassName] = useState('');
+
+  return (
+    <SizeBox
+      className={className}
+      onMouseOver={() => setClassName('animated fadeIn')}
+      onMouseLeave={() => setClassName('animated fadeOut delay-1s')}
+    >
+      <p>
+        {width} × {height}
+      </p>
+    </SizeBox>
+  );
 };
 
 export default observer(
@@ -297,6 +339,11 @@ export default observer(
                 onMouseOver={this.onImageHover}
                 onMouseLeave={this.onImageLeave}
               />
+
+              {imageModel.loaded ? (
+                <Sizebox width={imageModel.width} height={imageModel.height} />
+              ) : null}
+
               {isLoaded ? null : <Load />}
             </ImgWrapper>
 
