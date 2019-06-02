@@ -13,6 +13,7 @@ import Load from './common/Loader';
 import Checkbox from './common/Checkbox';
 import TextInput from './common/TextInput';
 import color from '../utils/colors';
+import 'animate.css/animate.min.css';
 
 const Main = styled.div`
   width: 100%;
@@ -53,6 +54,32 @@ const Img = styled.img`
   opacity: ${({ opacity }) => opacity};
   display: ${({ visible }) => (visible ? 'block' : 'none')};
   padding-bottom: ${({ paddingBottom }) => `${paddingBottom}px`};
+`;
+
+const SizeBox = styled.div`
+  width: 100%;
+  height: 40px;
+  user-select: none;
+
+  opacity: 0;
+  background: rgb(51, 51, 51);
+  background: linear-gradient(
+    0deg,
+    rgba(51, 51, 51, 0.3376244388409515) 73%,
+    rgba(255, 255, 255, 0) 100%
+  );
+
+  position: absolute;
+  bottom: 92px;
+  z-index: 1;
+
+  p {
+    color: #e0e0e0;
+    text-align: end;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-right: 8px;
+  }
 `;
 
 const Footer = styled.div`
@@ -108,7 +135,7 @@ const emptyFunc = () => {};
 const onZoomButtonClick = url => {
   swal({
     showConfirmButton: false,
-    background: `rgba(0,0,0,0)`,
+    background: `rgba(0, 0, 0, 0)`,
     imageUrl: url,
     animation: false
   });
@@ -146,6 +173,7 @@ export default observer(
         isLoaded: false,
         footerHeight: 0,
         imageOpacity: 0.95,
+        sizeboxAnimation: '',
         hooterColor: color.titleGreyDefault,
         zoomColor: color.paleGrey,
         openTabColor: color.paleGrey,
@@ -199,11 +227,17 @@ export default observer(
     };
 
     onHover = () => {
-      this.setState({ hooterColor: color.titleGreyLight });
+      this.setState({
+        sizeboxAnimation: 'animated fadeIn',
+        hooterColor: color.titleGreyLight
+      });
     };
 
     onLeave = () => {
-      this.setState({ hooterColor: color.titleGreyDefault });
+      this.setState({
+        sizeboxAnimation: 'animated fadeOut',
+        hooterColor: color.titleGreyDefault
+      });
     };
 
     onClickZoom = () => {
@@ -266,6 +300,7 @@ export default observer(
         isLoaded,
         footerHeight,
         imageOpacity,
+        sizeboxAnimation,
         zoomColor,
         openTabColor,
         downloadColor,
@@ -297,6 +332,19 @@ export default observer(
                 onMouseOver={this.onImageHover}
                 onMouseLeave={this.onImageLeave}
               />
+
+              {imageModel.loaded ? (
+                <SizeBox
+                  className={sizeboxAnimation}
+                  onClick={this.onImageClick}
+                  onDoubleClick={this.onClickZoom}
+                >
+                  <p>
+                    {imageModel.width} × {imageModel.height}
+                  </p>
+                </SizeBox>
+              ) : null}
+
               {isLoaded ? null : <Load />}
             </ImgWrapper>
 
