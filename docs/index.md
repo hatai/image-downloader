@@ -49,6 +49,11 @@ like Hover Zoom, even if you can't mass download images with it.
 
 ## Change log
 
+### Version 2.3.0
+
+* Show progress bar
+* Show image size
+
 ### Version 2.2.2
 
 * Fix layout collapse
