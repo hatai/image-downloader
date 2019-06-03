@@ -159,6 +159,8 @@ export default observer(
         progress
       } = imageListModel;
 
+      console.log(progress);
+
       return (
         <AppCover>
           <Menu>
