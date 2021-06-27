@@ -1,7 +1,2 @@
-import Range from './Range'
-import Handle from './Handle'
-
-export default {
-  Range,
-  Handle,
-}
+export { default as Range } from './Range'
+export { default as Handle} from './Handle'

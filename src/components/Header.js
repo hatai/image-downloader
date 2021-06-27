@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
+import { useState } from 'react'
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { observer } from 'mobx-react';
 import styled from 'styled-components';
-import uuid from 'uuid/v4';
+import {v4 as uuid} from 'uuid';
 import Icon from '@mdi/react';
 import { mdiCloudDownloadOutline, mdiSettingsOutline } from '@mdi/js';
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import Checkbox from './common/Checkbox';
+import Progressbar from './common/Progressbar';
 import Settings from './Settings';
 import imageListModel from '../models/image';
 import settingsModel from '../models/settings';
 import color from '../utils/colors';
-import { observer } from 'mobx-react';
-import Progressbar from './common/Progressbar';
 
 const StyledDiv = styled.div`
   display: block;
@@ -95,125 +95,118 @@ const Action = styled(StyledDiv)`
   }
 `;
 
-export default observer(
-  class Header extends Component {
-    static propTypes = {
-      onToggleCheckbox: PropTypes.func,
-      onClickDownloadButton: PropTypes.func
-    };
-
-    static defaultProps = {
-      onToggleCheckbox: () => {},
-      onClickDownloadButton: () => {}
-    };
-
-    constructor(props) {
-      super(props);
-
-      this.state = {
-        checkboxIconColor: color.orionGreen,
-        downloadIconColor: color.orionGreen,
-        settingsIconColor: color.orionGreen
-      };
-    }
-
-    showSettings = () => {
-      const id = uuid();
-      swal.fire({
-        titleText: 'Settings',
-        html: `<div id="${id}"></div>`,
-        background: `${color.voyagerDarkGrey}`,
-        showCloseButton: true,
-        showConfirmButton: false,
-        onOpen: () => {
-          ReactDOM.render(
-            <Settings settingsModel={settingsModel} />,
-            document.getElementById(id)
-          );
-        }
-      });
-    };
-
-    handleOnMouseOver = type => {
-      this.setState({ [type]: color.darkMintGreen });
-    };
-
-    handleOnMouseLeave = type => {
-      this.setState({ [type]: color.orionGreen });
-    };
-
-    render() {
-      const {
-        checkboxIconColor,
-        downloadIconColor,
-        settingsIconColor
-      } = this.state;
-
-      const { onToggleCheckbox, onClickDownloadButton } = this.props;
-
-      const {
-        isCheckedAll,
-        isIndeterminate,
-        images,
-        checkedImages,
-        progress
-      } = imageListModel;
-
-      console.log(progress);
-
-      return (
-        <AppCover>
-          <Menu>
-            <Action
-              start={'check'}
-              end={'check'}
-              onClick={onToggleCheckbox}
-              onMouseOver={() => this.handleOnMouseOver('checkboxIconColor')}
-              onMouseLeave={() => this.handleOnMouseLeave('checkboxIconColor')}
-            >
-              <Checkbox
-                checked={isCheckedAll}
-                indeterminate={isIndeterminate}
-                color={checkboxIconColor}
-                size={'2em'}
-              />
-              <p>{`Check all (${checkedImages.length}/${images.length})`}</p>
-            </Action>
-
-            <Action
-              start={'download'}
-              end={'download'}
-              onClick={onClickDownloadButton}
-              onMouseOver={() => this.handleOnMouseOver('downloadIconColor')}
-              onMouseLeave={() => this.handleOnMouseLeave('downloadIconColor')}
-            >
-              <Icon
-                path={mdiCloudDownloadOutline}
-                color={downloadIconColor}
-                size={'2em'}
-              />
-              <p>Download checked images</p>
-            </Action>
-
-            <Action
-              start={'setting'}
-              end={'setting'}
-              onClick={this.showSettings}
-              onMouseOver={() => this.handleOnMouseOver('settingsIconColor')}
-              onMouseLeave={() => this.handleOnMouseLeave('settingsIconColor')}
-            >
-              <Icon
-                path={mdiSettingsOutline}
-                color={settingsIconColor}
-                size={'2em'}
-              />
-              <p>Settings</p>
-            </Action>
-          </Menu>
-
-          <Progressbar width={progress} />
-        </AppCover>
+function showSettings() {
+  const id = uuid();
+  Swal.fire({
+    titleText: 'Settings',
+    html: `<div id="${id}"></div>`,
+    background: `${color.voyagerDarkGrey}`,
+    showCloseButton: true,
+    showConfirmButton: false,
+    willOpen: () => {
+      ReactDOM.render(
+        <Settings settingsModel={settingsModel} />,
+        document.getElementById(id)
       );
     }
+  });
+};
+
+const Header = ({
+  onToggleCheckbox,
+  onClickDownloadButton
+}) => {
+  const [iconColor, setIconColor] = useState({
+    checkbox: color.orionGreen,
+    download: color.orionGreen,
+    settings: color.orionGreen
+  })
+
+  const {
+    isCheckedAll,
+    isIndeterminate,
+    images,
+    checkedImages,
+    progress
+  } = imageListModel;
+
+  function handleOnMouseOver(type) {
+    setIconColor((state) => ({
+      ...state,
+      [type]: color.darkMintGreen
+    }))
   }
-);
+
+  function handleOnMouseLeave(type) {
+    setIconColor((state) => ({
+      ...state,
+      [type]: color.orionGreen
+    }))
+  }
+
+  return (
+    <AppCover>
+      <Menu>
+        <Action
+          start={'check'}
+          end={'check'}
+          onClick={onToggleCheckbox}
+          onMouseOver={() => handleOnMouseOver('checkbox')}
+          onMouseLeave={() => handleOnMouseLeave('checkbox')}
+        >
+          <Checkbox
+            checked={isCheckedAll}
+            indeterminate={isIndeterminate}
+            color={iconColor.checkbox}
+            size={'2em'}
+          />
+          <p>{`Check all (${checkedImages.length}/${images.length})`}</p>
+        </Action>
+
+        <Action
+          start={'download'}
+          end={'download'}
+          onClick={onClickDownloadButton}
+          onMouseOver={() => handleOnMouseOver('download')}
+          onMouseLeave={() => handleOnMouseLeave('download')}
+        >
+          <Icon
+            path={mdiCloudDownloadOutline}
+            color={iconColor.download}
+            size={'2em'}
+          />
+          <p>Download checked images</p>
+        </Action>
+
+        <Action
+          start={'setting'}
+          end={'setting'}
+          onClick={showSettings}
+          onMouseOver={() => handleOnMouseOver('settings')}
+          onMouseLeave={() => handleOnMouseLeave('settings')}
+        >
+          <Icon
+            path={mdiSettingsOutline}
+            color={iconColor.settings}
+            size={'2em'}
+          />
+          <p>Settings</p>
+        </Action>
+      </Menu>
+
+      <Progressbar width={progress} />
+    </AppCover>
+  );
+}
+
+Header.propTypes = {
+  onToggleCheckbox: PropTypes.func,
+  onClickDownloadButton: PropTypes.func
+};
+
+Header.defaultProps = {
+  onToggleCheckbox: () => {},
+  onClickDownloadButton: () => {}
+}
+
+export default observer(Header)

@@ -1,7 +1,6 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import warning from 'warning';
 import Steps from './Steps';
 import Marks from './Marks';
@@ -345,7 +344,7 @@ export default function createSlider(Component) {
 
       const { tracks, handles } = super.render();
 
-      const sliderClassName = classNames(prefixCls, {
+      const sliderClassName = clsx(prefixCls, {
         [`${prefixCls}-with-marks`]: Object.keys(marks).length,
         [`${prefixCls}-disabled`]: Array.isArray(disabled)
           ? disabled.filter(v => v).length === disabled.length

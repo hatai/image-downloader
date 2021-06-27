@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 
 export default class Handle extends React.Component {
@@ -86,7 +86,7 @@ export default class Handle extends React.Component {
       ...restProps
     } = this.props;
 
-    const className = classNames(this.props.className, {
+    const className = clsx(this.props.className, {
       [`${prefixCls}-handle-click-focused`]: this.state.clickFocused,
       [`${prefixCls}-handle-disabled`]: !!disabled
     });

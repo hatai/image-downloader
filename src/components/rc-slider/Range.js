@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import shallowEqual from 'shallowequal';
 import warning from 'warning';
 import Track from './common/Track';
@@ -427,7 +427,7 @@ class Range extends React.Component {
     const handleClassName = `${prefixCls}-handle`;
     const handles = bounds.map((v, i) =>
       handleGenerator({
-        className: classNames({
+        className: clsx({
           [handleClassName]: true,
           [`${handleClassName}-${i + 1}`]: true
         }),
@@ -448,7 +448,7 @@ class Range extends React.Component {
 
     const tracks = bounds.slice(0, -1).map((_, index) => {
       const i = index + 1;
-      const trackClassName = classNames({
+      const trackClassName = clsx({
         [`${prefixCls}-track`]: true,
         [`${prefixCls}-track-${i}`]: true
       });

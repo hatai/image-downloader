@@ -1,19 +1,15 @@
-import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import swal from 'sweetalert2';
-import Icon from '@mdi/react';
-import {
-  mdiArrowTopRightThick,
-  mdiDownload,
-  mdiMagnifyPlusOutline
-} from '@mdi/js';
-import Load from './common/Loader';
-import Checkbox from './common/Checkbox';
-import TextInput from './common/TextInput';
-import color from '../utils/colors';
-import 'animate.css/animate.min.css';
+import { useEffect, useRef, useState } from 'react'
+import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
+import styled from 'styled-components'
+import Swal from 'sweetalert2'
+import Icon from '@mdi/react'
+import { mdiArrowTopRightThick, mdiDownload, mdiMagnifyPlusOutline } from '@mdi/js'
+import Load from './common/Loader'
+import Checkbox from './common/Checkbox'
+import TextInput from './common/TextInput'
+import color from '../utils/colors'
+import 'animate.css/animate.min.css'
 
 const Main = styled.div`
   width: 100%;
@@ -132,8 +128,11 @@ const Action = styled.div`
 
 const emptyFunc = () => {};
 
+const defaultImgOpacity = 0.8
+const hoverImgOpacity = 1.0
+
 const onZoomButtonClick = url => {
-  swal({
+  Swal({
     showConfirmButton: false,
     background: `rgba(0, 0, 0, 0)`,
     imageUrl: url,
@@ -141,270 +140,232 @@ const onZoomButtonClick = url => {
   });
 };
 
-export default observer(
-  class Card extends Component {
-    static propTypes = {
-      imageModel: PropTypes.object,
-      onZoomButtonClick: PropTypes.func,
-      onOpenTabClick: PropTypes.func,
-      onDownloadButtonClick: PropTypes.func,
-      onCheckboxClick: PropTypes.func,
-      onLoad: PropTypes.func,
-      onError: PropTypes.func
-    };
+const Card = ({
+   imageModel,
+   onZoomButtonClick,
+   onOpenTabClick,
+   onDownloadButtonClick,
+   onCheckboxClick,
+   onLoad,
+   onError
+ }) => {
+  const footerRef = useRef()
+  const [visible, setVisible] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [footerHeight, setFooterHeight] = useState(0)
+  const [imageOpacity, setImageOpacity] = useState(defaultImgOpacity)
+  const [sizeboxAnimation, setSizeboxAnimation] = useState('')
+  const [footerColor, setFooterColor] = useState(color.titleGreyDefault)
+  const [zoomIconColor, setZoomIconColor] = useState(color.paleGrey)
+  const [openTabColor, setOpenTabColor] = useState(color.paleGrey)
+  const [downloadColor, setDownloadColor] = useState(color.paleGrey)
+  const [checkboxColor, setCheckboxColor] = useState(color.orionGreen)
 
-    static defaultProps = {
-      imageModel: {},
-      onZoomButtonClick: onZoomButtonClick,
-      onOpenTabClick: emptyFunc,
-      onDownloadButtonClick: emptyFunc,
-      onCheckboxClick: emptyFunc,
-      onLoad: emptyFunc,
-      onError: emptyFunc
-    };
-
-    constructor(props) {
-      super(props);
-
-      this.footer = React.createRef();
-
-      this.state = {
-        visible: false,
-        isLoaded: false,
-        footerHeight: 0,
-        imageOpacity: 0.95,
-        sizeboxAnimation: '',
-        hooterColor: color.titleGreyDefault,
-        zoomColor: color.paleGrey,
-        openTabColor: color.paleGrey,
-        downloadColor: color.paleGrey,
-        checkboxColor: color.orionGreen
-      };
+  useEffect(() => {
+    if (footerRef.current) {
+      setFooterHeight(footerRef.current.clientHeight)
     }
+  }, [footerRef.current])
 
-    componentDidMount() {
-      this.setState({ footerHeight: this.getFooterHeight() });
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-      if (this.state.footerHeight !== prevState.footerHeight) {
-        this.setState({ footerHeight: this.getFooterHeight() });
-      }
-    }
-
-    getFooterHeight = () => {
-      const { footer } = this;
-      if (footer.current == null) {
-        return 0;
-      }
-
-      return footer.current.clientHeight;
-    };
-
-    onLoad = e => {
-      const { imageModel, onLoad } = this.props;
-
-      onLoad(e, imageModel);
-      this.setState({ visible: true, isLoaded: true });
-    };
-
-    onError = e => {
-      const { imageModel, onError } = this.props;
-      onError(e, imageModel);
-    };
-
-    onImageClick = () => {
-      const { imageModel, onCheckboxClick } = this.props;
-      onCheckboxClick(imageModel);
-    };
-
-    onImageHover = () => {
-      this.setState({ imageOpacity: 1 });
-    };
-
-    onImageLeave = () => {
-      this.setState({ imageOpacity: 0.95 });
-    };
-
-    onHover = () => {
-      this.setState({
-        sizeboxAnimation: 'animated fadeIn',
-        hooterColor: color.titleGreyLight
-      });
-    };
-
-    onLeave = () => {
-      this.setState({
-        sizeboxAnimation: 'animated fadeOut',
-        hooterColor: color.titleGreyDefault
-      });
-    };
-
-    onClickZoom = () => {
-      const { imageModel, onZoomButtonClick } = this.props;
-      onZoomButtonClick(imageModel);
-    };
-
-    onMouseOverZoom = () => {
-      this.setState({ zoomColor: color.starfleetMediumGrey });
-    };
-
-    onMouseLeaveZoom = () => {
-      this.setState({ zoomColor: color.paleGrey });
-    };
-
-    onClickOpenTab = () => {
-      const { imageModel, onOpenTabClick } = this.props;
-      onOpenTabClick(imageModel);
-    };
-
-    onMouseOverOpenTab = () => {
-      this.setState({ openTabColor: color.starfleetMediumGrey });
-    };
-
-    onMouseLeaveOpenTab = () => {
-      this.setState({ openTabColor: color.paleGrey });
-    };
-
-    onClickDownload = () => {
-      const { imageModel, onDownloadButtonClick } = this.props;
-      onDownloadButtonClick(imageModel);
-    };
-
-    onMouseOverDownload = () => {
-      this.setState({ downloadColor: color.starfleetMediumGrey });
-    };
-
-    onMouseLeaveDownload = () => {
-      this.setState({ downloadColor: color.paleGrey });
-    };
-
-    onClickCheckbox = () => {
-      const { imageModel, onCheckboxClick } = this.props;
-      onCheckboxClick(imageModel);
-    };
-
-    onMouseOverCheckbox = () => {
-      this.setState({ checkboxColor: color.darkMintGreen });
-    };
-
-    onMouseLeaveCheckbox = () => {
-      this.setState({ checkboxColor: color.orionGreen });
-    };
-
-    render() {
-      const { imageModel } = this.props;
-
-      const {
-        visible,
-        isLoaded,
-        footerHeight,
-        imageOpacity,
-        sizeboxAnimation,
-        zoomColor,
-        openTabColor,
-        downloadColor,
-        checkboxColor,
-        hooterColor
-      } = this.state;
-
-      return (
-        <Main
-          visible={imageModel.visible}
-          onMouseOver={this.onHover}
-          onMouseLeave={this.onLeave}
-        >
-          <Wrapper checked={imageModel.checked}>
-            <ImgWrapper>
-              <Img
-                src={imageModel.src}
-                alt={imageModel.src}
-                visible={visible}
-                loading={'lazy'}
-                async={true}
-                paddingBottom={footerHeight}
-                opacity={imageOpacity}
-                onLoadStart={this.onLoad}
-                onLoad={this.onLoad}
-                onError={this.onError}
-                onClick={this.onImageClick}
-                onDoubleClick={this.onClickZoom}
-                onMouseOver={this.onImageHover}
-                onMouseLeave={this.onImageLeave}
-              />
-
-              {imageModel.loaded ? (
-                <SizeBox
-                  className={sizeboxAnimation}
-                  onClick={this.onImageClick}
-                  onDoubleClick={this.onClickZoom}
-                >
-                  <p>
-                    {imageModel.width} × {imageModel.height}
-                  </p>
-                </SizeBox>
-              ) : null}
-
-              {isLoaded ? null : <Load />}
-            </ImgWrapper>
-
-            <Footer background={hooterColor} ref={this.footer}>
-              <Title width={'79%'}>
-                <TextInput value={imageModel.url} disabled />
-              </Title>
-
-              <Actions>
-                {/* zoom button */}
-                <Action
-                  onMouseOver={this.onMouseOverZoom}
-                  onMouseLeave={this.onMouseLeaveZoom}
-                  onClick={this.onClickZoom}
-                >
-                  <Icon
-                    path={mdiMagnifyPlusOutline}
-                    size={1}
-                    color={zoomColor}
-                  />
-                </Action>
-
-                {/* open image on new tab */}
-                <Action
-                  onMouseOver={this.onMouseOverOpenTab}
-                  onMouseLeave={this.onMouseLeaveOpenTab}
-                  onClick={this.onClickOpenTab}
-                >
-                  <Icon
-                    path={mdiArrowTopRightThick}
-                    size={1}
-                    color={openTabColor}
-                  />
-                </Action>
-
-                {/* download button */}
-                <Action
-                  onMouseOver={this.onMouseOverDownload}
-                  onMouseLeave={this.onMouseLeaveDownload}
-                  onClick={this.onClickDownload}
-                >
-                  <Icon path={mdiDownload} size={1} color={downloadColor} />
-                </Action>
-
-                {/* checkbox */}
-                <Action
-                  onMouseOver={this.onMouseOverCheckbox}
-                  onMouseLeave={this.onMouseLeaveCheckbox}
-                  onClick={this.onClickCheckbox}
-                >
-                  <Checkbox
-                    checked={imageModel.checked}
-                    color={checkboxColor}
-                  />
-                </Action>
-              </Actions>
-            </Footer>
-          </Wrapper>
-        </Main>
-      );
-    }
+  function handleOnLoad(e) {
+    onLoad(e, imageModel)
+    setVisible(true)
+    setIsLoaded(true)
   }
-);
+
+  function handleOnError(e) {
+    onError(e, imageModel)
+  }
+
+  function handleOnClickImage() {
+    onCheckboxClick(imageModel)
+  }
+
+  function handleOnMouseOverImage() {
+    setImageOpacity(hoverImgOpacity)
+  }
+
+  function handleOnMouseLeaveImage() {
+    setImageOpacity(defaultImgOpacity)
+  }
+
+  function handleOnMouseOver() {
+    setSizeboxAnimation('animate__animated animate__fadeIn')
+    setFooterColor(color.titleGreyLight)
+    handleOnMouseOverImage()
+  }
+
+  function handleOnMouseLeave() {
+    setSizeboxAnimation('animate__animated animate__fadeOut')
+    setFooterColor(color.titleGreyDefault)
+    handleOnMouseLeaveImage()
+  }
+
+  function handleOnClickZoom() {
+    onZoomButtonClick(imageModel)
+  }
+
+  function handleOnMouseOverZoom() {
+    setZoomIconColor(color.starfleetMediumGrey)
+  }
+
+  function handleOnMouseLeaveZoom() {
+    setZoomIconColor(color.paleGrey)
+  }
+
+  function handleOnClickOpenTab() {
+    onOpenTabClick(imageModel)
+  }
+
+  function handleOnMouseOverOpenTab() {
+    setOpenTabColor(color.starfleetMediumGrey)
+  }
+
+  function handleOnMouseLeaveOpenTab() {
+    setOpenTabColor(color.paleGrey)
+  }
+
+  function handleOnClickDownload() {
+    onDownloadButtonClick(imageModel)
+  }
+
+  function handleOnMouseOverDownload() {
+    setDownloadColor(color.starfleetMediumGrey)
+  }
+
+  function handleOnMouseLeaveDownload() {
+    setDownloadColor(color.paleGrey)
+  }
+
+  function handleOnClickCheckbox() {
+    onCheckboxClick(imageModel)
+  }
+
+  function handleOnMouseOverCheckbox() {
+    setCheckboxColor(color.darkMintGreen)
+  }
+
+  function handleOnMouseLeaveCheckbox() {
+    setCheckboxColor(color.orionGreen)
+  }
+
+  return (
+    <Main
+      visible={imageModel.visible}
+      onMouseOver={handleOnMouseOver}
+      onMouseLeave={handleOnMouseLeave}
+    >
+      <Wrapper checked={imageModel.checked}>
+        <ImgWrapper>
+          <Img
+            src={imageModel.src}
+            alt={imageModel.src}
+            visible={visible}
+            loading={'eager'}
+            crossorigin="anonymous"
+            paddingBottom={footerHeight}
+            opacity={imageOpacity}
+            onLoadStart={handleOnLoad}
+            onLoad={handleOnLoad}
+            onError={handleOnError}
+            onClick={handleOnClickImage}
+            onDoubleClick={handleOnClickZoom}
+            onMouseOver={handleOnMouseOverImage}
+            onMouseLeave={handleOnMouseLeaveImage}
+          />
+
+          {imageModel.loaded ? (
+            <SizeBox
+              className={sizeboxAnimation}
+              onClick={handleOnClickImage}
+              onDoubleClick={handleOnClickZoom}
+            >
+              <p>
+                {imageModel.width} × {imageModel.height}
+              </p>
+            </SizeBox>
+          ) : null}
+
+          {isLoaded ? null : <Load />}
+        </ImgWrapper>
+
+        <Footer background={footerColor} ref={footerRef}>
+          <Title width={'79%'}>
+            <TextInput value={imageModel.url} disabled />
+          </Title>
+
+          <Actions>
+            {/* zoom button */}
+            <Action
+              onMouseOver={handleOnMouseOverZoom}
+              onMouseLeave={handleOnMouseLeaveZoom}
+              onClick={handleOnClickZoom}
+            >
+              <Icon
+                path={mdiMagnifyPlusOutline}
+                size={1}
+                color={zoomIconColor}
+              />
+            </Action>
+
+            {/* open image on new tab */}
+            <Action
+              onMouseOver={handleOnMouseOverOpenTab}
+              onMouseLeave={handleOnMouseLeaveOpenTab}
+              onClick={handleOnClickOpenTab}
+            >
+              <Icon
+                path={mdiArrowTopRightThick}
+                size={1}
+                color={openTabColor}
+              />
+            </Action>
+
+            {/* download button */}
+            <Action
+              onMouseOver={handleOnMouseOverDownload}
+              onMouseLeave={handleOnMouseLeaveDownload}
+              onClick={handleOnClickDownload}
+            >
+              <Icon path={mdiDownload} size={1} color={downloadColor} />
+            </Action>
+
+            {/* checkbox */}
+            <Action
+              onMouseOver={handleOnMouseOverCheckbox}
+              onMouseLeave={handleOnMouseLeaveCheckbox}
+              onClick={handleOnClickCheckbox}
+            >
+              <Checkbox
+                checked={imageModel.checked}
+                color={checkboxColor}
+              />
+            </Action>
+          </Actions>
+        </Footer>
+      </Wrapper>
+    </Main>
+  )
+}
+
+Card.propTypes = {
+  imageModel: PropTypes.object,
+  onZoomButtonClick: PropTypes.func,
+  onOpenTabClick: PropTypes.func,
+  onDownloadButtonClick: PropTypes.func,
+  onCheckboxClick: PropTypes.func,
+  onLoad: PropTypes.func,
+  onError: PropTypes.func
+};
+
+Card.defaultProps = {
+  imageModel: {},
+  onZoomButtonClick: onZoomButtonClick,
+  onOpenTabClick: emptyFunc,
+  onDownloadButtonClick: emptyFunc,
+  onCheckboxClick: emptyFunc,
+  onLoad: emptyFunc,
+  onError: emptyFunc
+};
+
+export default observer(Card)

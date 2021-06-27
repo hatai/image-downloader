@@ -1,6 +1,5 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import warning from 'warning';
 
 const calcPoints = (vertical, marks, dots, step, min, max) => {
@@ -51,7 +50,7 @@ const Steps = ({
         style = { ...style, ...activeDotStyle };
       }
 
-      const pointClassName = classNames({
+      const pointClassName = clsx({
         [`${prefixCls}-dot`]: true,
         [`${prefixCls}-dot-active`]: isActive
       });

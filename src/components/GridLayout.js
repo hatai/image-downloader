@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -45,16 +44,12 @@ const Grid = styled.div`
   break-inside: avoid;
 `;
 
-export default class GridLayout extends Component {
-  render() {
-    const { children } = this.props;
+const GridLayout = ({ children }) => (
+  <Container>
+    {children.map((child, i) => (
+      <Grid key={i}>{child}</Grid>
+    ))}
+  </Container>
+)
 
-    return (
-      <Container>
-        {children.map((child, i) => (
-          <Grid key={i}>{child}</Grid>
-        ))}
-      </Container>
-    );
-  }
-}
+export default GridLayout

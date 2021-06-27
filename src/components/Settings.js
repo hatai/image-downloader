@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
@@ -61,269 +60,262 @@ const SmallLabel = styled.div`
   font-size: 0.6rem;
 `;
 
-export default observer(
-  class Settings extends Component {
-    static propTypes = {
-      id: PropTypes.string
-    };
+const options = ['Normal', 'Wildcard', 'Regex'];
 
-    static defaultProps = {
-      id: null
-    };
+const Settings = ({id}) => {
+  const {
+    subfolder,
+    filter,
+    filterType,
+    onlyImagesHasSameHostname,
+    onlyImagesFromLink,
+    minWidth,
+    minWidthEnabled,
+    maxWidth,
+    maxWidthEnabled,
+    minHeight,
+    minHeightEnabled,
+    maxHeight,
+    maxHeightEnabled,
+    excludeQueryImage
+  } = settingsModel;
 
-    constructor(props) {
-      super(props);
+  function setSubfolderValue(e) {
+    settingsModel.subfolder = e.target.value;
+  };
 
-      this.options = ['Normal', 'Wildcard', 'Regex'];
+  function setFilterType(selected, i) {
+    settingsModel.filterType = i;
+  };
+
+  function setFilterValue(e){
+    settingsModel.filter = e.target.value;
+  };
+
+  function setWidth([min, max]) {
+    if (settingsModel.minWidthEnabled || settingsModel.maxWidthEnabled) {
+      settingsModel.minWidth = min;
+      settingsModel.maxWidth = max;
     }
+  };
 
-    setSubfolderValue = e => {
-      settingsModel.subfolder = e.target.value;
-    };
+  function onClickMinWidth() {
+    settingsModel.minWidthEnabled = !settingsModel.minWidthEnabled;
+  };
 
-    setFilterType = (selected, i) => {
-      settingsModel.filterType = i;
-    };
+  function onClickMaxWidth() {
+    settingsModel.maxWidthEnabled = !settingsModel.maxWidthEnabled;
+  };
 
-    setFilterValue = e => {
-      settingsModel.filter = e.target.value;
-    };
-
-    setWidth = ([min, max]) => {
-      if (settingsModel.minWidthEnabled || settingsModel.maxWidthEnabled) {
-        settingsModel.minWidth = min;
-        settingsModel.maxWidth = max;
-      }
-    };
-
-    onClickMinWidth = () => {
-      settingsModel.minWidthEnabled = !settingsModel.minWidthEnabled;
-    };
-
-    onClickMaxWidth = () => {
-      settingsModel.maxWidthEnabled = !settingsModel.maxWidthEnabled;
-    };
-
-    setHeight = ([min, max]) => {
-      if (settingsModel.minHeightEnabled || settingsModel.maxHeightEnabled) {
-        settingsModel.minHeight = min;
-        settingsModel.maxHeight = max;
-      }
-    };
-
-    onClickMinHeight = () => {
-      settingsModel.minHeightEnabled = !settingsModel.minHeightEnabled;
-    };
-
-    onClickMaxHeight = () => {
-      settingsModel.maxHeightEnabled = !settingsModel.maxHeightEnabled;
-    };
-
-    setOnlyImagesHasSameHostname = () => {
-      const { onlyImagesHasSameHostname } = settingsModel;
-      settingsModel.onlyImagesHasSameHostname = !onlyImagesHasSameHostname;
-    };
-
-    setOnlyImagesFromLinks = () => {
-      const { onlyImagesFromLink } = settingsModel;
-      settingsModel.onlyImagesFromLink = !onlyImagesFromLink;
-    };
-
-    setExcludeQueryImage = () => {
-      const { excludeQueryImage } = settingsModel;
-      settingsModel.excludeQueryImage = !excludeQueryImage;
-    };
-
-    render() {
-      const { id } = this.props;
-      const {
-        subfolder,
-        filter,
-        filterType,
-        onlyImagesHasSameHostname,
-        onlyImagesFromLink,
-        minWidth,
-        minWidthEnabled,
-        maxWidth,
-        maxWidthEnabled,
-        minHeight,
-        minHeightEnabled,
-        maxHeight,
-        maxHeightEnabled,
-        excludeQueryImage
-      } = settingsModel;
-
-      return (
-        <Container id={id}>
-          <Grid>
-            <GridItem
-              columnStart={'first'}
-              columnEnd={'end'}
-              rowStart={'first'}
-            >
-              <NormalLabel>Save to Subfolder</NormalLabel>
-            </GridItem>
-            <GridItem
-              columnStart={'first'}
-              columnEnd={'end'}
-              rowStart={'second'}
-            >
-              <TextInput
-                placeholder={'subfolder path'}
-                value={subfolder}
-                onChange={this.setSubfolderValue}
-              />
-            </GridItem>
-
-            <GridItem
-              columnStart={'first'}
-              columnEnd={'end'}
-              rowStart={'third'}
-            >
-              <NormalLabel>Filter by URL</NormalLabel>
-            </GridItem>
-            <GridItem columnStart={'first'} columnEnd={14} rowStart={'forth'}>
-              <DropDown
-                options={this.options}
-                active={this.options[filterType]}
-                onClick={this.setFilterType}
-              />
-            </GridItem>
-            <GridItem columnStart={15} columnEnd={'end'} rowStart={'forth'}>
-              <TextInput
-                placeholder={'filter value'}
-                value={filter}
-                onChange={this.setFilterValue}
-              />
-            </GridItem>
-
-            <GridItem columnStart={'first'} columnEnd={7} rowStart={'fifth'}>
-              <NormalLabel>Width</NormalLabel>
-            </GridItem>
-            <GridItem columnStart={8} columnEnd={10} rowStart={'fifth'}>
-              <Checkbox
-                checked={minWidthEnabled}
-                onClick={this.onClickMinWidth}
-              />
-            </GridItem>
-            <GridItem columnStart={10} columnEnd={13} rowStart={'fifth'}>
-              <SmallLabel align={'right'}>{minWidth}</SmallLabel>
-            </GridItem>
-            <GridItem columnStart={14} columnEnd={35} rowStart={'fifth'}>
-              <Range
-                min={0}
-                max={3000}
-                defaultValue={[minWidth, maxWidth]}
-                value={[minWidth, maxWidth]}
-                count={1}
-                allowCross={false}
-                disabled={[!minWidthEnabled, !maxWidthEnabled]}
-                onChange={this.setWidth}
-              />
-            </GridItem>
-            <GridItem columnStart={36} columnEnd={39} rowStart={'fifth'}>
-              <SmallLabel align={'left'}>{maxWidth}</SmallLabel>
-            </GridItem>
-            <GridItem columnStart={39} columnEnd={'end'} rowStart={'fifth'}>
-              <Checkbox
-                checked={maxWidthEnabled}
-                onClick={this.onClickMaxWidth}
-              />
-            </GridItem>
-
-            <GridItem columnStart={'first'} columnEnd={7} rowStart={'sixth'}>
-              <NormalLabel>Height</NormalLabel>
-            </GridItem>
-            <GridItem columnStart={8} columnEnd={10} rowStart={'sixth'}>
-              <Checkbox
-                checked={minHeightEnabled}
-                onClick={this.onClickMinHeight}
-              />
-            </GridItem>
-            <GridItem columnStart={10} columnEnd={13} rowStart={'sixth'}>
-              <SmallLabel align={'right'}>{minHeight}</SmallLabel>
-            </GridItem>
-            <GridItem columnStart={14} columnEnd={35} rowStart={'sixth'}>
-              <Range
-                min={0}
-                max={3000}
-                defaultValue={[minHeight, maxHeight]}
-                value={[minHeight, maxHeight]}
-                count={1}
-                allowCross={false}
-                disabled={[!minHeightEnabled, !maxHeightEnabled]}
-                onChange={this.setHeight}
-              />
-            </GridItem>
-            <GridItem columnStart={36} columnEnd={39} rowStart={'sixth'}>
-              <SmallLabel align={'left'}>{maxHeight}</SmallLabel>
-            </GridItem>
-            <GridItem columnStart={39} columnEnd={'end'} rowStart={'sixth'}>
-              <Checkbox
-                checked={maxHeightEnabled}
-                onClick={this.onClickMaxHeight}
-              />
-            </GridItem>
-
-            <GridItem
-              columnStart={1}
-              columnEnd={3}
-              rowStart={'seventh'}
-              onClick={this.setOnlyImagesHasSameHostname}
-            >
-              <Checkbox checked={onlyImagesHasSameHostname} />
-            </GridItem>
-            <GridItem
-              columnStart={4}
-              columnEnd={'end'}
-              rowStart={'seventh'}
-              onClick={this.setOnlyImagesHasSameHostname}
-            >
-              <NormalLabel>Only images has same hostname</NormalLabel>
-            </GridItem>
-
-            <GridItem
-              columnStart={1}
-              columnEnd={3}
-              rowStart={'eighth'}
-              onClick={this.setOnlyImagesFromLinks}
-            >
-              <Checkbox checked={onlyImagesFromLink} />
-            </GridItem>
-            <GridItem
-              columnStart={4}
-              columnEnd={'end'}
-              rowStart={'eighth'}
-              onClick={this.setOnlyImagesFromLinks}
-            >
-              <NormalLabel>Only images from links</NormalLabel>
-            </GridItem>
-
-            <GridItem
-              columnStart={1}
-              columnEnd={3}
-              rowStart={'ninth'}
-              onClick={this.setExcludeQueryImage}
-            >
-              <Checkbox checked={excludeQueryImage} />
-            </GridItem>
-            <GridItem
-              columnStart={4}
-              columnEnd={'end'}
-              rowStart={'ninth'}
-              onClick={this.setExcludeQueryImage}
-            >
-              <NormalLabel>Exclude images with query params</NormalLabel>
-            </GridItem>
-            <GridItem columnStart={4} columnEnd={'end'} rowStart={'tenth'}>
-              <SmallLabel>
-                ex.
-                https//example.com/search?imageURL=https://example.com/example.jpg
-              </SmallLabel>
-            </GridItem>
-          </Grid>
-        </Container>
-      );
+  function setHeight([min, max]) {
+    if (settingsModel.minHeightEnabled || settingsModel.maxHeightEnabled) {
+      settingsModel.minHeight = min;
+      settingsModel.maxHeight = max;
     }
-  }
-);
+  };
+
+  function onClickMinHeight() {
+    settingsModel.minHeightEnabled = !settingsModel.minHeightEnabled;
+  };
+
+  function onClickMaxHeight() {
+    settingsModel.maxHeightEnabled = !settingsModel.maxHeightEnabled;
+  };
+
+  function setOnlyImagesHasSameHostname() {
+    const { onlyImagesHasSameHostname } = settingsModel;
+    settingsModel.onlyImagesHasSameHostname = !onlyImagesHasSameHostname;
+  };
+
+  function setOnlyImagesFromLinks() {
+    const { onlyImagesFromLink } = settingsModel;
+    settingsModel.onlyImagesFromLink = !onlyImagesFromLink;
+  };
+
+  function setExcludeQueryImage() {
+    const { excludeQueryImage } = settingsModel;
+    settingsModel.excludeQueryImage = !excludeQueryImage;
+  };
+
+  return (
+    <Container id={id}>
+      <Grid>
+        <GridItem
+          columnStart={'first'}
+          columnEnd={'end'}
+          rowStart={'first'}
+        >
+          <NormalLabel>Save to Subfolder</NormalLabel>
+        </GridItem>
+        <GridItem
+          columnStart={'first'}
+          columnEnd={'end'}
+          rowStart={'second'}
+        >
+          <TextInput
+            placeholder={'subfolder path'}
+            value={subfolder}
+            onChange={setSubfolderValue}
+          />
+        </GridItem>
+
+        <GridItem
+          columnStart={'first'}
+          columnEnd={'end'}
+          rowStart={'third'}
+        >
+          <NormalLabel>Filter by URL</NormalLabel>
+        </GridItem>
+        <GridItem columnStart={'first'} columnEnd={14} rowStart={'forth'}>
+          <DropDown
+            options={options}
+            active={options[filterType]}
+            onClick={setFilterType}
+          />
+        </GridItem>
+        <GridItem columnStart={15} columnEnd={'end'} rowStart={'forth'}>
+          <TextInput
+            placeholder={'filter value'}
+            value={filter}
+            onChange={setFilterValue}
+          />
+        </GridItem>
+
+        <GridItem columnStart={'first'} columnEnd={7} rowStart={'fifth'}>
+          <NormalLabel>Width</NormalLabel>
+        </GridItem>
+        <GridItem columnStart={8} columnEnd={10} rowStart={'fifth'}>
+          <Checkbox
+            checked={minWidthEnabled}
+            onClick={onClickMinWidth}
+          />
+        </GridItem>
+        <GridItem columnStart={10} columnEnd={13} rowStart={'fifth'}>
+          <SmallLabel align={'right'}>{minWidth}</SmallLabel>
+        </GridItem>
+        <GridItem columnStart={14} columnEnd={35} rowStart={'fifth'}>
+          <Range
+            min={0}
+            max={3000}
+            defaultValue={[minWidth, maxWidth]}
+            value={[minWidth, maxWidth]}
+            count={1}
+            allowCross={false}
+            disabled={[!minWidthEnabled, !maxWidthEnabled]}
+            onChange={setWidth}
+          />
+        </GridItem>
+        <GridItem columnStart={36} columnEnd={39} rowStart={'fifth'}>
+          <SmallLabel align={'left'}>{maxWidth}</SmallLabel>
+        </GridItem>
+        <GridItem columnStart={39} columnEnd={'end'} rowStart={'fifth'}>
+          <Checkbox
+            checked={maxWidthEnabled}
+            onClick={onClickMaxWidth}
+          />
+        </GridItem>
+
+        <GridItem columnStart={'first'} columnEnd={7} rowStart={'sixth'}>
+          <NormalLabel>Height</NormalLabel>
+        </GridItem>
+        <GridItem columnStart={8} columnEnd={10} rowStart={'sixth'}>
+          <Checkbox
+            checked={minHeightEnabled}
+            onClick={onClickMinHeight}
+          />
+        </GridItem>
+        <GridItem columnStart={10} columnEnd={13} rowStart={'sixth'}>
+          <SmallLabel align={'right'}>{minHeight}</SmallLabel>
+        </GridItem>
+        <GridItem columnStart={14} columnEnd={35} rowStart={'sixth'}>
+          <Range
+            min={0}
+            max={3000}
+            defaultValue={[minHeight, maxHeight]}
+            value={[minHeight, maxHeight]}
+            count={1}
+            allowCross={false}
+            disabled={[!minHeightEnabled, !maxHeightEnabled]}
+            onChange={setHeight}
+          />
+        </GridItem>
+        <GridItem columnStart={36} columnEnd={39} rowStart={'sixth'}>
+          <SmallLabel align={'left'}>{maxHeight}</SmallLabel>
+        </GridItem>
+        <GridItem columnStart={39} columnEnd={'end'} rowStart={'sixth'}>
+          <Checkbox
+            checked={maxHeightEnabled}
+            onClick={onClickMaxHeight}
+          />
+        </GridItem>
+
+        <GridItem
+          columnStart={1}
+          columnEnd={3}
+          rowStart={'seventh'}
+          onClick={setOnlyImagesHasSameHostname}
+        >
+          <Checkbox checked={onlyImagesHasSameHostname} />
+        </GridItem>
+        <GridItem
+          columnStart={4}
+          columnEnd={'end'}
+          rowStart={'seventh'}
+          onClick={setOnlyImagesHasSameHostname}
+        >
+          <NormalLabel>Only images has same hostname</NormalLabel>
+        </GridItem>
+
+        <GridItem
+          columnStart={1}
+          columnEnd={3}
+          rowStart={'eighth'}
+          onClick={setOnlyImagesFromLinks}
+        >
+          <Checkbox checked={onlyImagesFromLink} />
+        </GridItem>
+        <GridItem
+          columnStart={4}
+          columnEnd={'end'}
+          rowStart={'eighth'}
+          onClick={setOnlyImagesFromLinks}
+        >
+          <NormalLabel>Only images from links</NormalLabel>
+        </GridItem>
+
+        <GridItem
+          columnStart={1}
+          columnEnd={3}
+          rowStart={'ninth'}
+          onClick={setExcludeQueryImage}
+        >
+          <Checkbox checked={excludeQueryImage} />
+        </GridItem>
+        <GridItem
+          columnStart={4}
+          columnEnd={'end'}
+          rowStart={'ninth'}
+          onClick={setExcludeQueryImage}
+        >
+          <NormalLabel>Exclude images with query params</NormalLabel>
+        </GridItem>
+        <GridItem columnStart={4} columnEnd={'end'} rowStart={'tenth'}>
+          <SmallLabel>
+            ex.
+            https//example.com/search?imageURL=https://example.com/example.jpg
+          </SmallLabel>
+        </GridItem>
+      </Grid>
+    </Container>
+  );
+}
+
+Settings.propTypes = {
+  id: PropTypes.string
+}
+
+Settings.defaultProps = {
+  id: null
+};
+
+export default observer(Settings)

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 const Marks = ({
   className,
@@ -34,7 +34,7 @@ const Marks = ({
       const isActive =
         (!included && point === upperBound) ||
         (included && point <= upperBound && point >= lowerBound);
-      const markClassName = classNames({
+      const markClassName = clsx({
         [`${className}-text`]: true,
         [`${className}-text-active`]: isActive
       });
