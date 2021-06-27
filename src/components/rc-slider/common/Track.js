@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
 
 const Track = props => {
   const { className, included, vertical, offset, length, style } = props;

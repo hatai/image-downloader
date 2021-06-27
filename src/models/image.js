@@ -1,6 +1,6 @@
 /* eslint-env webextensions */
-import { action, computed, decorate, observable } from 'mobx';
-import uuid from 'uuid/v1';
+import { action, computed, observable, makeObservable } from 'mobx';
+import { v1 as uuid } from 'uuid';
 import warning from 'warning';
 import settingsModel from './settings';
 import { REGEX_IMAGE } from '../utils/constants';
@@ -19,6 +19,26 @@ class ImageModel {
   loadFailed = false;
 
   constructor(src, width, height, linked = false) {
+    makeObservable(this, {
+      // observable
+      id: observable.ref,
+      src: observable,
+      hostname: observable,
+      width: observable,
+      height: observable,
+      linked: observable,
+      checked: observable,
+      visible: observable,
+      loaded: observable,
+      loadFailed: observable,
+
+      // computed
+      url: computed,
+
+      // action
+      download: action.bound
+    });
+
     this.id = uuid();
     this.src = src;
     this.hostname = new URL(src).hostname;
@@ -41,29 +61,30 @@ class ImageModel {
   }
 }
 
-decorate(ImageModel, {
-  // observable
-  id: observable.ref,
-  src: observable,
-  hostname: observable,
-  width: observable,
-  height: observable,
-  linked: observable,
-  checked: observable,
-  visible: observable,
-  loaded: observable,
-  loadFailed: observable,
-
-  // computed
-  url: computed,
-
-  // action
-  download: action.bound
-});
-
 class ImageListModel {
   hostname = '';
   sources = [];
+
+  constructor() {
+    makeObservable(this, {
+      // observable
+      sources: observable.ref,
+      // computed
+      images: computed,
+      isCheckedAll: computed,
+      isNotCheckedAll: computed,
+      isIndeterminate: computed,
+      checkedImages: computed,
+      uncheckedImages: computed,
+      linkedImages: computed,
+      notLinkedImages: computed,
+      progress: computed,
+      // action
+      checkAll: action.bound,
+      uncheckAll: action.bound,
+      doFilter: action.bound
+    });
+  }
 
   /********************************************************************
    * Getter
@@ -349,25 +370,6 @@ class ImageListModel {
       });
   }
 }
-
-decorate(ImageListModel, {
-  // observable
-  sources: observable.ref,
-  // computed
-  images: computed,
-  isCheckedAll: computed,
-  isNotCheckedAll: computed,
-  isIndeterminate: computed,
-  checkedImages: computed,
-  uncheckedImages: computed,
-  linkedImages: computed,
-  notLinkedImages: computed,
-  progress: computed,
-  // action
-  checkAll: action.bound,
-  uncheckAll: action.bound,
-  doFilter: action.bound
-});
 
 /**
  * whether to filter or not

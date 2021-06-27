@@ -1,5 +1,5 @@
 /* eslint-env webextensions */
-import { action, computed, decorate, observable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 import { getSavedOptions } from '../utils/index';
 import { KEY } from '../utils/constants';
 
@@ -21,6 +21,32 @@ class SettingsModel {
   onlyImagesHasSameHostname = false;
   onlyImagesFromLink = false;
   excludeQueryImage = true;
+
+  constructor() {
+    makeObservable(this, {
+      // observable
+      subfolder: observable,
+      filter: observable,
+      filterType: observable,
+      minWidth: observable,
+      minWidthEnabled: observable,
+      maxWidth: observable,
+      maxWidthEnabled: observable,
+      minHeight: observable,
+      minHeightEnabled: observable,
+      maxHeight: observable,
+      maxHeightEnabled: observable,
+      onlyImagesHasSameHostname: observable,
+      onlyImagesFromLink: observable,
+      excludeQueryImage: observable,
+      // computed
+      midWidth: computed,
+      midHeight: computed,
+      values: computed,
+      // action
+      applySettingsFromLocalStorage: action.bound
+    });
+  }
 
   get midWidth() {
     return (this.minWidth + this.maxWidth) / 2;
@@ -107,30 +133,6 @@ class SettingsModel {
     });
   }
 }
-
-decorate(SettingsModel, {
-  // observable
-  subfolder: observable,
-  filter: observable,
-  filterType: observable,
-  minWidth: observable,
-  minWidthEnabled: observable,
-  maxWidth: observable,
-  maxWidthEnabled: observable,
-  minHeight: observable,
-  minHeightEnabled: observable,
-  maxHeight: observable,
-  maxHeightEnabled: observable,
-  onlyImagesHasSameHostname: observable,
-  onlyImagesFromLink: observable,
-  excludeQueryImage: observable,
-  // computed
-  midWidth: computed,
-  midHeight: computed,
-  values: computed,
-  // action
-  applySettingsFromLocalStorage: action.bound
-});
 
 const settingsModel = new SettingsModel();
 export default settingsModel;
